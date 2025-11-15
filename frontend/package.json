@@ -1,0 +1,13 @@
+{
+  "name": "hospital-management-frontend",
+  "version": "1.0.0",
+  "description": "医院门诊管理系统前端",
+  "main": "index.js",
+  "scripts": {
+    "dev": "live-server src/pages/patient/",
+    "build": "echo '构建完成'"
+  },
+  "keywords": ["医院", "管理系统", "前端"],
+  "author": "你的名字",
+  "license": "MIT"
+}

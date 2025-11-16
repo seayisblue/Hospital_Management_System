@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>线上挂号 - 医院门诊管理系统</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles/common.css">
+    <style>
+        .doctor-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .doctor-card.selected {
+            border: 2px solid #667eea;
+            background-color: #f8f9ff;
+        }
+        .time-slot {
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .time-slot:hover {
+            background-color: #e9ecef;
+        }
+        .time-slot.selected {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .time-slot.disabled {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">🩺 线上挂号</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- 步骤指示器 -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="steps">
+                                    <div class="step active">
+                                        <div class="step-number">1</div>
+                                        <div class="step-label">选择科室</div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">2</div>
+                                        <div class="step-label">选择医生</div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">3</div>
+                                        <div class="step-label">选择时间</div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">4</div>
+                                        <div class="step-label">确认挂号</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 科室选择 -->
+                        <div id="step1" class="step-content">
+                            <h5>请选择就诊科室</h5>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card doctor-card" data-dept="内科">
+                                        <div class="card-body text-center">
+                                            <div class="h3 text-primary">❤️</div>
+                                            <h6>内科</h6>
+                                            <small class="text-muted">感冒、发烧、高血压等</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card doctor-card" data-dept="外科">
+                                        <div class="card-body text-center">
+                                            <div class="h3 text-success">🦴</div>
+                                            <h6>外科</h6>
+                                            <small class="text-muted">创伤、手术、骨科等</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card doctor-card" data-dept="儿科">
+                                        <div class="card-body text-center">
+                                            <div class="h3 text-warning">👶</div>
+                                            <h6>儿科</h6>
+                                            <small class="text-muted">儿童疾病、生长发育</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card doctor-card" data-dept="妇产科">
+                                        <div class="card-body text-center">
+                                            <div class="h3 text-danger">🤰</div>
+                                            <h6>妇产科</h6>
+                                            <small class="text-muted">妇科疾病、孕产检查</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card doctor-card" data-dept="眼科">
+                                        <div class="card-body text-center">
+                                            <div class="h3 text-info">👁️</div>
+                                            <h6>眼科</h6>
+                                            <small class="text-muted">视力检查、眼部疾病</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card doctor-card" data-dept="口腔科">
+                                        <div class="card-body text-center">
+                                            <div class="h3 text-secondary">🦷</div>
+                                            <h6>口腔科</h6>
+                                            <small class="text-muted">牙齿检查、口腔治疗</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button class="btn btn-primary" onclick="nextStep(1)">下一步</button>
+                            </div>
+                        </div>
+
+                        <!-- 医生选择 -->
+                        <div id="step2" class="step-content d-none">
+                            <h5>请选择医生</h5>
+                            <div class="row" id="doctorList">
+                                <!-- 医生列表将通过JavaScript动态生成 -->
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary" onclick="prevStep(2)">上一步</button>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <button class="btn btn-primary" onclick="nextStep(2)">下一步</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 时间选择 -->
+                        <div id="step3" class="step-content d-none">
+                            <h5>请选择就诊时间</h5>
+                            <div class="mb-3">
+                                <label class="form-label">选择日期</label>
+                                <input type="date" class="form-control" id="appointmentDate" min="">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">选择时间段</label>
+                                <div class="row" id="timeSlots">
+                                    <!-- 时间段将通过JavaScript动态生成 -->
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary" onclick="prevStep(3)">上一步</button>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <button class="btn btn-primary" onclick="nextStep(3)">下一步</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 确认挂号 -->
+                        <div id="step4" class="step-content d-none">
+                            <h5>确认挂号信息</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>科室：</strong><span id="confirmDept">-</span></p>
+                                            <p><strong>医生：</strong><span id="confirmDoctor">-</span></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>时间：</strong><span id="confirmTime">-</span></p>
+                                            <p><strong>费用：</strong><span id="confirmFee">-</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary" onclick="prevStep(4)">上一步</button>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <button class="btn btn-success" onclick="confirmAppointment()">确认挂号</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../utils/helpers.js"></script>
+    
+    <script>
+        // 全局变量存储选择信息
+        let appointmentData = {
+            department: '',
+            doctor: null,
+            date: '',
+            time: '',
+            fee: 0
+        };
+
+        // 医生数据
+        const doctors = {
+            '内科': [
+                { id: 1, name: '张医生', title: '主任医师', fee: 50, available: true },
+                { id: 2, name: '李医生', title: '副主任医师', fee: 40, available: true }
+            ],
+            '外科': [
+                { id: 3, name: '王医生', title: '主任医师', fee: 60, available: true },
+                { id: 4, name: '赵医生', title: '主治医师', fee: 35, available: true }
+            ],
+            '儿科': [
+                { id: 5, name: '刘医生', title: '副主任医师', fee: 45, available: true }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbar();
+            initAppointmentPage();
+        });
+
+        function initAppointmentPage() {
+            // 设置最小日期为今天
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointmentDate').min = today;
+            
+            // 绑定科室选择事件
+            document.querySelectorAll('.doctor-card[data-dept]').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.doctor-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    appointmentData.department = this.dataset.dept;
+                });
+            });
+
+            // 绑定日期变化事件
+            document.getElementById('appointmentDate').addEventListener('change', function() {
+                generateTimeSlots();
+            });
+        }
+
+        function nextStep(currentStep) {
+            // 验证当前步骤
+            if (currentStep === 1 && !appointmentData.department) {
+                showMessage('请选择科室！', 'error');
+                return;
+            }
+            if (currentStep === 2 && !appointmentData.doctor) {
+                showMessage('请选择医生！', 'error');
+                return;
+            }
+            if (currentStep === 3 && (!appointmentData.date || !appointmentData.time)) {
+                showMessage('请选择就诊时间！', 'error');
+                return;
+            }
+
+            // 隐藏当前步骤，显示下一步
+            document.getElementById(`step${currentStep}`).classList.add('d-none');
+            document.getElementById(`step${currentStep + 1}`).classList.remove('d-none');
+            
+            // 更新步骤指示器
+            updateStepIndicator(currentStep + 1);
+
+            // 如果是第二步，生成医生列表
+            if (currentStep === 1) {
+                generateDoctorList();
+            }
+            // 如果是第四步，更新确认信息
+            if (currentStep === 3) {
+                updateConfirmation();
+            }
+        }
+
+        function prevStep(currentStep) {
+            document.getElementById(`step${currentStep}`).classList.add('d-none');
+            document.getElementById(`step${currentStep - 1}`).classList.remove('d-none');
+            updateStepIndicator(currentStep - 1);
+        }
+
+        function updateStepIndicator(step) {
+            document.querySelectorAll('.step').forEach((stepEl, index) => {
+                if (index + 1 <= step) {
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.remove('active');
+                }
+            });
+        }
+
+        function generateDoctorList() {
+            const doctorList = document.getElementById('doctorList');
+            const deptDoctors = doctors[appointmentData.department] || [];
+            
+            doctorList.innerHTML = deptDoctors.map(doctor => `
+                <div class="col-md-6 mb-3">
+                    <div class="card doctor-card ${!doctor.available ? 'opacity-50' : ''}" 
+                         data-doctor-id="${doctor.id}" 
+                         onclick="${doctor.available ? `selectDoctor(${doctor.id})` : ''}">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">
+                                    <h6>${doctor.name}</h6>
+                                    <small class="text-muted">${doctor.title}</small>
+                                    <div class="mt-2">
+                                        <span class="badge bg-primary">挂号费: ¥${doctor.fee}</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-end">
+                                    <div class="h3 text-success">🩺</div>
+                                    ${!doctor.available ? '<small class="text-danger">已满</small>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectDoctor(doctorId) {
+            const deptDoctors = doctors[appointmentData.department];
+            appointmentData.doctor = deptDoctors.find(d => d.id === doctorId);
+            appointmentData.fee = appointmentData.doctor.fee;
+            
+            document.querySelectorAll('.doctor-card[data-doctor-id]').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-doctor-id="${doctorId}"]`).classList.add('selected');
+        }
+
+        function generateTimeSlots() {
+            const date = document.getElementById('appointmentDate').value;
+            appointmentData.date = date;
+            
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            const timeSlots = [
+                '08:00-08:30', '08:30-09:00', '09:00-09:30', '09:30-10:00',
+                '10:00-10:30', '10:30-11:00', '14:00-14:30', '14:30-15:00',
+                '15:00-15:30', '15:30-16:00', '16:00-16:30', '16:30-17:00'
+            ];
+            
+            timeSlotsContainer.innerHTML = timeSlots.map(slot => `
+                <div class="col-md-3 mb-2">
+                    <div class="time-slot" data-time="${slot}" onclick="selectTimeSlot(this)">
+                        ${slot}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectTimeSlot(element) {
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            appointmentData.time = element.dataset.time;
+        }
+
+        function updateConfirmation() {
+            document.getElementById('confirmDept').textContent = appointmentData.department;
+            document.getElementById('confirmDoctor').textContent = 
+                `${appointmentData.doctor.name} (${appointmentData.doctor.title})`;
+            document.getElementById('confirmTime').textContent = 
+                `${appointmentData.date} ${appointmentData.time}`;
+            document.getElementById('confirmFee').textContent = `¥${appointmentData.fee}`;
+        }
+
+        function confirmAppointment() {
+            showMessage('挂号成功！正在生成账单...', 'success');
+            // 模拟支付流程
+            setTimeout(() => {
+                showMessage('请前往财务中心支付挂号费', 'info');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+            }, 1500);
+        }
+    </script>
+
+    <style>
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background-color: #dee2e6;
+            z-index: 1;
+        }
+        .step.active:not(:last-child)::after {
+            background-color: #667eea;
+        }
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #dee2e6;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        .step.active .step-number {
+            background-color: #667eea;
+        }
+        .step-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+        .step.active .step-label {
+            color: #667eea;
+            font-weight: bold;
+        }
+    </style>
+</body>
+</html>

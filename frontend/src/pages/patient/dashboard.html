@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>患者首页 - 医院门诊管理系统</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+    <!-- 导航栏容器 -->
+    <div id="navbar-container"></div>
+
+    <div class="container mt-4">
+        <!-- 欢迎横幅 -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h3>欢迎回来，张先生！</h3>
+                                <p class="mb-0">今天感觉怎么样？我们随时为您提供专业的医疗服务。</p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="h4">📅 2024年1月15日</div>
+                                <div>星期一</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能卡片 -->
+        <div class="row">
+            <!-- 线上挂号 -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="h1 text-primary">🩺</div>
+                        <h5 class="card-title">线上挂号</h5>
+                        <p class="card-text">选择科室医生，预约就诊时间</p>
+                        <a href="appointment.html" class="btn btn-primary">立即挂号</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 就诊记录 -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="h1 text-success">📋</div>
+                        <h5 class="card-title">就诊记录</h5>
+                        <p class="card-text">查看历史病历和诊断信息</p>
+                        <a href="medical-records.html" class="btn btn-primary">查看记录</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 我的处方 -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="h1 text-warning">💊</div>
+                        <h5 class="card-title">我的处方</h5>
+                        <p class="card-text">查看医生开具的处方信息</p>
+                        <a href="prescriptions.html" class="btn btn-primary">查看处方</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人信息 -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="h1 text-info">👤</div>
+                        <h5 class="card-title">个人信息</h5>
+                        <p class="card-text">管理个人资料和账户设置</p>
+                        <a href="profile.html" class="btn btn-primary">管理信息</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最近预约 -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">最近预约</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>预约时间</th>
+                                        <th>科室</th>
+                                        <th>医生</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2024-01-16 09:00</td>
+                                        <td>内科</td>
+                                        <td>李医生</td>
+                                        <td><span class="badge bg-warning">待就诊</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-danger">取消预约</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-01-10 14:30</td>
+                                        <td>外科</td>
+                                        <td>王医生</td>
+                                        <td><span class="badge bg-success">已完成</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">查看详情</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../utils/helpers.js"></script>
+    
+    <script>
+        // 页面加载时加载导航栏
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbar();
+        });
+    </script>
+</body>
+</html>

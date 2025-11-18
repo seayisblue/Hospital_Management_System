@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电子病历 - 医院门诊管理系统</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>📝 电子病历</h2>
+            <div>
+                <button class="btn btn-outline-secondary" onclick="saveDraft()">保存草稿</button>
+                <button class="btn btn-primary" onclick="completeMedicalRecord()">完成病历</button>
+            </div>
+        </div>
+
+        <!-- 患者基本信息 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">👤 患者信息</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>姓名:</strong> 张三
+                    </div>
+                    <div class="col-md-3">
+                        <strong>性别:</strong> 男
+                    </div>
+                    <div class="col-md-3">
+                        <strong>年龄:</strong> 35岁
+                    </div>
+                    <div class="col-md-3">
+                        <strong>病历号:</strong> P20240115001
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 病历表单 -->
+        <div class="card">
+            <div class="card-body">
+                <form id="medicalRecordForm">
+                    <!-- 主诉 -->
+                    <div class="mb-4">
+                        <label for="subjective" class="form-label fw-bold">主诉 (Subjective)</label>
+                        <textarea class="form-control" id="subjective" rows="3" placeholder="患者自述的主要症状、持续时间等">发热、咳嗽3天，伴有咽痛</textarea>
+                    </div>
+
+                    <!-- 查体 -->
+                    <div class="mb-4">
+                        <label for="objective" class="form-label fw-bold">查体 (Objective)</label>
+                        <textarea class="form-control" id="objective" rows="3" placeholder="医生的检查发现、体征等">T: 38.5℃，咽部充血，扁桃体I度肿大，双肺呼吸音粗，未闻及干湿性啰音</textarea>
+                    </div>
+
+                    <!-- 诊断 -->
+                    <div class="mb-4">
+                        <label for="assessment" class="form-label fw-bold">初步诊断 (Assessment)</label>
+                        <textarea class="form-control" id="assessment" rows="2" placeholder="初步诊断结果">急性上呼吸道感染</textarea>
+                    </div>
+
+                    <!-- 治疗方案 -->
+                    <div class="mb-4">
+                        <label for="plan" class="form-label fw-bold">治疗方案 (Plan)</label>
+                        <textarea class="form-control" id="plan" rows="3" placeholder="治疗计划、建议等">1. 抗感染治疗
+2. 对症支持治疗
+3. 多饮水，注意休息
+4. 如有加重，及时复诊</textarea>
+                    </div>
+
+                    <!-- 生命体征 -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <label class="form-label">体温(℃)</label>
+                            <input type="number" class="form-control" value="38.5" step="0.1">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">血压(mmHg)</label>
+                            <input type="text" class="form-control" value="120/80">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">心率(次/分)</label>
+                            <input type="number" class="form-control" value="88">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">呼吸(次/分)</label>
+                            <input type="number" class="form-control" value="18">
+                        </div>
+                    </div>
+
+                    <!-- 开具处方按钮 -->
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success btn-lg" onclick="prescribeMedicine()">
+                            💊 开具处方
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../utils/helpers.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbar();
+        });
+
+        function saveDraft() {
+            showMessage('病历草稿已保存', 'info');
+        }
+
+        function completeMedicalRecord() {
+            const subjective = document.getElementById('subjective').value;
+            const assessment = document.getElementById('assessment').value;
+            
+            if (!subjective || !assessment) {
+                showMessage('请填写主诉和初步诊断', 'error');
+                return;
+            }
+            
+            showMessage('病历已完成！', 'success');
+            // 这里可以添加提交到后端的逻辑
+        }
+
+        function prescribeMedicine() {
+            // 先完成病历再开具处方
+            const subjective = document.getElementById('subjective').value;
+            const assessment = document.getElementById('assessment').value;
+            
+            if (!subjective || !assessment) {
+                showMessage('请先完成病历再开具处方', 'error');
+                return;
+            }
+            
+            showMessage('跳转到处方页面...', 'success');
+            setTimeout(() => {
+                window.location.href = 'prescription.html?patientId=1001';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

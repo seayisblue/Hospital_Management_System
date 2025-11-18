@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开具处方 - 医院门诊管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles/common.css">
+    <style>
+        .medicine-item {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+        }
+        .medicine-item:hover {
+            background: #e9ecef;
+            cursor: pointer;
+        }
+        .medicine-item.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        .quantity-control {
+            width: 80px;
+        }
+        .prescription-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .usage-template {
+            font-size: 0.875rem;
+            padding: 4px 8px;
+            margin: 2px;
+            cursor: pointer;
+        }
+        .total-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>💊 开具处方</h2>
+            <div>
+                <button class="btn btn-outline-secondary" onclick="saveDraft()">保存草稿</button>
+                <button class="btn btn-success" onclick="submitPrescription()">开具处方</button>
+            </div>
+        </div>
+
+        <!-- 患者信息 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">👤 患者信息</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>姓名:</strong> 张三
+                    </div>
+                    <div class="col-md-3">
+                        <strong>性别:</strong> 男
+                    </div>
+                    <div class="col-md-3">
+                        <strong>年龄:</strong> 35岁
+                    </div>
+                    <div class="col-md-3">
+                        <strong>病历号:</strong> P20240115001
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <strong>诊断:</strong> 急性上呼吸道感染
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- 药品选择区域 -->
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">药品目录</h5>
+                        <div class="input-group" style="width: 200px;">
+                            <input type="text" class="form-control form-control-sm" placeholder="搜索药品..." id="medicineSearch">
+                            <button class="btn btn-outline-secondary btn-sm" type="button">🔍</button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                        <div class="list-group" id="medicineList">
+                            <!-- 药品列表将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 常用用法模板 -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">💡 常用用法模板</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap">
+                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('一日三次')">一日三次</span>
+                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('一日两次')">一日两次</span>
+                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('一日一次')">一日一次</span>
+                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('饭后服用')">饭后服用</span>
+                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('饭前服用')">饭前服用</span>
+                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('早晚各一次')">早晚各一次</span>
+                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('必要时服用')">必要时服用</span>
+                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('外用')">外用</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 处方详情区域 -->
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">📝 处方内容</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered prescription-table">
+                                <thead>
+                                    <tr>
+                                        <th width="25%">药品名称</th>
+                                        <th width="15%">规格</th>
+                                        <th width="10%">数量</th>
+                                        <th width="25%">用法用量</th>
+                                        <th width="15%">单价</th>
+                                        <th width="10%">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="prescriptionItems">
+                                    <!-- 动态添加的药品行 -->
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-end"><strong>总计金额:</strong></td>
+                                        <td colspan="2" class="total-amount">¥0.00</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- 医嘱输入 -->
+                        <div class="mt-4">
+                            <label for="doctorAdvice" class="form-label fw-bold">医嘱说明</label>
+                            <textarea class="form-control" id="doctorAdvice" rows="3" placeholder="请输入用药注意事项、饮食建议等..."></textarea>
+                        </div>
+
+                        <!-- 处方天数 -->
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label for="prescriptionDays" class="form-label">处方天数</label>
+                                <select class="form-select" id="prescriptionDays">
+                                    <option value="3">3天</option>
+                                    <option value="5" selected>5天</option>
+                                    <option value="7">7天</option>
+                                    <option value="10">10天</option>
+                                    <option value="14">14天</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">预计总金额</label>
+                                <div class="total-amount" id="estimatedTotal">¥0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 处方预览 -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">👁️ 处方预览</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="prescription-preview" id="prescriptionPreview">
+                            <p class="text-muted">添加药品后显示处方预览...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 用法用量编辑模态框 -->
+    <div class="modal fade" id="usageModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">编辑用法用量</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="usageForm">
+                        <input type="hidden" id="editingMedicineId">
+                        <div class="mb-3">
+                            <label class="form-label">用法用量</label>
+                            <textarea class="form-control" id="usageText" rows="3" placeholder="例如：一次2粒，一日三次，饭后服用"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">用药天数</label>
+                            <input type="number" class="form-control" id="usageDays" value="5" min="1" max="30">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUsage()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../utils/helpers.js"></script>
+    
+    <script>
+        // 药品数据
+        const medicines = [
+            { id: 1, name: '阿莫西林胶囊', specification: '0.25g*24粒', price: 25.00, stock: 156, category: '抗生素' },
+            { id: 2, name: '感冒灵颗粒', specification: '10g*9袋', price: 18.50, stock: 89, category: '感冒药' },
+            { id: 3, name: '降压片', specification: '30片', price: 32.00, stock: 120, category: '心血管' },
+            { id: 4, name: '维生素C片', specification: '100mg*60片', price: 12.00, stock: 200, category: '维生素' },
+            { id: 5, name: '止痛贴膏', specification: '5贴/盒', price: 25.00, stock: 75, category: '外用' },
+            { id: 6, name: '眼药水', specification: '10ml', price: 15.00, stock: 60, category: '眼科' },
+            { id: 7, name: '肠胃药', specification: '20片', price: 28.00, stock: 90, category: '消化系统' },
+            { id: 8, name: '消炎药', specification: '0.1g*24片', price: 18.00, stock: 110, category: '抗生素' }
+        ];
+
+        // 当前处方中的药品
+        let prescriptionItems = [];
+        let selectedMedicineId = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbar();
+            initializePrescriptionPage();
+        });
+
+        function initializePrescriptionPage() {
+            renderMedicineList();
+            setupEventListeners();
+        }
+
+        function renderMedicineList() {
+            const medicineList = document.getElementById('medicineList');
+            medicineList.innerHTML = medicines.map(medicine => `
+                <div class="medicine-item" data-medicine-id="${medicine.id}">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h6 class="mb-1">${medicine.name}</h6>
+                            <small class="text-muted">${medicine.specification}</small>
+                            <div>
+                                <span class="badge bg-secondary">${medicine.category}</span>
+                                <span class="badge bg-info">库存: ${medicine.stock}</span>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="text-primary fw-bold">¥${medicine.price.toFixed(2)}</div>
+                            <button class="btn btn-sm btn-primary mt-1" onclick="addToPrescription(${medicine.id})">
+                                添加到处方
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // 添加点击选择效果
+            document.querySelectorAll('.medicine-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.medicine-item').forEach(i => i.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedMedicineId = this.dataset.medicineId;
+                });
+            });
+        }
+
+        function setupEventListeners() {
+            // 搜索功能
+            document.getElementById('medicineSearch').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                document.querySelectorAll('.medicine-item').forEach(item => {
+                    const medicineName = item.querySelector('h6').textContent.toLowerCase();
+                    item.style.display = medicineName.includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+
+            // 处方天数变化
+            document.getElementById('prescriptionDays').addEventListener('change', updatePrescriptionPreview);
+        }
+
+        function addToPrescription(medicineId) {
+            const medicine = medicines.find(m => m.id === medicineId);
+            if (!medicine) return;
+
+            // 检查是否已存在
+            const existingItem = prescriptionItems.find(item => item.id === medicineId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                prescriptionItems.push({
+                    id: medicine.id,
+                    name: medicine.name,
+                    specification: medicine.specification,
+                    price: medicine.price,
+                    quantity: 1,
+                    usage: '请设置用法用量',
+                    days: 5
+                });
+            }
+
+            renderPrescriptionItems();
+            updateTotalAmount();
+            updatePrescriptionPreview();
+            showMessage(`已添加 ${medicine.name} 到处方`, 'success');
+        }
+
+        function removeFromPrescription(medicineId) {
+            prescriptionItems = prescriptionItems.filter(item => item.id !== medicineId);
+            renderPrescriptionItems();
+            updateTotalAmount();
+            updatePrescriptionPreview();
+        }
+
+        function updateQuantity(medicineId, change) {
+            const item = prescriptionItems.find(item => item.id === medicineId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity < 1) item.quantity = 1;
+                renderPrescriptionItems();
+                updateTotalAmount();
+                updatePrescriptionPreview();
+            }
+        }
+
+        function editUsage(medicineId) {
+            const item = prescriptionItems.find(item => item.id === medicineId);
+            if (item) {
+                document.getElementById('editingMedicineId').value = medicineId;
+                document.getElementById('usageText').value = item.usage;
+                document.getElementById('usageDays').value = item.days;
+                const modal = new bootstrap.Modal(document.getElementById('usageModal'));
+                modal.show();
+            }
+        }
+
+        function saveUsage() {
+            const medicineId = document.getElementById('editingMedicineId').value;
+            const usage = document.getElementById('usageText').value;
+            const days = parseInt(document.getElementById('usageDays').value);
+
+            const item = prescriptionItems.find(item => item.id === parseInt(medicineId));
+            if (item) {
+                item.usage = usage;
+                item.days = days;
+                renderPrescriptionItems();
+                updatePrescriptionPreview();
+            }
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('usageModal'));
+            modal.hide();
+        }
+
+        function applyUsageTemplate(template) {
+            if (selectedMedicineId) {
+                const item = prescriptionItems.find(item => item.id === parseInt(selectedMedicineId));
+                if (item) {
+                    item.usage = template;
+                    renderPrescriptionItems();
+                    updatePrescriptionPreview();
+                    showMessage(`已应用用法: ${template}`, 'info');
+                }
+            } else {
+                showMessage('请先选择药品', 'warning');
+            }
+        }
+
+        function renderPrescriptionItems() {
+            const tbody = document.getElementById('prescriptionItems');
+            tbody.innerHTML = prescriptionItems.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.specification}</td>
+                    <td>
+                        <div class="input-group input-group-sm">
+                            <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <input type="number" class="form-control text-center quantity-control" value="${item.quantity}" min="1" 
+                                   onchange="updateQuantityDirect(${item.id}, this.value)">
+                            <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                    </td>
+                    <td>
+                        <div>${item.usage}</div>
+                        <small class="text-muted">${item.days}天用量</small>
+                        <button class="btn btn-sm btn-outline-primary mt-1" onclick="editUsage(${item.id})">编辑</button>
+                    </td>
+                    <td>¥${item.price.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeFromPrescription(${item.id})">删除</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateQuantityDirect(medicineId, value) {
+            const quantity = parseInt(value);
+            if (quantity > 0) {
+                const item = prescriptionItems.find(item => item.id === medicineId);
+                if (item) {
+                    item.quantity = quantity;
+                    updateTotalAmount();
+                    updatePrescriptionPreview();
+                }
+            }
+        }
+
+        function updateTotalAmount() {
+            const total = prescriptionItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.querySelector('.total-amount').textContent = `¥${total.toFixed(2)}`;
+            document.getElementById('estimatedTotal').textContent = `¥${total.toFixed(2)}`;
+        }
+
+        function updatePrescriptionPreview() {
+            const preview = document.getElementById('prescriptionPreview');
+            const days = document.getElementById('prescriptionDays').value;
+            const advice = document.getElementById('doctorAdvice').value;
+
+            if (prescriptionItems.length === 0) {
+                preview.innerHTML = '<p class="text-muted">添加药品后显示处方预览...</p>';
+                return;
+            }
+
+            let previewHTML = `
+                <div class="prescription-header mb-3">
+                    <h6>处方预览 (${days}天用量)</h6>
+                </div>
+                <div class="prescription-content">
+            `;
+
+            prescriptionItems.forEach(item => {
+                previewHTML += `
+                    <div class="mb-2">
+                        <strong>${item.name}</strong> - ${item.specification}<br>
+                        <small class="text-muted">${item.quantity}${getUnit(item.name)} × ${item.days}天 | ${item.usage}</small>
+                    </div>
+                `;
+            });
+
+            if (advice) {
+                previewHTML += `
+                    <div class="mt-3 p-2 bg-light rounded">
+                        <strong>医嘱:</strong> ${advice}
+                    </div>
+                `;
+            }
+
+            previewHTML += `</div>`;
+            preview.innerHTML = previewHTML;
+        }
+
+        function getUnit(medicineName) {
+            if (medicineName.includes('胶囊') || medicineName.includes('片')) return '盒';
+            if (medicineName.includes('颗粒')) return '袋';
+            if (medicineName.includes('贴膏')) return '贴';
+            if (medicineName.includes('眼药水')) return '瓶';
+            return '个';
+        }
+
+        function saveDraft() {
+            if (prescriptionItems.length === 0) {
+                showMessage('处方为空，无法保存', 'warning');
+                return;
+            }
+            showMessage('处方草稿已保存', 'success');
+            // 这里可以添加保存到本地存储或后端的逻辑
+        }
+
+        function submitPrescription() {
+            if (prescriptionItems.length === 0) {
+                showMessage('请添加至少一种药品', 'error');
+                return;
+            }
+
+            // 检查所有药品是否设置了用法用量
+            const hasEmptyUsage = prescriptionItems.some(item => !item.usage || item.usage === '请设置用法用量');
+            if (hasEmptyUsage) {
+                showMessage('请为所有药品设置用法用量', 'error');
+                return;
+            }
+
+            const totalAmount = prescriptionItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            if (confirm(`确认开具处方？总金额: ¥${totalAmount.toFixed(2)}`)) {
+                showMessage('处方开具成功！正在生成账单...', 'success');
+                // 模拟处理时间
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>

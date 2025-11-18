@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医生工作站 - 医院门诊管理系统</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles/common.css">
+    <style>
+        .patient-list-item {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .patient-list-item:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+        }
+        .urgent-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="container mt-4">
+        <!-- 医生信息横幅 -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h4>👨‍⚕️ 张医生，欢迎回来！</h4>
+                                <p class="mb-0">内科 - 主任医师 | 今日接诊数: <strong>12</strong> 人</p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="h5">📅 2024年1月15日</div>
+                                <div>星期一 09:30 AM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- 就诊队列 -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">📋 今日就诊队列</h5>
+                        <span class="badge bg-primary">8人等待</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group" id="patientQueue">
+                            <div class="list-group-item patient-list-item" data-patient-id="1001">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <div>
+                                        <h6 class="mb-1">张三</h6>
+                                        <p class="mb-1">主诉：发热、咳嗽3天</p>
+                                        <small class="text-muted">挂号时间: 08:30 | 等待: 15分钟</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-warning mb-2">待就诊</span>
+                                        <div>
+                                            <button class="btn btn-sm btn-primary" onclick="startConsultation(1001)">开始接诊</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item patient-list-item" data-patient-id="1002">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <div>
+                                        <h6 class="mb-1">李四</h6>
+                                        <p class="mb-1">主诉：头痛、头晕</p>
+                                        <small class="text-muted">挂号时间: 09:00 | 等待: 45分钟</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-warning mb-2">待就诊</span>
+                                        <div>
+                                            <button class="btn btn-sm btn-primary" onclick="startConsultation(1002)">开始接诊</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item patient-list-item" data-patient-id="1003">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <div>
+                                        <h6 class="mb-1">王五 <span class="badge bg-danger urgent-badge">紧急</span></h6>
+                                        <p class="mb-1">主诉：胸痛、呼吸困难</p>
+                                        <small class="text-muted">挂号时间: 09:15 | 等待: 30分钟</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-warning mb-2">待就诊</span>
+                                        <div>
+                                            <button class="btn btn-sm btn-danger" onclick="startConsultation(1003)">紧急接诊</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 今日已完成就诊 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">✅ 今日已完成就诊</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>患者</th>
+                                        <th>诊断</th>
+                                        <th>就诊时间</th>
+                                        <th>状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>赵六</td>
+                                        <td>上呼吸道感染</td>
+                                        <td>08:00-08:20</td>
+                                        <td><span class="badge bg-success">已完成</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>钱七</td>
+                                        <td>高血压随访</td>
+                                        <td>08:25-08:45</td>
+                                        <td><span class="badge bg-success">已完成</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快捷功能 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <div class="h1 text-primary">📝</div>
+                        <h5>电子病历模板</h5>
+                        <p class="card-text">常用病历模板和诊断方案</p>
+                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#templatesModal">查看模板</button>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <div class="h1 text-success">💊</div>
+                        <h5>药品目录</h5>
+                        <p class="card-text">常用药品信息和用法</p>
+                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#medicinesModal">查看药品</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="h1 text-info">📊</div>
+                        <h5>工作统计</h5>
+                        <div class="row text-center mt-3">
+                            <div class="col-6">
+                                <div class="h5 text-primary">12</div>
+                                <small>今日接诊</small>
+                            </div>
+                            <div class="col-6">
+                                <div class="h5 text-success">8</div>
+                                <small>开具处方</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 病历模板模态框 -->
+    <div class="modal fade" id="templatesModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">📝 电子病历模板</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">上呼吸道感染模板</h6>
+                                <small>常用</small>
+                            </div>
+                            <p class="mb-1">主诉：发热、咳嗽、咽痛。查体：咽部充血，扁桃体不大...</p>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">高血压随访模板</h6>
+                                <small>常用</small>
+                            </div>
+                            <p class="mb-1">主诉：血压控制情况。查体：BP 130/85mmHg，心率78次/分...</p>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">糖尿病管理模板</h6>
+                                <small>专科</small>
+                            </div>
+                            <p class="mb-1">主诉：血糖控制情况。查体：随机血糖8.5mmol/L...</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 药品目录模态框 -->
+    <div class="modal fade" id="medicinesModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">💊 常用药品目录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>药品名称</th>
+                                    <th>规格</th>
+                                    <th>用法</th>
+                                    <th>单价</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>阿莫西林胶囊</td>
+                                    <td>0.25g*24粒</td>
+                                    <td>0.5g tid</td>
+                                    <td>¥25.00</td>
+                                </tr>
+                                <tr>
+                                    <td>感冒灵颗粒</td>
+                                    <td>10g*9袋</td>
+                                    <td>1袋 tid</td>
+                                    <td>¥18.50</td>
+                                </tr>
+                                <tr>
+                                    <td>降压片</td>
+                                    <td>30片</td>
+                                    <td>1片 qd</td>
+                                    <td>¥32.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../utils/helpers.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbar();
+        });
+
+        function startConsultation(patientId) {
+            showMessage(`开始接诊患者 #${patientId}`, 'success');
+            setTimeout(() => {
+                window.location.href = `medical-record.html?patientId=${patientId}`;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

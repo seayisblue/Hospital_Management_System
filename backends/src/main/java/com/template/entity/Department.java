@@ -33,5 +33,17 @@ public class Department implements Serializable {
      */
     @TableField("Description")
     private String description;
+
+    /**
+     * 科室主任ID
+     */
+    @TableField("ManagerID")
+    private Integer managerId;
+
+    /**
+     * 门诊时间
+     */
+    @TableField("WorkHours")
+    private String workHours;
 }
 

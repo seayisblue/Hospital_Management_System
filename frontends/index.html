@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医院门诊管理系统 - 统一门户</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .welcome-header {
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-box {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            /* 确保图标居中 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn {
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="text-center mb-5 welcome-header">
+        <h1>🏥 医院门诊管理系统</h1>
+        <p class="lead">请选择您的角色进入系统</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="icon-box text-primary">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h4 class="card-title">患者入口</h4>
+
+                    <a href="./src/pages/patient/login.html" class="btn btn-primary w-100">进入系统</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="icon-box text-success">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <h4 class="card-title">医生工作站</h4>
+
+                    <a href="./src/pages/doctor/login.html" class="btn btn-success w-100">进入系统</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="icon-box text-warning">
+                        <i class="bi bi-bandaid"></i>
+                    </div>
+                    <h4 class="card-title">药房工作站</h4>
+
+                    <a href="./src/pages/pharmacist/login.html" class="btn btn-warning w-100">进入系统</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="icon-box text-danger">
+                        <i class="bi bi-gear"></i>
+                    </div>
+                    <h4 class="card-title">系统管理</h4>
+
+                    <a href="./src/pages/admin/login.html" class="btn btn-danger w-100">后台登录</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="text-center mt-5 text-white">
+        <small>&copy; 2025 医院门诊管理系统</small>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

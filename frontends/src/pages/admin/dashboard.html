@@ -39,29 +39,25 @@
             <div class="col-md-3">
                 <div class="stat-card bg-patient">
                     <div class="icon">👥</div>
-                    <div class="number">1,248</div>
-                    <div class="label">注册患者</div>
+                    <div class="number" id="stat-patient">-</div> <div class="label">注册患者</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stat-card bg-doctor">
                     <div class="icon">🩺</div>
-                    <div class="number">86</div>
-                    <div class="label">在职医生</div>
+                    <div class="number" id="stat-doctor">-</div> <div class="label">在职医生</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stat-card bg-appointment">
                     <div class="icon">📅</div>
-                    <div class="number">324</div>
-                    <div class="label">今日预约</div>
+                    <div class="number" id="stat-appointment">-</div> <div class="label">今日预约</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stat-card bg-revenue">
                     <div class="icon">💰</div>
-                    <div class="number">¥28,560</div>
-                    <div class="label">今日收入</div>
+                    <div class="number" id="stat-revenue">-</div> <div class="label">今日收入</div>
                 </div>
             </div>
         </div>
@@ -152,24 +148,26 @@
                         <div class="list-group">
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="badge bg-warning me-2">紧急</span>
-                                    处理23个待支付账单
+                                    <span class="badge bg-warning me-2">财务</span>
+                                    当前有未支付的账单，请及时确认收款
                                 </div>
-                                <a href="finance-center.html" class="btn btn-sm btn-primary">立即处理</a>
+                                <a href="finance-center.html" class="btn btn-sm btn-primary">去收款</a>
                             </div>
+
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="badge bg-info me-2">常规</span>
-                                    审核新药品入库申请
+                                    <span class="badge bg-info me-2">排班</span>
+                                    检查下周医生排班情况
                                 </div>
-                                <a href="medicine-stock.html" class="btn btn-sm btn-primary">查看</a>
+                                <a href="schedule-management.html" class="btn btn-sm btn-primary">去排班</a>
                             </div>
+
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="badge bg-success me-2">提醒</span>
-                                    更新科室值班信息
+                                    <span class="badge bg-success me-2">库存</span>
+                                    查看药品库存是否充足
                                 </div>
-                                <a href="department-management.html" class="btn btn-sm btn-primary">更新</a>
+                                <a href="medicine-stock.html" class="btn btn-sm btn-primary">查库存</a>
                             </div>
                         </div>
                     </div>
@@ -180,11 +178,46 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../utils/helpers.js"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             loadNavbar();
+            fetchDashboardStats(); // 加载统计数据
         });
+
+        // ★★★ 获取首页统计数据 ★★★
+        async function fetchDashboardStats() {
+            const token = localStorage.getItem('token');
+            if (!token) return window.location.href = 'login.html';
+
+            try {
+                // 调用我们刚写的新接口
+                const response = await fetch('http://localhost:8081/admin/dashboard/stats', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.code === 200) {
+                    const stats = result.data;
+
+                    // 填充数据 (带简单的动画效果或直接显示)
+                    document.getElementById('stat-patient').textContent = stats.patientCount;
+                    document.getElementById('stat-doctor').textContent = stats.doctorCount;
+                    document.getElementById('stat-appointment').textContent = stats.todayAppointment;
+                    document.getElementById('stat-revenue').textContent = '¥' + stats.todayRevenue;
+                } else {
+                    if (result.code === 401) window.location.href = 'login.html';
+                }
+            } catch (error) {
+                console.error('获取统计失败:', error);
+                // 保持显示 "-" 或显示 "0"
+            }
+        }
     </script>
 </body>
 </html>

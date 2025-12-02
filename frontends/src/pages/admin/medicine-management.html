@@ -6,788 +6,304 @@
     <title>药品管理 - 医院门诊管理系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../styles/common.css">
-    <style>
-        .stock-low { background-color: #fff3cd !important; }
-        .stock-critical { background-color: #f8d7da !important; }
-        .medicine-card {
-            transition: all 0.3s ease;
-            border-left: 4px solid #28a745;
-        }
-        .medicine-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .price-tag {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #dc3545;
-        }
-        .stock-level {
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
-    <div id="navbar-container"></div>
+<div id="navbar-container"></div>
 
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>💊 药品管理</h2>
-            <div>
-                <button class="btn btn-outline-primary me-2" onclick="exportMedicines()">📤 导出药品</button>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMedicineModal">
-                    ➕ 添加药品
-                </button>
-            </div>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>💊 药品管理</h2>
+        <div>
+            <button class="btn btn-outline-primary me-2" onclick="exportMedicines()">📤 导出药品</button>
+            <button class="btn btn-primary" onclick="openAddModal()">
+                ➕ 添加药品
+            </button>
         </div>
+    </div>
 
-        <!-- 药品统计 -->
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-primary">156</div>
-                        <div class="text-muted">药品总数</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-success">¥286,540</div>
-                        <div class="text-muted">库存总值</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-warning">12</div>
-                        <div class="text-muted">库存预警</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-info">8</div>
-                        <div class="text-muted">药品分类</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 筛选和搜索 -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <input type="text" class="form-control" placeholder="搜索药品名称..." id="searchMedicine">
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" id="categoryFilter">
-                            <option value="">所有分类</option>
-                            <option value="抗生素">抗生素</option>
-                            <option value="感冒药">感冒药</option>
-                            <option value="心血管">心血管</option>
-                            <option value="维生素">维生素</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" id="stockFilter">
-                            <option value="">库存状态</option>
-                            <option value="critical">库存紧张</option>
-                            <option value="low">库存不足</option>
-                            <option value="good">库存正常</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" id="statusFilter">
-                            <option value="">药品状态</option>
-                            <option value="active">启用</option>
-                            <option value="inactive">停用</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-primary w-100" onclick="applyFilters()">筛选</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 视图切换 -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0">药品列表</h5>
-            <div class="btn-group">
-                <button class="btn btn-sm btn-outline-primary active" onclick="changeView('table')">表格视图</button>
-                <button class="btn btn-sm btn-outline-primary" onclick="changeView('card')">卡片视图</button>
-            </div>
-        </div>
-
-        <!-- 表格视图 -->
-        <div id="tableView">
-            <div class="card">
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>药品ID</th>
-                                    <th>药品名称</th>
-                                    <th>规格</th>
-                                    <th>分类</th>
-                                    <th>生产厂家</th>
-                                    <th>单价</th>
-                                    <th>库存</th>
-                                    <th>状态</th>
-                                    <th>操作</th>
-                                </tr>
-                            </thead>
-                            <tbody id="medicineTable">
-                                <!-- 动态生成药品数据 -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 卡片视图 -->
-        <div id="cardView" class="d-none">
-            <div class="row" id="medicineCards">
-                <!-- 动态生成药品卡片 -->
-            </div>
-        </div>
-
-        <!-- 分页 -->
-        <nav class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#">上一页</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">下一页</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <!-- 添加药品模态框 -->
-    <div class="modal fade" id="addMedicineModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">添加新药品</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addMedicineForm">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">药品名称</label>
-                                    <input type="text" class="form-control" id="medicineName" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">通用名</label>
-                                    <input type="text" class="form-control" id="medicineGenericName">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">规格</label>
-                                    <input type="text" class="form-control" id="medicineSpecification" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">剂型</label>
-                                    <select class="form-select" id="medicineForm">
-                                        <option value="">请选择剂型</option>
-                                        <option value="片剂">片剂</option>
-                                        <option value="胶囊">胶囊</option>
-                                        <option value="颗粒">颗粒</option>
-                                        <option value="注射剂">注射剂</option>
-                                        <option value="外用">外用</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">分类</label>
-                                    <select class="form-select" id="medicineCategory" required>
-                                        <option value="">请选择分类</option>
-                                        <option value="抗生素">抗生素</option>
-                                        <option value="感冒药">感冒药</option>
-                                        <option value="心血管">心血管</option>
-                                        <option value="维生素">维生素</option>
-                                        <option value="消化系统">消化系统</option>
-                                        <option value="神经系统">神经系统</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">生产厂家</label>
-                                    <input type="text" class="form-control" id="medicineManufacturer" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label class="form-label">单价 (元)</label>
-                                    <input type="number" class="form-control" id="medicinePrice" step="0.01" required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label class="form-label">初始库存</label>
-                                    <input type="number" class="form-control" id="medicineStock" min="0" required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label class="form-label">安全库存</label>
-                                    <input type="number" class="form-control" id="medicineMinStock" min="0" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">药品说明</label>
-                            <textarea class="form-control" id="medicineDescription" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="medicineStatus" checked>
-                            <label class="form-check-label" for="medicineStatus">立即启用该药品</label>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="addMedicine()">添加药品</button>
+                    <div class="h4 text-primary" id="stat-total">-</div>
+                    <div class="text-muted">药品总数</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 药品详情模态框 -->
-    <div class="modal fade" id="medicineDetailModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">药品详情 - <span id="detailMedicineName"></span></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="搜索药品名称..." id="searchMedicine">
                 </div>
-                <div class="modal-body">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <strong>通用名:</strong> <span id="detailGenericName"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>规格:</strong> <span id="detailSpecification"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <strong>分类:</strong> <span id="detailCategory"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>生产厂家:</strong> <span id="detailManufacturer"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <strong>单价:</strong> <span id="detailPrice" class="price-tag"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <strong>当前库存:</strong> <span id="detailStock" class="stock-level"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <strong>安全库存:</strong> <span id="detailMinStock"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <strong>药品说明:</strong>
-                            <p id="detailDescription" class="mt-1"></p>
-                        </div>
-                    </div>
-                    
-                    <h6>库存流水</h6>
-                    <div class="table-responsive">
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>时间</th>
-                                    <th>类型</th>
-                                    <th>数量</th>
-                                    <th>原因</th>
-                                    <th>操作人</th>
-                                </tr>
-                            </thead>
-                            <tbody id="medicineHistory">
-                                <!-- 动态生成库存流水 -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary">编辑药品</button>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100" onclick="fetchMedicines()">搜索</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../utils/helpers.js"></script>
-    
-    <script>
-        // 药品数据
-        const medicines = [
-            { 
-                id: 1, 
-                name: '阿莫西林胶囊', 
-                genericName: '阿莫西林',
-                specification: '0.25g*24粒', 
-                form: '胶囊',
-                category: '抗生素', 
-                manufacturer: '华北制药', 
-                price: 25.00, 
-                stock: 15, 
-                minStock: 20,
-                description: '广谱抗生素，用于敏感菌所致的感染',
-                status: 'active',
-                createdAt: '2024-01-01'
-            },
-            { 
-                id: 2, 
-                name: '感冒灵颗粒', 
-                genericName: '复方感冒灵',
-                specification: '10g*9袋', 
-                form: '颗粒',
-                category: '感冒药', 
-                manufacturer: '白云山', 
-                price: 18.50, 
-                stock: 8, 
-                minStock: 15,
-                description: '用于感冒引起的头痛、发热、鼻塞等症状',
-                status: 'active',
-                createdAt: '2024-01-05'
-            },
-            { 
-                id: 3, 
-                name: '降压片', 
-                genericName: '硝苯地平',
-                specification: '30片', 
-                form: '片剂',
-                category: '心血管', 
-                manufacturer: '华东制药', 
-                price: 32.00, 
-                stock: 45, 
-                minStock: 20,
-                description: '用于高血压的治疗',
-                status: 'active',
-                createdAt: '2024-01-03'
-            },
-            { 
-                id: 4, 
-                name: '维生素C片', 
-                genericName: '维生素C',
-                specification: '100mg*60片', 
-                form: '片剂',
-                category: '维生素', 
-                manufacturer: '康恩贝', 
-                price: 12.00, 
-                stock: 120, 
-                minStock: 50,
-                description: '补充维生素C，增强免疫力',
-                status: 'active',
-                createdAt: '2024-01-02'
-            }
-        ];
-
-        // 药品库存流水
-        const medicineHistory = {
-            1: [
-                { date: '2024-01-15 14:30', type: '出库', quantity: -5, reason: '处方消耗', operator: '李药剂师' },
-                { date: '2024-01-10 09:15', type: '入库', quantity: 50, reason: '采购入库', operator: '张管理员' }
-            ],
-            2: [
-                { date: '2024-01-14 11:30', type: '出库', quantity: -2, reason: '处方消耗', operator: '王药剂师' },
-                { date: '2024-01-12 10:00', type: '入库', quantity: 30, reason: '采购入库', operator: '张管理员' }
-            ]
-        };
-
-        document.addEventListener('DOMContentLoaded', function() {
-            loadNavbar();
-            renderMedicineTable();
-            renderMedicineCards();
-            setupEventListeners();
-        });
-
-        function setupEventListeners() {
-            // 搜索功能
-            document.getElementById('searchMedicine').addEventListener('input', function() {
-                applyFilters();
-            });
-
-            // 筛选功能
-            document.getElementById('categoryFilter').addEventListener('change', function() {
-                applyFilters();
-            });
-
-            document.getElementById('stockFilter').addEventListener('change', function() {
-                applyFilters();
-            });
-
-            document.getElementById('statusFilter').addEventListener('change', function() {
-                applyFilters();
-            });
-        }
-
-        function renderMedicineTable() {
-            const tbody = document.getElementById('medicineTable');
-            tbody.innerHTML = medicines.map(medicine => {
-                const stockStatus = getStockStatus(medicine);
-                const statusClass = getStatusClass(stockStatus);
-                
-                return `
-                    <tr class="${statusClass}" data-medicine-id="${medicine.id}">
-                        <td>${medicine.id}</td>
-                        <td>
-                            <strong>${medicine.name}</strong>
-                            <div class="text-muted small">${medicine.genericName}</div>
-                        </td>
-                        <td>${medicine.specification}</td>
-                        <td><span class="badge bg-secondary">${medicine.category}</span></td>
-                        <td>${medicine.manufacturer}</td>
-                        <td class="price-tag">¥${medicine.price.toFixed(2)}</td>
-                        <td>
-                            <span class="stock-level ${getStockLevelClass(medicine)}">${medicine.stock}</span>
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar ${getProgressBarClass(medicine)}" 
-                                     style="width: ${(medicine.stock / (medicine.minStock * 2)) * 100}%"></div>
-                            </div>
-                            <small class="text-muted">安全: ${medicine.minStock}</small>
-                        </td>
-                        <td>
-                            <span class="badge ${medicine.status === 'active' ? 'bg-success' : 'bg-secondary'}">
-                                ${medicine.status === 'active' ? '启用' : '停用'}
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary" onclick="viewMedicineDetail(${medicine.id})">
-                                详情
-                            </button>
-                            <button class="btn btn-sm btn-outline-warning" onclick="editMedicine(${medicine.id})">
-                                编辑
-                            </button>
-                        </td>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>药品名称</th>
+                        <th>规格</th>
+                        <th>厂家</th>
+                        <th>单价</th>
+                        <th>库存 / 安全线</th> <th>状态</th>
+                        <th>操作</th>
                     </tr>
-                `;
-            }).join('');
-        }
+                    </thead>
+                    <tbody id="medicineTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-        function renderMedicineCards() {
-            const container = document.getElementById('medicineCards');
-            container.innerHTML = medicines.map(medicine => {
-                const stockStatus = getStockStatus(medicine);
-                
-                return `
-                    <div class="col-md-6 col-lg-4 mb-3">
-                        <div class="card medicine-card h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h6 class="card-title">${medicine.name}</h6>
-                                    <span class="badge ${medicine.status === 'active' ? 'bg-success' : 'bg-secondary'}">
-                                        ${medicine.status === 'active' ? '启用' : '停用'}
-                                    </span>
-                                </div>
-                                <p class="card-text text-muted small mb-2">${medicine.genericName}</p>
-                                <div class="mb-2">
-                                    <span class="badge bg-light text-dark">${medicine.category}</span>
-                                    <span class="badge bg-info">${medicine.form}</span>
-                                </div>
-                                <p class="card-text small">${medicine.specification}</p>
-                                <div class="row text-center mb-2">
-                                    <div class="col-6">
-                                        <div class="price-tag">¥${medicine.price.toFixed(2)}</div>
-                                        <small class="text-muted">单价</small>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="stock-level ${getStockLevelClass(medicine)}">${medicine.stock}</div>
-                                        <small class="text-muted">库存</small>
-                                    </div>
-                                </div>
-                                <div class="progress mb-2" style="height: 6px;">
-                                    <div class="progress-bar ${getProgressBarClass(medicine)}" 
-                                         style="width: ${(medicine.stock / (medicine.minStock * 2)) * 100}%"></div>
-                                </div>
-                                <small class="text-muted">生产厂家: ${medicine.manufacturer}</small>
-                                <div class="mt-3 d-grid gap-2">
-                                    <button class="btn btn-outline-primary btn-sm" onclick="viewMedicineDetail(${medicine.id})">
-                                        库存详情
-                                    </button>
-                                    <div class="btn-group" role="group">
-                                        <button class="btn btn-outline-warning btn-sm" onclick="editMedicine(${medicine.id})">
-                                            编辑
-                                        </button>
-                                        <button class="btn btn-outline-danger btn-sm" onclick="toggleMedicineStatus(${medicine.id})">
-                                            ${medicine.status === 'active' ? '停用' : '启用'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div class="modal fade" id="addMedicineModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">添加新药品</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addMedicineForm">
+                    <input type="hidden" id="medicineId">
+                    <div class="mb-3">
+                        <label class="form-label">药品名称</label>
+                        <input type="text" class="form-control" id="medicineName" required>
                     </div>
-                `;
-            }).join('');
-        }
+                    <div class="mb-3">
+                        <label class="form-label">规格</label>
+                        <input type="text" class="form-control" id="medicineSpecification" placeholder="如：0.25g*24粒/盒">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">生产厂家</label>
+                        <input type="text" class="form-control" id="medicineManufacturer">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">单价 (元)</label>
+                        <input type="number" class="form-control" id="medicinePrice" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">安全库存 (预警阈值)</label>
+                        <input type="number" class="form-control" id="medicineMinStock" value="20" min="0">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">初始库存</label>
+                        <input type="number" class="form-control" id="medicineStock" value="0" min="0">
+                        <div class="form-text text-muted" id="stockHelp">编辑模式下不可修改库存，请去库存管理页面操作。</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="saveBtn" onclick="submitMedicine()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        function getStockStatus(medicine) {
-            if (medicine.stock === 0) return 'critical';
-            if (medicine.stock < medicine.minStock) return 'low';
-            return 'good';
-        }
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../utils/helpers.js"></script>
 
-        function getStatusClass(status) {
-            switch(status) {
-                case 'critical': return 'stock-critical';
-                case 'low': return 'stock-low';
-                default: return '';
-            }
-        }
+<script>
+    let medicines = [];
 
-        function getStockLevelClass(medicine) {
-            if (medicine.stock === 0) return 'text-danger';
-            if (medicine.stock < medicine.minStock) return 'text-warning';
-            return 'text-success';
-        }
+    document.addEventListener('DOMContentLoaded', function() {
+        loadNavbar();
+        fetchMedicines();
 
-        function getProgressBarClass(medicine) {
-            if (medicine.stock === 0) return 'bg-danger';
-            if (medicine.stock < medicine.minStock) return 'bg-warning';
-            return 'bg-success';
-        }
+        document.getElementById('searchMedicine').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') fetchMedicines();
+        });
+    });
 
-        function applyFilters() {
-            const searchTerm = document.getElementById('searchMedicine').value.toLowerCase();
-            const categoryFilter = document.getElementById('categoryFilter').value;
-            const stockFilter = document.getElementById('stockFilter').value;
-            const statusFilter = document.getElementById('statusFilter').value;
-            
-            // 表格视图筛选
-            document.querySelectorAll('#medicineTable tr').forEach(row => {
-                const medicineId = row.dataset.medicineId;
-                const medicine = medicines.find(m => m.id == medicineId);
-                if (!medicine) return;
-                
-                const matchesSearch = medicine.name.toLowerCase().includes(searchTerm) || 
-                                    medicine.genericName.toLowerCase().includes(searchTerm);
-                const matchesCategory = !categoryFilter || medicine.category === categoryFilter;
-                const matchesStock = !stockFilter || getStockStatus(medicine) === stockFilter;
-                const matchesStatus = !statusFilter || medicine.status === statusFilter;
-                
-                row.style.display = (matchesSearch && matchesCategory && matchesStock && matchesStatus) ? '' : 'none';
+    // 1. 获取药品列表
+    async function fetchMedicines() {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'login.html';
+
+        const keyword = document.getElementById('searchMedicine').value;
+        let url = 'http://localhost:8081/medicine?page=1&pageSize=100';
+        if (keyword) url += `&medicineName=${encodeURIComponent(keyword)}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Authorization': token }
             });
-            
-            // 卡片视图筛选
-            document.querySelectorAll('#medicineCards .col-md-6').forEach(card => {
-                card.style.display = ''; // 重置显示
-            });
-        }
+            const result = await response.json();
 
-        function changeView(viewType) {
-            const tableView = document.getElementById('tableView');
-            const cardView = document.getElementById('cardView');
-            const tableBtn = document.querySelector('button[onclick="changeView(\'table\')"]');
-            const cardBtn = document.querySelector('button[onclick="changeView(\'card\')"]');
-            
-            if (viewType === 'table') {
-                tableView.classList.remove('d-none');
-                cardView.classList.add('d-none');
-                tableBtn.classList.add('btn-primary');
-                tableBtn.classList.remove('btn-outline-primary');
-                cardBtn.classList.add('btn-outline-primary');
-                cardBtn.classList.remove('btn-primary');
+            if (result.code === 200) {
+                medicines = result.data.records;
+                renderTable();
+                document.getElementById('stat-total').textContent = result.data.total;
             } else {
-                tableView.classList.add('d-none');
-                cardView.classList.remove('d-none');
-                tableBtn.classList.add('btn-outline-primary');
-                tableBtn.classList.remove('btn-primary');
-                cardBtn.classList.add('btn-primary');
-                cardBtn.classList.remove('btn-outline-primary');
+                showMessage('加载失败: ' + result.message, 'error');
             }
+        } catch (error) {
+            console.error(error);
+            showMessage('连接服务器失败', 'error');
+        }
+    }
+
+    // 2. 渲染表格 (已修改：显示安全库存)
+    function renderTable() {
+        const tbody = document.getElementById('medicineTable');
+
+        if (medicines.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted p-4">暂无药品数据</td></tr>';
+            return;
         }
 
-        function viewMedicineDetail(medicineId) {
-            const medicine = medicines.find(m => m.id === medicineId);
-            if (!medicine) return;
-            
-            document.getElementById('detailMedicineName').textContent = medicine.name;
-            document.getElementById('detailGenericName').textContent = medicine.genericName;
-            document.getElementById('detailSpecification').textContent = medicine.specification;
-            document.getElementById('detailCategory').textContent = medicine.category;
-            document.getElementById('detailManufacturer').textContent = medicine.manufacturer;
-            document.getElementById('detailPrice').textContent = `¥${medicine.price.toFixed(2)}`;
-            document.getElementById('detailStock').textContent = medicine.stock;
-            document.getElementById('detailMinStock').textContent = medicine.minStock;
-            document.getElementById('detailDescription').textContent = medicine.description;
-            
-            // 设置库存级别样式
-            const stockElement = document.getElementById('detailStock');
-            stockElement.className = `stock-level ${getStockLevelClass(medicine)}`;
-            
-            // 填充库存流水
-            const history = medicineHistory[medicineId] || [];
-            const historyTbody = document.getElementById('medicineHistory');
-            historyTbody.innerHTML = history.map(record => `
+        tbody.innerHTML = medicines.map(m => `
                 <tr>
-                    <td>${record.date}</td>
+                    <td>${m.medicineId}</td>
+                    <td><strong>${m.medicineName}</strong></td>
+                    <td>${m.specification || '-'}</td>
+                    <td>${m.manufacturer || '-'}</td>
+                    <td class="text-danger fw-bold">¥${m.unitPrice}</td>
                     <td>
-                        <span class="badge ${record.quantity > 0 ? 'bg-success' : 'bg-danger'}">
-                            ${record.type}
+                        <span class="badge ${m.stockLevel < (m.minStock || 0) ? 'bg-warning text-dark' : 'bg-info'}">
+                            ${m.stockLevel}
                         </span>
+                        <small class="text-muted ms-1">/ 安全:${m.minStock || 0}</small>
                     </td>
-                    <td class="${record.quantity > 0 ? 'text-success' : 'text-danger'}">
-                        ${record.quantity > 0 ? '+' : ''}${record.quantity}
+                    <td><span class="badge bg-success">正常</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="openEditModal(${m.medicineId})">编辑</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteMedicine(${m.medicineId})">删除</button>
                     </td>
-                    <td>${record.reason}</td>
-                    <td>${record.operator}</td>
                 </tr>
             `).join('');
-            
-            const modal = new bootstrap.Modal(document.getElementById('medicineDetailModal'));
-            modal.show();
+    }
+
+    // 3. 打开添加弹窗
+    function openAddModal() {
+        document.getElementById('addMedicineForm').reset();
+        document.getElementById('medicineId').value = '';
+
+        document.getElementById('modalTitle').textContent = '添加新药品';
+        document.getElementById('medicineStock').disabled = false;
+        document.getElementById('stockHelp').style.display = 'none';
+
+        // 默认安全库存
+        document.getElementById('medicineMinStock').value = 20;
+
+        new bootstrap.Modal(document.getElementById('addMedicineModal')).show();
+    }
+
+    // 4. 打开编辑弹窗 (已修改：回显安全库存)
+    function openEditModal(id) {
+        const m = medicines.find(item => item.medicineId === id);
+        if (!m) return;
+
+        document.getElementById('medicineId').value = m.medicineId;
+        document.getElementById('medicineName').value = m.medicineName;
+        document.getElementById('medicineSpecification').value = m.specification;
+        document.getElementById('medicineManufacturer').value = m.manufacturer;
+        document.getElementById('medicinePrice').value = m.unitPrice;
+        document.getElementById('medicineStock').value = m.stockLevel;
+
+        // ★★★ 修改处：回显安全库存 ★★★
+        document.getElementById('medicineMinStock').value = m.minStock || 0;
+
+        document.getElementById('modalTitle').textContent = '编辑药品';
+        document.getElementById('medicineStock').disabled = true;
+        document.getElementById('stockHelp').style.display = 'block';
+
+        new bootstrap.Modal(document.getElementById('addMedicineModal')).show();
+    }
+
+    // 5. 提交保存 (已修改：收集安全库存字段)
+    async function submitMedicine() {
+        const id = document.getElementById('medicineId').value;
+        const name = document.getElementById('medicineName').value;
+        const price = document.getElementById('medicinePrice').value;
+
+        if (!name || !price) {
+            showMessage('药品名称和单价不能为空', 'warning');
+            return;
         }
 
-        function editMedicine(medicineId) {
-            const medicine = medicines.find(m => m.id === medicineId);
-            if (!medicine) return;
+        const data = {
+            medicineName: name,
+            specification: document.getElementById('medicineSpecification').value,
+            manufacturer: document.getElementById('medicineManufacturer').value,
+            unitPrice: parseFloat(price),
+            // ★★★ 修改处：收集安全库存 ★★★
+            minStock: parseInt(document.getElementById('medicineMinStock').value) || 0
+        };
 
-            // 填充编辑表单
-            document.getElementById('medicineName').value = medicine.name;
-            document.getElementById('medicineGenericName').value = medicine.genericName;
-            document.getElementById('medicineSpecification').value = medicine.specification;
-            document.getElementById('medicineForm').value = medicine.form;
-            document.getElementById('medicineCategory').value = medicine.category;
-            document.getElementById('medicineManufacturer').value = medicine.manufacturer;
-            document.getElementById('medicinePrice').value = medicine.price;
-            document.getElementById('medicineStock').value = medicine.stock;
-            document.getElementById('medicineMinStock').value = medicine.minStock;
-            document.getElementById('medicineDescription').value = medicine.description;
-            document.getElementById('medicineStatus').checked = medicine.status === 'active';
+        const token = localStorage.getItem('token');
+        let url = 'http://localhost:8081/medicine';
+        let method = 'POST';
 
-            // 更改模态框标题和按钮
-            document.querySelector('#addMedicineModal .modal-title').textContent = '编辑药品';
-            document.querySelector('#addMedicineModal .btn-primary').textContent = '保存修改';
-            document.querySelector('#addMedicineModal .btn-primary').setAttribute('onclick', `updateMedicine(${medicineId})`);
-
-            const modal = new bootstrap.Modal(document.getElementById('addMedicineModal'));
-            modal.show();
+        if (id) {
+            url += `/${id}`;
+            method = 'PUT';
+        } else {
+            data.initialStock = parseInt(document.getElementById('medicineStock').value) || 0;
         }
 
-        function addMedicine() {
-            const form = document.getElementById('addMedicineForm');
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.code === 200) {
+                showMessage(id ? '修改成功' : '添加成功', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('addMedicineModal')).hide();
+                fetchMedicines();
+            } else {
+                showMessage('操作失败: ' + result.message, 'error');
             }
-
-            const newMedicine = {
-                id: medicines.length + 1,
-                name: document.getElementById('medicineName').value,
-                genericName: document.getElementById('medicineGenericName').value,
-                specification: document.getElementById('medicineSpecification').value,
-                form: document.getElementById('medicineForm').value,
-                category: document.getElementById('medicineCategory').value,
-                manufacturer: document.getElementById('medicineManufacturer').value,
-                price: parseFloat(document.getElementById('medicinePrice').value),
-                stock: parseInt(document.getElementById('medicineStock').value),
-                minStock: parseInt(document.getElementById('medicineMinStock').value),
-                description: document.getElementById('medicineDescription').value,
-                status: document.getElementById('medicineStatus').checked ? 'active' : 'inactive',
-                createdAt: new Date().toISOString().split('T')[0]
-            };
-
-            medicines.push(newMedicine);
-            renderMedicineTable();
-            renderMedicineCards();
-            showMessage('药品添加成功！', 'success');
-
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addMedicineModal'));
-            modal.hide();
-            form.reset();
-
-            // 重置模态框标题和按钮
-            document.querySelector('#addMedicineModal .modal-title').textContent = '添加新药品';
-            document.querySelector('#addMedicineModal .btn-primary').textContent = '添加药品';
-            document.querySelector('#addMedicineModal .btn-primary').setAttribute('onclick', 'addMedicine()');
+        } catch (e) {
+            console.error(e);
+            showMessage('操作失败', 'error');
         }
+    }
 
-        function updateMedicine(medicineId) {
-            const medicine = medicines.find(m => m.id === medicineId);
-            if (!medicine) return;
+    // 6. 删除药品
+    async function deleteMedicine(id) {
+        if (!confirm('确定要删除该药品吗？此操作不可恢复！')) return;
 
-            medicine.name = document.getElementById('medicineName').value;
-            medicine.genericName = document.getElementById('medicineGenericName').value;
-            medicine.specification = document.getElementById('medicineSpecification').value;
-            medicine.form = document.getElementById('medicineForm').value;
-            medicine.category = document.getElementById('medicineCategory').value;
-            medicine.manufacturer = document.getElementById('medicineManufacturer').value;
-            medicine.price = parseFloat(document.getElementById('medicinePrice').value);
-            medicine.stock = parseInt(document.getElementById('medicineStock').value);
-            medicine.minStock = parseInt(document.getElementById('medicineMinStock').value);
-            medicine.description = document.getElementById('medicineDescription').value;
-            medicine.status = document.getElementById('medicineStatus').checked ? 'active' : 'inactive';
+        try {
+            const response = await fetch(`http://localhost:8081/medicine/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
 
-            renderMedicineTable();
-            renderMedicineCards();
-            showMessage('药品信息更新成功！', 'success');
-
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addMedicineModal'));
-            modal.hide();
-            document.getElementById('addMedicineForm').reset();
-
-            // 重置模态框
-            document.querySelector('#addMedicineModal .modal-title').textContent = '添加新药品';
-            document.querySelector('#addMedicineModal .btn-primary').textContent = '添加药品';
-            document.querySelector('#addMedicineModal .btn-primary').setAttribute('onclick', 'addMedicine()');
-        }
-
-        function toggleMedicineStatus(medicineId) {
-            const medicine = medicines.find(m => m.id === medicineId);
-            if (!medicine) return;
-
-            const newStatus = medicine.status === 'active' ? 'inactive' : 'active';
-            const action = newStatus === 'active' ? '启用' : '停用';
-
-            if (confirm(`确定要${action} ${medicine.name} 药品吗？`)) {
-                medicine.status = newStatus;
-                renderMedicineTable();
-                renderMedicineCards();
-                showMessage(`已${action} ${medicine.name} 药品`, 'success');
+            const result = await response.json();
+            if (result.code === 200) {
+                showMessage('删除成功', 'success');
+                fetchMedicines();
+            } else {
+                showMessage('删除失败: ' + result.message, 'error');
             }
+        } catch (e) {
+            showMessage('操作失败', 'error');
         }
+    }
 
-        function exportMedicines() {
-            showMessage('正在导出药品数据...', 'info');
-            // 模拟导出过程
-            setTimeout(() => {
-                showMessage('药品数据导出成功！', 'success');
-            }, 1500);
-        }
-    </script>
+    function exportMedicines() { showMessage('导出功能演示中...', 'info'); }
+</script>
 </body>
 </html>

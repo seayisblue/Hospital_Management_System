@@ -54,39 +54,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>RX20240115001</td>
-                                        <td>张三</td>
-                                        <td>张医生</td>
-                                        <td>08:45</td>
-                                        <td><span class="badge bg-warning">待发药</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary" onclick="viewPrescription('RX20240115001')">查看</button>
-                                            <button class="btn btn-sm btn-success" onclick="dispenseMedicine('RX20240115001')">发药</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>RX20240115002</td>
-                                        <td>李四</td>
-                                        <td>王医生</td>
-                                        <td>09:15</td>
-                                        <td><span class="badge bg-warning">待发药</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary" onclick="viewPrescription('RX20240115002')">查看</button>
-                                            <button class="btn btn-sm btn-success" onclick="dispenseMedicine('RX20240115002')">发药</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>RX20240115003</td>
-                                        <td>王五</td>
-                                        <td>张医生</td>
-                                        <td>09:30</td>
-                                        <td><span class="badge bg-warning">待发药</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary" onclick="viewPrescription('RX20240115003')">查看</button>
-                                            <button class="btn btn-sm btn-success" onclick="dispenseMedicine('RX20240115003')">发药</button>
-                                        </td>
-                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -110,18 +78,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>RX20240114001</td>
-                                        <td>赵六</td>
-                                        <td>08:10</td>
-                                        <td><span class="badge bg-success">已发药</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>RX20240114002</td>
-                                        <td>钱七</td>
-                                        <td>08:35</td>
-                                        <td><span class="badge bg-success">已发药</span></td>
-                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -235,42 +192,197 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../utils/helpers.js"></script>
-    
-    <script>
-        let currentPrescriptionId = '';
 
+    <script>
+        // 页面加载时执行
         document.addEventListener('DOMContentLoaded', function() {
             loadNavbar();
+            loadPharmacistInfo();
+            fetchPendingPrescriptions(); // ★★★ 获取待发药列表 ★★★
         });
 
-        function viewPrescription(prescriptionId) {
-            currentPrescriptionId = prescriptionId;
-            document.getElementById('modalPrescriptionId').textContent = prescriptionId;
+        function loadPharmacistInfo() {
+            const infoStr = localStorage.getItem('pharmacistInfo');
+            if (infoStr) {
+                const info = JSON.parse(infoStr);
+                const title = document.querySelector('.card-body h4');
+                if(title) title.innerText = `💊 ${info.staffName}，欢迎回来！`;
+            }
+        }
+
+        // 1. 获取待发药处方
+        async function fetchPendingPrescriptions() {
+            const token = localStorage.getItem('token');
+            if (!token) return window.location.href = 'login.html';
+
+            try {
+                // 后端接口: 获取所有"未发药"的处方
+                const response = await fetch('http://localhost:8081/pharmacy/prescriptions/pending', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.code === 200) {
+                    const list = result.data;
+                    currentPrescriptionList = list;
+                    renderTable(list);
+
+                    // 更新右上角"X张待发药"的数字
+                    const badge = document.querySelector('.card-header .badge');
+                    if(badge) badge.textContent = `${list.length}张待发药`;
+                } else {
+                    // 如果Token过期
+                    if(result.code === 401) window.location.href = 'login.html';
+                    else showMessage('获取列表失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showMessage('连接服务器失败', 'error');
+            }
+        }
+
+        // 2. 渲染表格
+        function renderTable(list) {
+            const tbody = document.querySelector('table tbody'); // 或者用 getElementById('prescriptionList')
+
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无待发药处方</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = list.map(item => `
+            <tr>
+                <td>${item.prescriptionId}</td>
+                <td>
+                    ${item.patientName}
+                    <small class="text-muted">(${item.patientAge}岁)</small>
+                </td>
+                <td>${item.staffName} <small class="text-muted">(${item.deptName})</small></td>
+                <td>${item.prescriptionDate.replace('T', ' ').substring(0, 16)}</td>
+                <td><span class="badge bg-warning">${item.status}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="viewDetails(${item.prescriptionId})">查看</button>
+                    <button class="btn btn-sm btn-success" onclick="dispenseMedicine(${item.prescriptionId})">发药</button>
+                </td>
+            </tr>
+        `).join('');
+        }
+
+        // 3. ★★★ 核心功能：发药 ★★★
+        async function dispenseMedicine(prescriptionId) {
+            if (!confirm(`确认发放处方 [${prescriptionId}] 的药品吗？`)) return;
+
+            try {
+                const response = await fetch('http://localhost:8081/pharmacy/dispense', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': localStorage.getItem('token')
+                    },
+                    body: JSON.stringify({ prescriptionId: prescriptionId })
+                });
+
+                const result = await response.json();
+
+                if (result.code === 200) {
+                    showMessage('发药成功！库存已扣减', 'success');
+                    fetchPendingPrescriptions(); // 刷新列表，刚才那条应该消失
+                } else {
+                    showMessage('发药失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showMessage('操作失败', 'error');
+            }
+        }
+
+        // 查看详情 (简单弹窗展示)
+        // 1. 我们需要先把获取到的列表存到一个全局变量里，方便查看详情时取用
+        let currentPrescriptionList = [];
+
+        // 修改 fetchPendingPrescriptions 里的逻辑
+        // 找到这行：const list = result.data;
+        // 在它下面加一行：currentPrescriptionList = list;
+
+        // 2. 真正实现查看详情功能
+        function viewDetails(id) {
+            // 从全局列表中找到当前点击的处方
+            const prescription = currentPrescriptionList.find(p => p.prescriptionId === id);
+
+            if (!prescription) {
+                showMessage('未找到处方信息', 'error');
+                return;
+            }
+
+            // 填充模态框标题
+            document.getElementById('modalPrescriptionId').textContent = prescription.prescriptionId;
+
+            // 填充模态框里的病人信息
+            // 注意：你需要确保 dashboard.html 的模态框 HTML 结构里有对应的 id
+            // 如果没有，我们可以用简单粗暴的方式直接替换 body 内容
+
+            const modalBody = document.querySelector('#prescriptionModal .modal-body');
+            modalBody.innerHTML = `
+        <div class="row mb-3">
+            <div class="col-md-6"><strong>患者:</strong> ${prescription.patientName}</div>
+            <div class="col-md-6"><strong>开具医生:</strong> ${prescription.staffName} (${prescription.deptName})</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6"><strong>时间:</strong> ${prescription.prescriptionDate.replace('T', ' ').substring(0, 16)}</div>
+            <div class="col-md-6"><strong>总金额:</strong> <span class="text-danger fw-bold">¥${prescription.billAmount || '-'}</span></div>
+        </div>
+
+        <h6 class="border-bottom pb-2">💊 药品明细</h6>
+        <table class="table table-bordered table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>药品名称</th>
+                    <th>规格</th>
+                    <th>数量</th>
+                    <th>单价</th>
+                    <th>小计</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${prescription.details.map(d => `
+                    <tr>
+                        <td>${d.medicineName}</td>
+                        <td>${d.specification || '-'}</td>
+                        <td>${d.quantity}</td>
+                        <td>¥${d.unitPrice}</td>
+                        <td>¥${d.subtotal}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+
+            // 设置"确认发药"按钮的点击事件
+            // 先移除旧的监听，防止重复绑定（或者直接改 onclick 属性最简单）
+            const confirmBtn = document.querySelector('#prescriptionModal .btn-success');
+            confirmBtn.onclick = function() {
+                dispenseFromModal(id); // 传入当前的 ID
+            };
+
+            // 显示模态框
             const modal = new bootstrap.Modal(document.getElementById('prescriptionModal'));
             modal.show();
         }
 
-        function dispenseMedicine(prescriptionId) {
-            if (confirm(`确定要发放处方 ${prescriptionId} 的药品吗？`)) {
-                showMessage(`处方 ${prescriptionId} 发药成功！`, 'success');
-                // 这里可以添加更新处方状态的逻辑
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
-            }
-        }
-
-        function dispenseFromModal() {
-            dispenseMedicine(currentPrescriptionId);
-            const modal = bootstrap.Modal.getInstance(document.getElementById('prescriptionModal'));
+        // 辅助函数：从模态框确认发药
+        function dispenseFromModal(id) {
+            // 关闭模态框
+            const modalEl = document.getElementById('prescriptionModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
             modal.hide();
-        }
 
-        function manageInventory() {
-            showMessage('跳转到库存管理页面...', 'info');
-            setTimeout(() => {
-                window.location.href = 'inventory.html';
-            }, 1000);
+            // 调用发药逻辑
+            dispenseMedicine(id);
         }
     </script>
 </body>

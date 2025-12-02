@@ -112,19 +112,31 @@ public class PatientServiceImpl implements PatientService {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "患者不存在");
         }
 
-        // 如果修改手机号，检查是否已被使用
-        if (request.getPhoneNumber() != null && !request.getPhoneNumber().equals(patient.getPhoneNumber())) {
+        // 1. 检查手机号是否变更
+        if (org.springframework.util.StringUtils.hasText(request.getPhoneNumber())
+                && !request.getPhoneNumber().equals(patient.getPhoneNumber())) {
+
+            // 检查新手机号是否已存在
             LambdaQueryWrapper<Patient> query = new LambdaQueryWrapper<>();
             query.eq(Patient::getPhoneNumber, request.getPhoneNumber());
             if (patientMapper.selectCount(query) > 0) {
-                throw new BusinessException(ResultCode.BUSINESS_ERROR, "该手机号已被使用");
+                throw new BusinessException(ResultCode.BUSINESS_ERROR, "该手机号已被其他用户使用");
             }
         }
 
-        // 更新患者信息
+        // 2. 手动更新字段 (放弃 BeanUtils，防止属性名不一致或null覆盖问题)
         Patient updatePatient = new Patient();
         updatePatient.setPatientId(patientId);
-        BeanUtils.copyProperties(request, updatePatient);
+
+        // 只有当前端传了值，才更新
+        if (org.springframework.util.StringUtils.hasText(request.getPhoneNumber())) {
+            updatePatient.setPhoneNumber(request.getPhoneNumber());
+        }
+        if (org.springframework.util.StringUtils.hasText(request.getAddress())) {
+            updatePatient.setAddress(request.getAddress());
+        }
+        // 还可以加其他允许修改的字段...
+
         patientMapper.updateById(updatePatient);
     }
 

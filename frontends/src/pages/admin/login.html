@@ -46,20 +46,51 @@
     <script src="../../utils/helpers.js"></script>
     
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            
-            // 模拟管理员登录验证
-            if (username === 'admin' && password === 'admin123') {
-                showMessage('管理员登录成功！', 'success');
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
-            } else {
-                showMessage('账号或密码错误！', 'error');
+
+            if (!username || !password) {
+                showMessage('请输入账号和密码！', 'error');
+                return;
+            }
+
+            try {
+                // 1. 向后端发起【职工/管理员】登录请求
+                // 注意接口是 /staff/login，不是 /patient/login
+                const response = await fetch('http://localhost:8081/staff/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    // 后端需要的字段是 loginName 和 password
+                    body: JSON.stringify({
+                        loginName: username,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.code === 200) {
+                    showMessage('管理员登录成功！', 'success');
+
+                    // 2. ★★★ 关键：保存 Token ★★★
+                    // 只有存了 Token，之后的“添加医生”、“查询列表”才能通过验证
+                    localStorage.setItem('token', result.data.token);
+                    localStorage.setItem('staffInfo', JSON.stringify(result.data));
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    showMessage('登录失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error('登录出错:', error);
+                showMessage('连接服务器失败 (8081)', 'error');
             }
         });
     </script>

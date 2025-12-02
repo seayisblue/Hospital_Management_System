@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-8">
-                                <h3>欢迎回来，张先生！</h3>
+                                <h3 id="welcomeMsg">欢迎回来！</h3>
                                 <p class="mb-0">今天感觉怎么样？我们随时为您提供专业的医疗服务。</p>
                             </div>
                             <div class="col-md-4 text-end">
@@ -103,26 +103,7 @@
                                         <th>操作</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>2024-01-16 09:00</td>
-                                        <td>内科</td>
-                                        <td>李医生</td>
-                                        <td><span class="badge bg-warning">待就诊</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-danger">取消预约</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2024-01-10 14:30</td>
-                                        <td>外科</td>
-                                        <td>王医生</td>
-                                        <td><span class="badge bg-success">已完成</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary">查看详情</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="appointmentList"> </tbody>
                             </table>
                         </div>
                     </div>
@@ -133,12 +114,119 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../utils/helpers.js"></script>
-    
+
     <script>
-        // 页面加载时加载导航栏
         document.addEventListener('DOMContentLoaded', function() {
             loadNavbar();
+            initDashboard();
         });
+
+        function initDashboard() {
+            // 1. 显示欢迎语
+            const userName = localStorage.getItem('userName') || '患者';
+            const welcomeEl = document.getElementById('welcomeMsg'); // 确保你的 HTML 里有 id="welcomeMsg"
+            if (welcomeEl) welcomeEl.textContent = `欢迎回来，${userName}！`;
+
+            // 2. 加载预约列表
+            fetchMyAppointments();
+        }
+
+        // ★★★ 获取我的挂号记录 ★★★
+        async function fetchMyAppointments() {
+            const token = localStorage.getItem('token');
+            // 如果没 Token，踢回登录页
+            if (!token) {
+                // alert('未登录'); // 可选
+                return window.location.href = 'login.html';
+            }
+
+            try {
+                // ⚠️ 注意：端口号必须是 8081
+                const response = await fetch('http://localhost:8081/appointment/my', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.code === 200) {
+                    renderAppointmentTable(result.data);
+                } else {
+                    // 如果 Token 过期 (401)，回登录页
+                    if (result.code === 401) {
+                        window.location.href = 'login.html';
+                    } else {
+                        showMessage('加载失败: ' + result.message, 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('请求错误:', error);
+                // 如果这里报错，说明连不上 8081
+                showMessage('连接服务器失败 (请检查后端 8081 是否启动)', 'error');
+            }
+        }
+
+        // 渲染表格
+        function renderAppointmentTable(list) {
+            const tbody = document.getElementById('appointmentList');
+
+            if (!list || list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">暂无预约记录</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = list.map(item => {
+                // 时间格式化
+                const timeStr = item.appointmentTime ? item.appointmentTime.replace('T', ' ').substring(0, 16) : '-';
+
+                // 状态样式
+                let badgeClass = 'bg-secondary';
+                let actionBtn = '';
+
+                if (item.status === '待就诊') {
+                    badgeClass = 'bg-warning text-dark';
+                    actionBtn = `<button class="btn btn-sm btn-outline-danger" onclick="cancelAppointment(${item.appointmentId})">取消</button>`;
+                } else if (item.status === '已就诊') {
+                    badgeClass = 'bg-success';
+                    actionBtn = `<button class="btn btn-sm btn-outline-primary" onclick="location.href='medical-records.html'">病历</button>`;
+                }
+
+                return `
+                <tr>
+                    <td>${timeStr}</td>
+                    <td>${item.deptName}</td>
+                    <td>${item.staffName}</td>
+                    <td><span class="badge ${badgeClass}">${item.status}</span></td>
+                    <td>${actionBtn}</td>
+                </tr>
+            `;
+            }).join('');
+        }
+
+        // 取消预约
+        async function cancelAppointment(id) {
+            if (!confirm('确定取消吗？')) return;
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch(`http://localhost:8081/appointment/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': token }
+                });
+                const result = await response.json();
+                if (result.code === 200) {
+                    showMessage('取消成功', 'success');
+                    fetchMyAppointments(); // 刷新列表
+                } else {
+                    showMessage(result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('操作失败', 'error');
+            }
+        }
     </script>
 </body>
 </html>

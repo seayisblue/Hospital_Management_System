@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息 - 医院门诊管理系统</title>
+</head>
+<body>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息 - 医院门诊管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles/common.css">
+</head>
+<body>
+<div id="navbar-container"></div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">👤 个人信息</h5>
+                    <button class="btn btn-sm btn-primary" id="editBtn" onclick="toggleEdit()">
+                        ✏️ 修改资料
+                    </button>
+                </div>
+                <div class="card-body">
+                    <form id="profileForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">姓名</label>
+                                <input type="text" class="form-control" id="patientName" disabled readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">性别</label>
+                                <input type="text" class="form-control" id="gender" disabled readonly>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">身份证号</label>
+                            <input type="text" class="form-control" id="idCardNumber" disabled readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">出生日期</label>
+                            <input type="date" class="form-control" id="dateOfBirth" disabled readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">手机号码</label>
+                            <input type="tel" class="form-control" id="phoneNumber" disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">家庭住址</label>
+                            <textarea class="form-control" id="address" rows="3" disabled></textarea>
+                        </div>
+
+                        <div class="text-end d-none" id="saveBtnGroup">
+                            <button type="button" class="btn btn-secondary me-2" onclick="cancelEdit()">取消</button>
+                            <button type="submit" class="btn btn-success">保存修改</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../utils/helpers.js"></script>
+
+<script>
+    let originalData = {}; // 用于取消编辑时恢复数据
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadNavbar();
+        fetchProfile();
+    });
+
+    // 1. 获取个人信息
+    async function fetchProfile() {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'login.html';
+
+        try {
+            // 接口: GET /patient/info
+            const response = await fetch('http://localhost:8081/patient/info', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                }
+            });
+
+            const result = await response.json();
+
+            if (result.code === 200) {
+                const data = result.data;
+                originalData = data; // 备份数据
+                fillForm(data);
+            } else {
+                if(result.code === 401) window.location.href = 'login.html';
+                else showMessage('加载失败: ' + result.message, 'error');
+            }
+        } catch (error) {
+            console.error(error);
+            showMessage('连接服务器失败', 'error');
+        }
+    }
+
+    // 填充表单
+    function fillForm(data) {
+        document.getElementById('patientName').value = data.patientName;
+        document.getElementById('gender').value = data.gender;
+        document.getElementById('idCardNumber').value = data.idCardNumber;
+        document.getElementById('dateOfBirth').value = data.dateOfBirth;
+        document.getElementById('phoneNumber').value = data.phoneNumber; // 注意这里后端返回的是脱敏的，修改时要注意
+        document.getElementById('address').value = data.address || '';
+    }
+
+    // 2. 切换编辑状态
+    function toggleEdit() {
+        // 只允许修改手机号和地址
+        document.getElementById('phoneNumber').disabled = false;
+        document.getElementById('address').disabled = false;
+
+        // 如果手机号是脱敏的(带*)，清空让用户重填，或者提示用户
+        // 这里简单处理：如果包含*，则清空，强制用户输入完整号码以便校验
+        const phoneInput = document.getElementById('phoneNumber');
+        if (phoneInput.value.includes('*')) {
+            phoneInput.placeholder = "请输入新的手机号";
+            phoneInput.value = "";
+        }
+
+        document.getElementById('editBtn').classList.add('d-none');
+        document.getElementById('saveBtnGroup').classList.remove('d-none');
+    }
+
+    // 取消编辑
+    function cancelEdit() {
+        fillForm(originalData); // 恢复原数据
+        disableForm();
+    }
+
+    function disableForm() {
+        document.getElementById('phoneNumber').disabled = true;
+        document.getElementById('address').disabled = true;
+        document.getElementById('editBtn').classList.remove('d-none');
+        document.getElementById('saveBtnGroup').classList.add('d-none');
+    }
+
+    // 3. 提交修改
+    document.getElementById('profileForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const phone = document.getElementById('phoneNumber').value;
+        const address = document.getElementById('address').value;
+
+        // 简单校验
+        if (!phone || phone.length !== 11 || !/^1[3-9]\d{9}$/.test(phone)) {
+            showMessage('请输入有效的11位手机号码', 'warning');
+            return;
+        }
+
+        try {
+            // 接口: PUT /patient/info
+            const response = await fetch('http://localhost:8081/patient/info', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    phoneNumber: phone,
+                    address: address
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.code === 200) {
+                showMessage('修改成功！手机号已变更，请使用新账号重新登录', 'success');
+
+                // 如果修改了手机号，强制登出
+                if (originalData.phoneNumber !== phone) {
+                    localStorage.clear(); // 清除 Token
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    // 没改手机号（只改了地址），不用登出
+                    originalData.phoneNumber = phone;
+                    originalData.address = address;
+                    disableForm();
+                    fetchProfile();
+                }
+            } else {
+                showMessage('修改失败: ' + result.message, 'error');
+            }
+        } catch (error) {
+            console.error(error);
+            showMessage('连接服务器失败', 'error');
+        }
+    });
+</script>
+</body>
+</html>

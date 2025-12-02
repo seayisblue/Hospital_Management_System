@@ -121,5 +121,14 @@ public class AppointmentController {
         List<PrescriptionVO> prescriptions = appointmentService.getPatientPrescriptions(patientId);
         return Result.success(prescriptions);
     }
+
+    /**
+     * 获取处方详情（包含药品列表）
+     */
+    @GetMapping("/prescriptions/{prescriptionId}")
+    public Result<com.template.vo.PharmacyPrescriptionVO> getPrescriptionDetail(@PathVariable Integer prescriptionId) {
+        com.template.vo.PharmacyPrescriptionVO vo = appointmentService.getPrescriptionDetail(prescriptionId);
+        return Result.success(vo);
+    }
 }
 

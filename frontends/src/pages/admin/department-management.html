@@ -269,275 +269,131 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../utils/helpers.js"></script>
-    
-    <script>
-        // 科室数据
-        const departments = [
-            { 
-                id: 1, 
-                name: '内科', 
-                code: 'NK001', 
-                head: '张主任', 
-                description: '负责内科疾病诊疗，包括呼吸系统、消化系统、心血管系统等疾病', 
-                doctorCount: 15, 
-                status: 'active',
-                hours: '08:00-12:00, 14:00-17:00',
-                monthlyPatients: 1245
-            },
-            { 
-                id: 2, 
-                name: '外科', 
-                code: 'WK002', 
-                head: '王主任', 
-                description: '负责外科手术和创伤治疗，包括普外科、骨科、神经外科等', 
-                doctorCount: 12, 
-                status: 'active',
-                hours: '08:30-12:00, 14:30-17:30',
-                monthlyPatients: 856
-            },
-            { 
-                id: 3, 
-                name: '儿科', 
-                code: 'EK003', 
-                head: '刘主任', 
-                description: '专门负责儿童疾病诊疗和生长发育监测', 
-                doctorCount: 8, 
-                status: 'active',
-                hours: '08:00-17:00',
-                monthlyPatients: 1987
-            },
-            { 
-                id: 4, 
-                name: '妇产科', 
-                code: 'FCK004', 
-                head: '陈主任', 
-                description: '负责妇科疾病和孕产妇保健', 
-                doctorCount: 10, 
-                status: 'active',
-                hours: '08:00-12:00, 14:00-17:00',
-                monthlyPatients: 932
-            },
-            { 
-                id: 5, 
-                name: '眼科', 
-                code: 'YK005', 
-                head: '赵主任', 
-                description: '负责眼部疾病诊疗和视力保健', 
-                doctorCount: 6, 
-                status: 'active',
-                hours: '08:30-12:00, 14:00-17:00',
-                monthlyPatients: 567
-            },
-            { 
-                id: 6, 
-                name: '口腔科', 
-                code: 'KQK006', 
-                head: '孙主任', 
-                description: '负责口腔疾病诊疗和牙齿保健', 
-                doctorCount: 7, 
-                status: 'active',
-                hours: '09:00-12:00, 14:30-17:30',
-                monthlyPatients: 423
-            }
-        ];
 
-        // 科室医生数据
-        const departmentDoctors = {
-            1: [
-                { name: '张医生', title: '主任医师', specialty: '心血管内科', schedule: '周一至周五全天' },
-                { name: '李医生', title: '副主任医师', specialty: '呼吸内科', schedule: '周一、三、五上午' },
-                { name: '王医生', title: '主治医师', specialty: '消化内科', schedule: '周二、四全天' }
-            ],
-            2: [
-                { name: '赵医生', title: '主任医师', specialty: '普外科', schedule: '周一至周三全天' },
-                { name: '钱医生', title: '副主任医师', specialty: '骨科', schedule: '周四、五全天' }
-            ]
-        };
+    <script>
+        // 1. 定义全局变量
+        let departments = [];
+        const departmentDoctors = {}; // 医生数据暂时没有接口，先留空
 
         document.addEventListener('DOMContentLoaded', function() {
             loadNavbar();
-            renderDepartmentCards();
+            fetchDepartments(); // 加载数据
             setupEventListeners();
         });
 
-        function setupEventListeners() {
-            // 搜索功能
-            document.getElementById('searchDept').addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                filterDepartments(searchTerm);
-            });
+        // 2. ★★★ 获取科室列表 ★★★
+        async function fetchDepartments() {
+            const token = localStorage.getItem('token');
+            if (!token) return window.location.href = 'login.html';
+
+            try {
+                // 请求后端 8081 接口
+                const response = await fetch('http://localhost:8081/department', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.code === 200) {
+                    // ★★★ 注意看这里！★★★
+                    // 药品接口是 result.data.records，但这个接口直接返回了列表，所以是 result.data
+                    departments = result.data;
+
+                    renderDepartmentCards();
+                } else {
+                    showMessage('获取失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showMessage('连接服务器失败', 'error');
+            }
         }
 
+        // 3. 渲染卡片（字段名已修正）
         function renderDepartmentCards() {
             const container = document.getElementById('deptList');
+
+            if (!departments || departments.length === 0) {
+                container.innerHTML = '<div class="col-12 text-center">暂无科室数据</div>';
+                return;
+            }
+
             container.innerHTML = departments.map(dept => `
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card dept-card h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <h5 class="card-title">${dept.name}</h5>
-                                <span class="badge ${dept.status === 'active' ? 'bg-success' : 'bg-secondary'}">
-                                    ${dept.status === 'active' ? '启用' : '停用'}
-                                </span>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card dept-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title">${dept.deptName}</h5>
+                            <span class="badge bg-success">启用</span>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">科室ID: ${dept.deptId}</small>
+                        </div>
+                        <p class="card-text text-muted small">${dept.description || '暂无描述'}</p>
+
+                        <div class="row text-center mt-3">
+                            <div class="col-6">
+                                <div class="doctor-count">-</div>
+                                <small class="text-muted">医生数量</small>
                             </div>
-                            <div class="mb-2">
-                                <small class="text-muted">科室代码: ${dept.code}</small>
-                            </div>
-                            <p class="card-text text-muted small">${dept.description}</p>
-                            <div class="row text-center mt-3">
-                                <div class="col-6">
-                                    <div class="doctor-count">${dept.doctorCount}</div>
-                                    <small class="text-muted">医生数量</small>
-                                </div>
-                                <div class="col-6">
-                                    <div class="h5 text-primary">${dept.monthlyPatients}</div>
-                                    <small class="text-muted">月接诊量</small>
-                                </div>
-                            </div>
-                            <div class="mt-3">
-                                <small class="text-muted">门诊时间: ${dept.hours}</small>
-                            </div>
-                            <div class="mt-3 d-grid gap-2">
-                                <button class="btn btn-outline-primary btn-sm" onclick="viewDeptDetail(${dept.id})">
-                                    查看详情
-                                </button>
-                                <div class="btn-group" role="group">
-                                    <button class="btn btn-outline-warning btn-sm" onclick="editDepartment(${dept.id})">
-                                        编辑
-                                    </button>
-                                    <button class="btn btn-outline-danger btn-sm" onclick="toggleDeptStatus(${dept.id})">
-                                        ${dept.status === 'active' ? '停用' : '启用'}
-                                    </button>
-                                </div>
+                            <div class="col-6">
+                                <div class="h5 text-primary">-</div>
+                                <small class="text-muted">月接诊量</small>
                             </div>
                         </div>
+                        <div class="mt-3 d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="viewDeptDetail(${dept.deptId})">
+                                查看详情
+                            </button>
+                            </div>
                     </div>
                 </div>
-            `).join('');
+            </div>
+        `).join('');
         }
 
-        function filterDepartments(searchTerm) {
-            document.querySelectorAll('.dept-card').forEach(card => {
-                const deptName = card.querySelector('.card-title').textContent.toLowerCase();
-                const parentCol = card.closest('.col-md-6');
-                parentCol.style.display = deptName.includes(searchTerm) ? 'block' : 'none';
+        // 搜索功能（纯前端过滤）
+        function setupEventListeners() {
+            document.getElementById('searchDept').addEventListener('input', function(e) {
+                const term = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.dept-card');
+
+                cards.forEach(card => {
+                    // 找到当前卡片所在的 col 容器
+                    const col = card.closest('.col-md-6');
+                    const name = card.querySelector('.card-title').textContent.toLowerCase();
+
+                    if (name.includes(term)) {
+                        col.style.display = ''; // 显示
+                    } else {
+                        col.style.display = 'none'; // 隐藏
+                    }
+                });
             });
         }
 
+        // 详情弹窗（简单展示）
         function viewDeptDetail(deptId) {
-            const dept = departments.find(d => d.id === deptId);
+            const dept = departments.find(d => d.deptId === deptId);
             if (!dept) return;
 
-            document.getElementById('detailDeptName').textContent = dept.name;
-            document.getElementById('detailDeptCode').textContent = dept.code;
-            document.getElementById('detailDeptHead').textContent = dept.head;
+            document.getElementById('detailDeptName').textContent = dept.deptName;
+            document.getElementById('detailDeptCode').textContent = dept.deptId;
             document.getElementById('detailDeptDescription').textContent = dept.description;
 
-            // 填充医生列表
-            const doctors = departmentDoctors[deptId] || [];
-            const doctorsList = document.getElementById('deptDoctorsList');
-            doctorsList.innerHTML = doctors.map(doctor => `
-                <tr>
-                    <td>${doctor.name}</td>
-                    <td>${doctor.title}</td>
-                    <td>${doctor.specialty}</td>
-                    <td>${doctor.schedule}</td>
-                    <td><span class="badge bg-success">在岗</span></td>
-                </tr>
-            `).join('');
+            // 清空医生列表（因为后端没给）
+            document.getElementById('deptDoctorsList').innerHTML = '<tr><td colspan="5" class="text-center">暂无医生数据</td></tr>';
 
             const modal = new bootstrap.Modal(document.getElementById('deptDetailModal'));
             modal.show();
         }
 
-        function editDepartment(deptId) {
-            const dept = departments.find(d => d.id === deptId);
-            if (!dept) return;
-
-            // 填充编辑表单
-            document.getElementById('deptName').value = dept.name;
-            document.getElementById('deptCode').value = dept.code;
-            document.getElementById('deptDescription').value = dept.description;
-            document.getElementById('deptHours').value = dept.hours;
-
-            // 更改模态框标题和按钮
-            document.querySelector('#addDeptModal .modal-title').textContent = '编辑科室';
-            document.querySelector('#addDeptModal .btn-primary').textContent = '保存修改';
-            document.querySelector('#addDeptModal .btn-primary').setAttribute('onclick', `updateDepartment(${deptId})`);
-
-            const modal = new bootstrap.Modal(document.getElementById('addDeptModal'));
-            modal.show();
-        }
-
-        function addDepartment() {
-            const form = document.getElementById('addDeptForm');
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-
-            const newDept = {
-                id: departments.length + 1,
-                name: document.getElementById('deptName').value,
-                code: document.getElementById('deptCode').value,
-                head: document.getElementById('deptHead').value,
-                description: document.getElementById('deptDescription').value,
-                hours: document.getElementById('deptHours').value,
-                doctorCount: 0,
-                status: document.getElementById('deptStatus').checked ? 'active' : 'inactive',
-                monthlyPatients: 0
-            };
-
-            departments.push(newDept);
-            renderDepartmentCards();
-            showMessage('科室添加成功！', 'success');
-
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addDeptModal'));
-            modal.hide();
-            form.reset();
-
-            // 重置模态框标题和按钮
-            document.querySelector('#addDeptModal .modal-title').textContent = '添加新科室';
-            document.querySelector('#addDeptModal .btn-primary').textContent = '添加科室';
-            document.querySelector('#addDeptModal .btn-primary').setAttribute('onclick', 'addDepartment()');
-        }
-
-        function updateDepartment(deptId) {
-            const dept = departments.find(d => d.id === deptId);
-            if (!dept) return;
-
-            dept.name = document.getElementById('deptName').value;
-            dept.code = document.getElementById('deptCode').value;
-            dept.head = document.getElementById('deptHead').value;
-            dept.description = document.getElementById('deptDescription').value;
-            dept.hours = document.getElementById('deptHours').value;
-
-            renderDepartmentCards();
-            showMessage('科室信息更新成功！', 'success');
-
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addDeptModal'));
-            modal.hide();
-            document.getElementById('addDeptForm').reset();
-
-            // 重置模态框
-            document.querySelector('#addDeptModal .modal-title').textContent = '添加新科室';
-            document.querySelector('#addDeptModal .btn-primary').textContent = '添加科室';
-            document.querySelector('#addDeptModal .btn-primary').setAttribute('onclick', 'addDepartment()');
-        }
-
-        function toggleDeptStatus(deptId) {
-            const dept = departments.find(d => d.id === deptId);
-            if (!dept) return;
-
-            const newStatus = dept.status === 'active' ? 'inactive' : 'active';
-            const action = newStatus === 'active' ? '启用' : '停用';
-
-            if (confirm(`确定要${action} ${dept.name} 科室吗？`)) {
-                dept.status = newStatus;
-                renderDepartmentCards();
-                showMessage(`已${action} ${dept.name} 科室`, 'success');
-            }
-        }
+        // 占位函数，防止报错
+        function addDepartment() { alert('添加功能暂未连接'); }
     </script>
 </body>
 </html>

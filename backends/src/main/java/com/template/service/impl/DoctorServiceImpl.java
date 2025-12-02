@@ -289,7 +289,7 @@ public class DoctorServiceImpl implements DoctorService {
             bill.setPatientId(patientId);
             bill.setTotalAmount(BigDecimal.ZERO);
             bill.setStatus("未支付");
-            
+            bill.setCreateTime(LocalDateTime.now());
             billMapper.insert(bill);
         }
         

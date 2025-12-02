@@ -41,4 +41,6 @@ public class MedicineVO {
      * 库存数量
      */
     private Integer stockLevel;
+
+    private Integer minStock;
 }

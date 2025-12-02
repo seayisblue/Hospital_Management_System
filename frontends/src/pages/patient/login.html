@@ -52,20 +52,60 @@
     <script src="../../utils/helpers.js"></script>
     
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
+        // 1. 注意这里加了 'async' 关键字，因为网络请求是异步的
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // 阻止表单默认的刷新页面行为
+
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            
-            // 模拟登录验证
-            if (username && password) {
-                showMessage('登录成功！正在跳转...', 'success');
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
-            } else {
+
+            // 简单校验
+            if (!username || !password) {
                 showMessage('请填写完整的登录信息！', 'error');
+                return;
+            }
+
+            try {
+                // ================= 连接核心开始 =================
+                // 2. 使用 fetch 向后端发起请求
+                // 地址必须是 http://localhost:8081/...
+                const response = await fetch('http://localhost:8081/patient/login', {
+                    method: 'POST', // 登录通常是 POST 方法
+                    headers: {
+                        'Content-Type': 'application/json' // 告诉后端我发的是 JSON 数据
+                    },
+                    // 3. 把前端的变量包装成后端需要的 JSON 格式
+                    // 后端 DTO 里的字段名是 account 和 password，必须完全一致
+                    body: JSON.stringify({
+                        account: username,
+                        password: password
+                    })
+                });
+
+                // 4. 等待后端返回结果并转为 JSON
+                const result = await response.json();
+                // ================= 连接核心结束 =================
+
+                // 5. 根据后端的 code 判断业务逻辑
+                if (result.code === 200) {
+                    showMessage('登录成功！正在跳转...', 'success');
+
+                    // ★★★ 关键步骤：保存“通行证”（Token） ★★★
+                    // 以后每次请求都要出示这个 Token，否则后端不理你
+                    localStorage.setItem('token', result.data.token);
+                    localStorage.setItem('userInfo', JSON.stringify(result.data));
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    // 如果失败，显示后端返回的具体错误消息（比如“密码错误”）
+                    showMessage(result.message, 'error');
+                }
+
+            } catch (error) {
+                console.error('请求出错:', error);
+                showMessage('无法连接到服务器，请检查后端是否启动 (端口 8081)', 'error');
             }
         });
     </script>

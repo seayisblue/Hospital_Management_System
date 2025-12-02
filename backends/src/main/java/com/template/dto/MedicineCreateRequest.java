@@ -30,6 +30,10 @@ public class MedicineCreateRequest {
      */
     private String manufacturer;
 
+
+    private Integer initialStock;
+
+    private Integer minStock;
     /**
      * 单价
      */

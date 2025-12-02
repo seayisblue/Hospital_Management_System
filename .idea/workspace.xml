@@ -5,14 +5,62 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4396145b-083f-4aad-9974-41ecfb0f3f87" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/controller/AdminDashboardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/vo/AdminStatsVO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontends/src/pages/admin/medicine-stock.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontends/src/pages/admin/on-site-registration.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontends/src/pages/admin/schedule-management.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontends/src/pages/patient/prescriptions.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontends/src/pages/patient/profile.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/template.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/controller/AppointmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/controller/AppointmentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/dto/MedicineCreateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/dto/MedicineCreateRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/entity/Medicine.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/entity/Medicine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/AppointmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/AppointmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/AppointmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/AppointmentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/DoctorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/DoctorServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/MedicineServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/MedicineServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/PatientServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/PatientServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/vo/MedicineVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/vo/MedicineVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/components/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/components/navbar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/department-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/department-management.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/finance-center.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/finance-center.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/medicine-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/medicine-management.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/staff-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/staff-management.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/doctor/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/doctor/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/doctor/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/doctor/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/doctor/medical-record.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/doctor/medical-record.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/doctor/prescription.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/doctor/prescription.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/appointment.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/appointment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/medical-records.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/medical-records.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/pharmacist/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/pharmacist/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/pharmacist/inventory.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/pharmacist/inventory.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/pages/pharmacist/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/pharmacist/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontends/src/utils/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/utils/helpers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/sql/hospital_system.sql" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="HTML File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -28,30 +76,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.TemplateApplication.executor": "Run",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/桌面/database/hospital/Hospital_Management_System",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.projectsettings.compiler.annotationProcessors",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.TemplateApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/桌面/database/hospital/Hospital_Management_System/backends&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.annotationProcessors&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="TemplateApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="template" />
@@ -93,10 +143,34 @@
       <workItem from="1763267090994" duration="301000" />
       <workItem from="1763292213043" duration="3962000" />
       <workItem from="1763453334518" duration="775000" />
+      <workItem from="1763468568885" duration="2421000" />
+      <workItem from="1763471061576" duration="224000" />
+      <workItem from="1763471303296" duration="4460000" />
+      <workItem from="1763543913239" duration="370000" />
+      <workItem from="1764328536617" duration="3856000" />
+      <workItem from="1764343072045" duration="7255000" />
+      <workItem from="1764384451209" duration="8436000" />
+      <workItem from="1764675821018" duration="1292000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backends/src/main/java/com/template/mapper/BillItemMapper.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backends/src/main/java/com/template/mapper/BillItemMapper.java</url>
+          <line>12</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -63,5 +63,11 @@ public interface AppointmentService {
      * @return 处方列表
      */
     List<PrescriptionVO> getPatientPrescriptions(Integer patientId);
+    /**
+     * 获取处方详情（包含药品列表）
+     * @param prescriptionId 处方ID
+     * @return 处方详情VO
+     */
+    com.template.vo.PharmacyPrescriptionVO getPrescriptionDetail(Integer prescriptionId);
 }
 

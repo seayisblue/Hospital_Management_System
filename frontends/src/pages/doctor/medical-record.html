@@ -27,18 +27,10 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-3">
-                        <strong>姓名:</strong> 张三
-                    </div>
-                    <div class="col-md-3">
-                        <strong>性别:</strong> 男
-                    </div>
-                    <div class="col-md-3">
-                        <strong>年龄:</strong> 35岁
-                    </div>
-                    <div class="col-md-3">
-                        <strong>病历号:</strong> P20240115001
-                    </div>
+                    <div class="col-md-3"><strong>姓名:</strong> <span id="pName">-</span></div>
+                    <div class="col-md-3"><strong>性别:</strong> <span id="pGender">-</span></div>
+                    <div class="col-md-3"><strong>年龄:</strong> <span id="pAge">-</span></div>
+                    <div class="col-md-3"><strong>电话:</strong> <span id="pPhone">-</span></div>
                 </div>
             </div>
         </div>
@@ -107,43 +99,112 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../utils/helpers.js"></script>
-    
+
     <script>
+        // 1. 从 URL 或 LocalStorage 获取当前正在处理的挂号ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const appointmentId = urlParams.get('appointmentId') || localStorage.getItem('currentAppointmentId');
+
         document.addEventListener('DOMContentLoaded', function() {
             loadNavbar();
+
+            const patientInfoStr = localStorage.getItem('currentPatientInfo');
+            if (patientInfoStr) {
+                const info = JSON.parse(patientInfoStr);
+                document.getElementById('pName').textContent = info.name;
+                document.getElementById('pGender').textContent = info.gender;
+                document.getElementById('pAge').textContent = info.age + '岁';
+                document.getElementById('pPhone').textContent = info.phone;
+            }
+
+            if (!appointmentId) {
+                alert('未找到挂号信息，请返回首页重新接诊');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // (可选) 这里其实应该调用接口获取患者详细信息
+            // 但由于后端暂未提供医生专用的"查询挂号详情"接口，我们暂时跳过显示患者信息的步骤
+            // 医生可以直接开始写病历
         });
 
-        function saveDraft() {
-            showMessage('病历草稿已保存', 'info');
-        }
+        // 2. ★★★ 完成病历 (提交到后端) ★★★
+        async function completeMedicalRecord() {
+            const token = localStorage.getItem('token');
 
-        function completeMedicalRecord() {
+            // 获取医生填写的四个文本框
             const subjective = document.getElementById('subjective').value;
+            const objective = document.getElementById('objective').value;
             const assessment = document.getElementById('assessment').value;
-            
+            const plan = document.getElementById('plan').value;
+
+            // 简单校验
             if (!subjective || !assessment) {
-                showMessage('请填写主诉和初步诊断', 'error');
+                showMessage('请至少填写【主诉】和【初步诊断】', 'warning');
                 return;
             }
-            
-            showMessage('病历已完成！', 'success');
-            // 这里可以添加提交到后端的逻辑
+
+            try {
+                // 发送请求
+                const response = await fetch('http://localhost:8081/doctor/medical-record', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    body: JSON.stringify({
+                        appointmentId: parseInt(appointmentId), // 必须是数字
+                        subjective: subjective,
+                        objective: objective,
+                        assessment: assessment,
+                        plan: plan
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.code === 200) {
+                    showMessage('病历创建成功！请继续开具处方', 'success');
+
+                    // ★★★ 关键：拿到 recordId 并保存 ★★★
+                    // 下一个页面（处方页）需要知道是给哪个病历开药
+                    const recordId = result.data;
+                    localStorage.setItem('currentRecordId', recordId);
+
+                    // 禁用修改，引导下一步
+                    disableForm();
+
+                } else {
+                    showMessage('提交失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showMessage('连接服务器失败', 'error');
+            }
         }
 
+        // 3. 跳转到处方页面
         function prescribeMedicine() {
-            // 先完成病历再开具处方
-            const subjective = document.getElementById('subjective').value;
-            const assessment = document.getElementById('assessment').value;
-            
-            if (!subjective || !assessment) {
-                showMessage('请先完成病历再开具处方', 'error');
+            const recordId = localStorage.getItem('currentRecordId');
+            if (!recordId) {
+                showMessage('请先填写并【完成病历】，才能开具处方！', 'warning');
                 return;
             }
-            
-            showMessage('跳转到处方页面...', 'success');
-            setTimeout(() => {
-                window.location.href = 'prescription.html?patientId=1001';
-            }, 1000);
+
+            // 带着 recordId 跳转
+            window.location.href = `prescription.html?recordId=${recordId}`;
+        }
+
+        // 辅助功能：提交成功后锁定表单
+        function disableForm() {
+            document.querySelectorAll('textarea, input').forEach(el => el.disabled = true);
+            // 隐藏"保存草稿"和"完成病历"按钮，只留"开具处方"
+            document.querySelector('button[onclick="saveDraft()"]').style.display = 'none';
+            document.querySelector('button[onclick="completeMedicalRecord()"]').style.display = 'none';
+        }
+
+        function saveDraft() {
+            showMessage('草稿功能暂未开放', 'info');
         }
     </script>
 </body>

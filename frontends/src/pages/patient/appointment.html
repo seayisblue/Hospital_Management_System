@@ -83,7 +83,7 @@
                             <h5>请选择就诊科室</h5>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
-                                    <div class="card doctor-card" data-dept="内科">
+                                    <div class="card doctor-card" data-dept="1">
                                         <div class="card-body text-center">
                                             <div class="h3 text-primary">❤️</div>
                                             <h6>内科</h6>
@@ -92,7 +92,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <div class="card doctor-card" data-dept="外科">
+                                    <div class="card doctor-card" data-dept="2">
                                         <div class="card-body text-center">
                                             <div class="h3 text-success">🦴</div>
                                             <h6>外科</h6>
@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <div class="card doctor-card" data-dept="儿科">
+                                    <div class="card doctor-card" data-dept="3">
                                         <div class="card-body text-center">
                                             <div class="h3 text-warning">👶</div>
                                             <h6>儿科</h6>
@@ -215,87 +215,77 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../utils/helpers.js"></script>
-    
+
     <script>
-        // 全局变量存储选择信息
+        // 全局变量存储数据
         let appointmentData = {
-            department: '',
+            deptId: null,
+            deptName: '',
             doctor: null,
-            date: '',
-            time: '',
-            fee: 0
+            schedule: null // 最终选中的排班对象
         };
 
-        // 医生数据
-        const doctors = {
-            '内科': [
-                { id: 1, name: '张医生', title: '主任医师', fee: 50, available: true },
-                { id: 2, name: '李医生', title: '副主任医师', fee: 40, available: true }
-            ],
-            '外科': [
-                { id: 3, name: '王医生', title: '主任医师', fee: 60, available: true },
-                { id: 4, name: '赵医生', title: '主治医师', fee: 35, available: true }
-            ],
-            '儿科': [
-                { id: 5, name: '刘医生', title: '副主任医师', fee: 45, available: true }
-            ]
-        };
+        // 缓存从后端查回来的排班列表
+        let availableSchedules = [];
 
         document.addEventListener('DOMContentLoaded', function() {
             loadNavbar();
-            initAppointmentPage();
+            initPage();
         });
 
-        function initAppointmentPage() {
-            // 设置最小日期为今天
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('appointmentDate').min = today;
-            
-            // 绑定科室选择事件
+        function initPage() {
+            // 1. 绑定科室点击事件
             document.querySelectorAll('.doctor-card[data-dept]').forEach(card => {
                 card.addEventListener('click', function() {
                     document.querySelectorAll('.doctor-card').forEach(c => c.classList.remove('selected'));
                     this.classList.add('selected');
-                    appointmentData.department = this.dataset.dept;
-                });
-            });
 
-            // 绑定日期变化事件
-            document.getElementById('appointmentDate').addEventListener('change', function() {
-                generateTimeSlots();
+                    appointmentData.deptId = this.dataset.dept;
+                    appointmentData.deptName = this.querySelector('h6').innerText;
+                });
             });
         }
 
-        function nextStep(currentStep) {
-            // 验证当前步骤
-            if (currentStep === 1 && !appointmentData.department) {
-                showMessage('请选择科室！', 'error');
-                return;
-            }
-            if (currentStep === 2 && !appointmentData.doctor) {
-                showMessage('请选择医生！', 'error');
-                return;
-            }
-            if (currentStep === 3 && (!appointmentData.date || !appointmentData.time)) {
-                showMessage('请选择就诊时间！', 'error');
-                return;
+        // 流程控制：下一步
+        async function nextStep(currentStep) {
+            // 校验第一步：选科室
+            if (currentStep === 1) {
+                if (!appointmentData.deptId) {
+                    showMessage('请先选择一个科室！', 'error');
+                    return;
+                }
+                // ★★★ 关键：选完科室，去后端查排班 ★★★
+                await fetchSchedules(appointmentData.deptId);
+
+                if (availableSchedules.length === 0) {
+                    showMessage('该科室近期暂无排班，请选择其他科室', 'warning');
+                    return;
+                }
+                generateDoctorList(); // 根据排班生成医生列表
             }
 
-            // 隐藏当前步骤，显示下一步
+            // 校验第二步：选医生
+            if (currentStep === 2) {
+                if (!appointmentData.doctor) {
+                    showMessage('请选择医生！', 'error');
+                    return;
+                }
+                generateTimeSlots(); // 根据医生生成时间段
+            }
+
+            // 校验第三步：选时间
+            if (currentStep === 3) {
+                if (!appointmentData.schedule) {
+                    showMessage('请选择就诊时间！', 'error');
+                    return;
+                }
+                updateConfirmation(); // 更新确认信息
+            }
+
+            // 切换显示
             document.getElementById(`step${currentStep}`).classList.add('d-none');
             document.getElementById(`step${currentStep + 1}`).classList.remove('d-none');
-            
-            // 更新步骤指示器
             updateStepIndicator(currentStep + 1);
-
-            // 如果是第二步，生成医生列表
-            if (currentStep === 1) {
-                generateDoctorList();
-            }
-            // 如果是第四步，更新确认信息
-            if (currentStep === 3) {
-                updateConfirmation();
-            }
         }
 
         function prevStep(currentStep) {
@@ -306,100 +296,148 @@
 
         function updateStepIndicator(step) {
             document.querySelectorAll('.step').forEach((stepEl, index) => {
-                if (index + 1 <= step) {
-                    stepEl.classList.add('active');
-                } else {
-                    stepEl.classList.remove('active');
-                }
+                if (index + 1 <= step) stepEl.classList.add('active');
+                else stepEl.classList.remove('active');
             });
         }
 
+        // ★★★ 核心：从后端获取排班数据 ★★★
+        async function fetchSchedules(deptId) {
+            const token = localStorage.getItem('token');
+            if(!token) return window.location.href = 'login.html';
+
+            try {
+                // 接口: GET /appointment/schedules?deptId=1
+                const response = await fetch(`http://localhost:8081/appointment/schedules?deptId=${deptId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': token
+                    }
+                });
+                const result = await response.json();
+                if (result.code === 200) {
+                    availableSchedules = result.data; // 拿到排班列表
+                    console.log('排班数据:', availableSchedules);
+                } else {
+                    showMessage(result.message, 'error');
+                }
+            } catch (e) {
+                console.error(e);
+                showMessage('获取排班失败', 'error');
+            }
+        }
+
+        // 生成医生列表 (根据排班数据去重)
         function generateDoctorList() {
-            const doctorList = document.getElementById('doctorList');
-            const deptDoctors = doctors[appointmentData.department] || [];
-            
-            doctorList.innerHTML = deptDoctors.map(doctor => `
+            const container = document.getElementById('doctorList');
+            // 利用 Map 去重医生
+            const doctorsMap = new Map();
+            availableSchedules.forEach(sch => {
+                if (!doctorsMap.has(sch.staffId)) {
+                    doctorsMap.set(sch.staffId, {
+                        id: sch.staffId,
+                        name: sch.staffName,
+                        title: sch.title || '医生'
+                    });
+                }
+            });
+
+            let html = '';
+            doctorsMap.forEach(doc => {
+                html += `
                 <div class="col-md-6 mb-3">
-                    <div class="card doctor-card ${!doctor.available ? 'opacity-50' : ''}" 
-                         data-doctor-id="${doctor.id}" 
-                         onclick="${doctor.available ? `selectDoctor(${doctor.id})` : ''}">
+                    <div class="card doctor-card" onclick="selectDoctor(${doc.id}, '${doc.name}', '${doc.title}', this)">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-8">
-                                    <h6>${doctor.name}</h6>
-                                    <small class="text-muted">${doctor.title}</small>
-                                    <div class="mt-2">
-                                        <span class="badge bg-primary">挂号费: ¥${doctor.fee}</span>
-                                    </div>
+                                    <h6>${doc.name}</h6>
+                                    <small class="text-muted">${doc.title}</small>
                                 </div>
                                 <div class="col-4 text-end">
                                     <div class="h3 text-success">🩺</div>
-                                    ${!doctor.available ? '<small class="text-danger">已满</small>' : ''}
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
-        }
-
-        function selectDoctor(doctorId) {
-            const deptDoctors = doctors[appointmentData.department];
-            appointmentData.doctor = deptDoctors.find(d => d.id === doctorId);
-            appointmentData.fee = appointmentData.doctor.fee;
-            
-            document.querySelectorAll('.doctor-card[data-doctor-id]').forEach(card => {
-                card.classList.remove('selected');
+                </div>`;
             });
-            document.querySelector(`[data-doctor-id="${doctorId}"]`).classList.add('selected');
+            container.innerHTML = html;
         }
 
+        function selectDoctor(id, name, title, el) {
+            appointmentData.doctor = { id, name, title };
+            // 样式处理
+            document.querySelectorAll('#doctorList .doctor-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        // 生成时间段 (筛选出选中医生的排班)
         function generateTimeSlots() {
-            const date = document.getElementById('appointmentDate').value;
-            appointmentData.date = date;
-            
-            const timeSlotsContainer = document.getElementById('timeSlots');
-            const timeSlots = [
-                '08:00-08:30', '08:30-09:00', '09:00-09:30', '09:30-10:00',
-                '10:00-10:30', '10:30-11:00', '14:00-14:30', '14:30-15:00',
-                '15:00-15:30', '15:30-16:00', '16:00-16:30', '16:30-17:00'
-            ];
-            
-            timeSlotsContainer.innerHTML = timeSlots.map(slot => `
-                <div class="col-md-3 mb-2">
-                    <div class="time-slot" data-time="${slot}" onclick="selectTimeSlot(this)">
-                        ${slot}
-                    </div>
+            const container = document.getElementById('timeSlots');
+            // 过滤出当前医生的排班
+            const mySchedules = availableSchedules.filter(s => s.staffId === appointmentData.doctor.id);
+
+            if(mySchedules.length === 0) {
+                container.innerHTML = '该医生暂无排班';
+                return;
+            }
+
+            // 这里的日期输入框其实没用了，因为我们直接列出所有可用排班
+            document.getElementById('appointmentDate').parentNode.style.display = 'none';
+
+            container.innerHTML = mySchedules.map(sch => `
+            <div class="col-md-4 mb-2">
+                <div class="time-slot text-center" onclick="selectSchedule(${sch.scheduleId}, '${sch.scheduleDate}', '${sch.timeSlot}', this)">
+                    <div>${sch.scheduleDate}</div>
+                    <div>${sch.timeSlot}</div>
+                    <small>余号: ${sch.availableSlots}</small>
                 </div>
-            `).join('');
+            </div>
+        `).join('');
         }
 
-        function selectTimeSlot(element) {
-            document.querySelectorAll('.time-slot').forEach(slot => {
-                slot.classList.remove('selected');
-            });
-            element.classList.add('selected');
-            appointmentData.time = element.dataset.time;
+        function selectSchedule(id, date, time, el) {
+            appointmentData.schedule = { id, date, time };
+            document.querySelectorAll('.time-slot').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
         }
 
+        // 更新确认信息
         function updateConfirmation() {
-            document.getElementById('confirmDept').textContent = appointmentData.department;
-            document.getElementById('confirmDoctor').textContent = 
-                `${appointmentData.doctor.name} (${appointmentData.doctor.title})`;
-            document.getElementById('confirmTime').textContent = 
-                `${appointmentData.date} ${appointmentData.time}`;
-            document.getElementById('confirmFee').textContent = `¥${appointmentData.fee}`;
+            document.getElementById('confirmDept').textContent = appointmentData.deptName;
+            document.getElementById('confirmDoctor').textContent = `${appointmentData.doctor.name} (${appointmentData.doctor.title})`;
+            document.getElementById('confirmTime').textContent = `${appointmentData.schedule.date} ${appointmentData.schedule.time}`;
+            document.getElementById('confirmFee').textContent = "¥15.00"; // 你的后端默认写了15元
         }
 
-        function confirmAppointment() {
-            showMessage('挂号成功！正在生成账单...', 'success');
-            // 模拟支付流程
-            setTimeout(() => {
-                showMessage('请前往财务中心支付挂号费', 'info');
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 2000);
-            }, 1500);
+        // ★★★ 最终提交：确认挂号 ★★★
+        async function confirmAppointment() {
+            try {
+                const response = await fetch('http://localhost:8081/appointment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': localStorage.getItem('token')
+                    },
+                    body: JSON.stringify({
+                        scheduleId: appointmentData.schedule.id // 后端只需要 scheduleId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.code === 200) {
+                    showMessage('挂号成功！', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html'; // 跳回首页看“最近预约”
+                    }, 1500);
+                } else {
+                    showMessage('挂号失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showMessage('连接服务器失败', 'error');
+            }
         }
     </script>
 

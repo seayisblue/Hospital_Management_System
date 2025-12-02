@@ -69,7 +69,7 @@ function validateIdCard(idCard) {
 function loadNavbar(containerId = 'navbar-container') {
     const container = document.getElementById(containerId);
     if (container) {
-        fetch('../components/navbar.html')
+        fetch('../../components/navbar.html')
             .then(response => response.text())
             .then(html => {
                 container.innerHTML = html;

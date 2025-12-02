@@ -50,31 +50,20 @@
         <div class="row mb-4">
             <div class="col-md-3">
                 <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-primary">12</div>
-                        <div class="text-muted">总就诊次数</div>
+                    <div class="card-body" id="recordList">
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-success">8</div>
-                        <div class="text-muted">已康复</div>
+                    <div class="card-body" id="recordList">
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-warning">3</div>
-                        <div class="text-muted">随访中</div>
+                    <div class="card-body" id="recordList">
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
                         <div class="h4 text-info">5</div>
                         <div class="text-muted">开具处方</div>
                     </div>
@@ -87,180 +76,8 @@
             <div class="card-header">
                 <h5 class="card-title mb-0">就诊历史</h5>
             </div>
-            <div class="card-body">
-                <!-- 2024年记录 -->
-                <div class="mb-4">
-                    <h6 class="text-muted mb-3">📅 2024年</h6>
-                    
-                    <!-- 记录1 -->
-                    <div class="card record-card mb-3">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h5 class="card-title">内科 - 张医生 <span class="badge bg-success ms-2">已康复</span></h5>
-                                            <p class="card-text text-muted mb-2">
-                                                <strong>诊断：</strong>急性上呼吸道感染<br>
-                                                <strong>主诉：</strong>发热、咳嗽3天，伴有咽痛、鼻塞
-                                            </p>
-                                            <div class="mb-2">
-                                                <strong>处方药品：</strong>
-                                                <span class="medicine-badge">阿莫西林胶囊</span>
-                                                <span class="medicine-badge">感冒灵颗粒</span>
-                                                <span class="medicine-badge">维生素C片</span>
-                                            </div>
-                                        </div>
-                                        <div class="text-end">
-                                            <small class="text-muted">2024-01-15</small><br>
-                                            <span class="badge bg-primary">挂号费: ¥50</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 text-end">
-                                    <button class="btn btn-sm btn-outline-primary mb-1" data-bs-toggle="modal" data-bs-target="#recordDetailModal" data-record="1">
-                                        查看完整病历
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-info mb-1" data-bs-toggle="modal" data-bs-target="#prescriptionModal" data-record="1">
-                                        查看处方详情
-                                    </button>
-                                    <br>
-                                    <button class="btn btn-sm btn-outline-success">
-                                        下载病历PDF
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 记录2 -->
-                    <div class="card record-card followup mb-3">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h5 class="card-title">外科 - 王医生 <span class="badge bg-warning ms-2">随访中</span></h5>
-                                            <p class="card-text text-muted mb-2">
-                                                <strong>诊断：</strong>左膝软组织损伤<br>
-                                                <strong>主诉：</strong>左膝疼痛1周，活动受限
-                                            </p>
-                                            <div class="mb-2">
-                                                <strong>处方药品：</strong>
-                                                <span class="medicine-badge">止痛贴膏</span>
-                                                <span class="medicine-badge">消炎药</span>
-                                            </div>
-                                            <div class="alert alert-warning py-2 mb-0">
-                                                <small>🔄 建议2周后复查</small>
-                                            </div>
-                                        </div>
-                                        <div class="text-end">
-                                            <small class="text-muted">2024-01-10</small><br>
-                                            <span class="badge bg-primary">挂号费: ¥60</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 text-end">
-                                    <button class="btn btn-sm btn-outline-primary mb-1" data-bs-toggle="modal" data-bs-target="#recordDetailModal" data-record="2">
-                                        查看完整病历
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-info mb-1" data-bs-toggle="modal" data-bs-target="#prescriptionModal" data-record="2">
-                                        查看处方详情
-                                    </button>
-                                    <br>
-                                    <button class="btn btn-sm btn-outline-warning">
-                                        预约复查
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 记录3 -->
-                    <div class="card record-card mb-3">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h5 class="card-title">眼科 - 李医生 <span class="badge bg-success ms-2">已康复</span></h5>
-                                            <p class="card-text text-muted mb-2">
-                                                <strong>诊断：</strong>结膜炎<br>
-                                                <strong>主诉：</strong>眼睛红肿、瘙痒2天
-                                            </p>
-                                            <div class="mb-2">
-                                                <strong>处方药品：</strong>
-                                                <span class="medicine-badge">眼药水</span>
-                                                <span class="medicine-badge">抗过敏药</span>
-                                            </div>
-                                        </div>
-                                        <div class="text-end">
-                                            <small class="text-muted">2024-01-05</small><br>
-                                            <span class="badge bg-primary">挂号费: ¥40</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 text-end">
-                                    <button class="btn btn-sm btn-outline-primary mb-1" data-bs-toggle="modal" data-bs-target="#recordDetailModal" data-record="3">
-                                        查看完整病历
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-info mb-1" data-bs-toggle="modal" data-bs-target="#prescriptionModal" data-record="3">
-                                        查看处方详情
-                                    </button>
-                                    <br>
-                                    <button class="btn btn-sm btn-outline-success">
-                                        下载病历PDF
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2023年记录 -->
-                <div>
-                    <h6 class="text-muted mb-3">📅 2023年</h6>
-                    <div class="card record-card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h5 class="card-title">内科 - 张医生 <span class="badge bg-success ms-2">已康复</span></h5>
-                                            <p class="card-text text-muted mb-2">
-                                                <strong>诊断：</strong>肠胃炎<br>
-                                                <strong>主诉：</strong>腹痛、腹泻1天
-                                            </p>
-                                            <div class="mb-2">
-                                                <strong>处方药品：</strong>
-                                                <span class="medicine-badge">肠胃药</span>
-                                                <span class="medicine-badge">电解质补充剂</span>
-                                            </div>
-                                        </div>
-                                        <div class="text-end">
-                                            <small class="text-muted">2023-12-20</small><br>
-                                            <span class="badge bg-primary">挂号费: ¥50</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 text-end">
-                                    <button class="btn btn-sm btn-outline-primary mb-1" data-bs-toggle="modal" data-bs-target="#recordDetailModal" data-record="4">
-                                        查看完整病历
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-info mb-1" data-bs-toggle="modal" data-bs-target="#prescriptionModal" data-record="4">
-                                        查看处方详情
-                                    </button>
-                                    <br>
-                                    <button class="btn btn-sm btn-outline-success">
-                                        下载病历PDF
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="card-body" id="recordList">
             </div>
-        </div>
     </div>
 
     <!-- 病历详情模态框 -->
@@ -303,183 +120,121 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../utils/helpers.js"></script>
-    
-    <script>
-        // 模拟数据
-        const medicalRecords = {
-            1: {
-                date: '2024-01-15',
-                department: '内科',
-                doctor: '张医生',
-                diagnosis: '急性上呼吸道感染',
-                symptoms: '发热、咳嗽3天，伴有咽痛、鼻塞',
-                examination: 'T: 38.5℃，咽部充血，扁桃体I度肿大，双肺呼吸音粗',
-                treatment: '抗感染治疗，对症支持治疗，多饮水注意休息',
-                advice: '如有加重，及时复诊'
-            },
-            2: {
-                date: '2024-01-10',
-                department: '外科',
-                doctor: '王医生',
-                diagnosis: '左膝软组织损伤',
-                symptoms: '左膝疼痛1周，活动受限',
-                examination: '左膝局部肿胀，压痛明显，活动度受限',
-                treatment: '休息，局部冷敷，止痛治疗',
-                advice: '2周后复查，避免剧烈运动'
-            }
-        };
 
-        const prescriptions = {
-            1: [
-                { name: '阿莫西林胶囊', spec: '0.25g*24粒', quantity: 2, usage: '0.5g，一日三次', price: 25.00 },
-                { name: '感冒灵颗粒', spec: '10g*9袋', quantity: 1, usage: '1袋，一日三次', price: 18.50 },
-                { name: '维生素C片', spec: '100mg*60片', quantity: 1, usage: '1片，一日一次', price: 12.00 }
-            ],
-            2: [
-                { name: '止痛贴膏', spec: '5贴/盒', quantity: 2, usage: '外用，一日一次', price: 25.00 },
-                { name: '消炎药', spec: '0.1g*24片', quantity: 1, usage: '1片，一日两次', price: 18.00 }
-            ]
-        };
+    <script>
+        // 全局变量存储病历数据
+        let medicalRecords = [];
 
         document.addEventListener('DOMContentLoaded', function() {
             loadNavbar();
+            fetchMedicalRecords(); // 加载病历数据
             setupEventListeners();
         });
 
+        // 1. ★★★ 获取我的病历列表 ★★★
+        async function fetchMedicalRecords() {
+            const token = localStorage.getItem('token');
+            if (!token) return window.location.href = 'login.html';
+
+            try {
+                // 接口: GET /appointment/medical-records
+                const response = await fetch('http://localhost:8081/appointment/medical-records', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.code === 200) {
+                    medicalRecords = result.data;
+                    renderRecords();
+                } else {
+                    if (result.code === 401) window.location.href = 'login.html';
+                    else showMessage('加载失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showMessage('连接服务器失败', 'error');
+            }
+        }
+
+        // 2. 渲染病历卡片列表
+        function renderRecords() {
+            const container = document.getElementById('recordList');
+
+            if (medicalRecords.length === 0) {
+                container.innerHTML = '<div class="text-center p-5 text-muted">暂无就诊记录</div>';
+                return;
+            }
+
+            container.innerHTML = medicalRecords.map(record => `
+            <div class="card record-card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="card-title">
+                                        ${record.deptName} - ${record.staffName}
+                                        <span class="badge bg-success ms-2">已完成</span>
+                                    </h5>
+                                    <p class="card-text text-muted mb-2">
+                                        <strong>诊断：</strong>${record.assessment || '未填写'}<br>
+                                        <strong>主诉：</strong>${record.subjective || '未填写'}
+                                    </p>
+                                    <div class="mb-2">
+                                        <strong>治疗方案/医嘱：</strong>
+                                        <span class="text-secondary">${record.plan || '无'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-end border-start">
+                            <small class="text-muted d-block mb-2">${record.createTime ? record.createTime.replace('T', ' ') : ''}</small>
+                            <button class="btn btn-sm btn-outline-primary w-100 mb-2"
+                                onclick="viewDetail(${record.recordId})">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        // 3. 查看详情（弹窗）
+        function viewDetail(recordId) {
+            const record = medicalRecords.find(r => r.recordId === recordId);
+            if (!record) return;
+
+            const content = document.getElementById('recordDetailContent');
+            content.innerHTML = `
+            <div class="row mb-3">
+                <div class="col-md-6"><strong>就诊时间:</strong> ${record.createTime.replace('T', ' ')}</div>
+                <div class="col-md-6"><strong>科室医生:</strong> ${record.deptName} - ${record.staffName}</div>
+            </div>
+            <div class="mb-3"><strong>主诉:</strong><p class="ms-3">${record.subjective}</p></div>
+            <div class="mb-3"><strong>查体:</strong><p class="ms-3">${record.objective || '无'}</p></div>
+            <div class="mb-3"><strong>初步诊断:</strong><p class="ms-3 text-primary">${record.assessment}</p></div>
+            <div class="mb-3"><strong>治疗方案:</strong><p class="ms-3">${record.plan || '无'}</p></div>
+        `;
+
+            const modal = new bootstrap.Modal(document.getElementById('recordDetailModal'));
+            modal.show();
+        }
+
+        // 绑定筛选按钮事件（目前仅做样式切换，后端接口暂不支持复杂筛选，前端数据量小可暂不处理过滤）
         function setupEventListeners() {
-            // 筛选按钮
             document.querySelectorAll('[data-filter]').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    filterRecords(this.dataset.filter);
+                    // 这里可以扩展前端过滤逻辑
                 });
             });
-
-            // 病历详情模态框
-            document.getElementById('recordDetailModal').addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget;
-                const recordId = button.dataset.record;
-                loadRecordDetail(recordId);
-            });
-
-            // 处方详情模态框
-            document.getElementById('prescriptionModal').addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget;
-                const recordId = button.dataset.record;
-                loadPrescriptionDetail(recordId);
-            });
-        }
-
-        function filterRecords(filter) {
-            // 这里可以实现按时间筛选功能
-            showMessage(`显示${getFilterText(filter)}的就诊记录`, 'info');
-        }
-
-        function getFilterText(filter) {
-            const filters = {
-                'all': '全部',
-                'recent': '最近3个月',
-                'year': '今年'
-            };
-            return filters[filter] || '全部';
-        }
-
-        function loadRecordDetail(recordId) {
-            const record = medicalRecords[recordId];
-            const content = document.getElementById('recordDetailContent');
-            
-            content.innerHTML = `
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <strong>就诊时间:</strong> ${record.date}
-                    </div>
-                    <div class="col-md-6">
-                        <strong>科室医生:</strong> ${record.department} - ${record.doctor}
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <strong>主诉:</strong><br>
-                        <p class="ms-3">${record.symptoms}</p>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <strong>查体:</strong><br>
-                        <p class="ms-3">${record.examination}</p>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <strong>诊断:</strong><br>
-                        <p class="ms-3 text-primary">${record.diagnosis}</p>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <strong>治疗方案:</strong><br>
-                        <p class="ms-3">${record.treatment}</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <strong>医嘱:</strong><br>
-                        <p class="ms-3 text-info">${record.advice}</p>
-                    </div>
-                </div>
-            `;
-        }
-
-        function loadPrescriptionDetail(recordId) {
-            const prescription = prescriptions[recordId];
-            const content = document.getElementById('prescriptionDetailContent');
-            
-            let total = 0;
-            const itemsHtml = prescription.map(item => {
-                const itemTotal = item.quantity * item.price;
-                total += itemTotal;
-                return `
-                    <tr>
-                        <td>${item.name}</td>
-                        <td>${item.spec}</td>
-                        <td>${item.quantity}</td>
-                        <td>${item.usage}</td>
-                        <td>¥${item.price.toFixed(2)}</td>
-                        <td>¥${itemTotal.toFixed(2)}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            content.innerHTML = `
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>药品名称</th>
-                                <th>规格</th>
-                                <th>数量</th>
-                                <th>用法用量</th>
-                                <th>单价</th>
-                                <th>金额</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${itemsHtml}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="5" class="text-end"><strong>总计:</strong></td>
-                                <td><strong>¥${total.toFixed(2)}</strong></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="mt-3">
-                    <strong>用药说明:</strong>
-                    <p class="text-muted">请按医嘱用药，如有不适请及时就医。药品请存放在阴凉干燥处。</p>
-                </div>
-            `;
         }
     </script>
 </body>

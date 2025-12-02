@@ -45,6 +45,21 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private StaffMapper staffMapper;
 
+    @Autowired
+    private PrescriptionDetailMapper prescriptionDetailMapper;
+
+    @Autowired
+    private MedicineMapper medicineMapper;
+
+    @Autowired
+    private DepartmentMapper departmentMapper; // 如果之前没有引用的话
+
+    @Autowired
+    private BillMapper billMapper;
+
+    @Autowired
+    private BillItemMapper billItemMapper;
+
     @Override
     public List<DoctorScheduleVO> getAvailableSchedules(ScheduleQueryRequest request) {
         // 将字符串日期转换为 LocalDate
@@ -102,6 +117,21 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentMapper.insert(appointment);
 
+        com.template.entity.Bill bill = new com.template.entity.Bill();
+        bill.setPatientId(request.getPatientId());
+        bill.setTotalAmount(appointment.getFee()); // 使用挂号费金额
+        bill.setStatus("未支付");
+        // bill.setCreateTime(LocalDateTime.now()); // 如果自动填充没生效，可以手动加这行
+        billMapper.insert(bill);
+
+        // 2. 创建收费明细
+        com.template.entity.BillItem billItem = new com.template.entity.BillItem();
+        billItem.setBillId(bill.getBillId());
+        billItem.setItemType("挂号");
+        billItem.setItemName("挂号费");
+        billItem.setAmount(appointment.getFee());
+        billItem.setReferenceId(appointment.getAppointmentId());
+        billItemMapper.insert(billItem);
         // 更新排班的已预订号数
         schedule.setBookedSlots(schedule.getBookedSlots() + 1);
         doctorScheduleMapper.updateById(schedule);
@@ -157,6 +187,70 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<PrescriptionVO> getPatientPrescriptions(Integer patientId) {
         return prescriptionMapper.selectByPatientId(patientId);
+    }
+
+    @Override
+    public com.template.vo.PharmacyPrescriptionVO getPrescriptionDetail(Integer prescriptionId) {
+        // 1. 查询处方基本信息
+        com.template.entity.Prescription prescription = prescriptionMapper.selectById(prescriptionId);
+        if (prescription == null) {
+            throw new BusinessException(ResultCode.DATA_NOT_EXIST, "处方不存在");
+        }
+
+        // 2. 组装 VO
+        com.template.vo.PharmacyPrescriptionVO vo = new com.template.vo.PharmacyPrescriptionVO();
+        vo.setPrescriptionId(prescription.getPrescriptionId());
+        vo.setRecordId(prescription.getRecordId());
+        vo.setPatientId(prescription.getPatientId());
+        vo.setStaffId(prescription.getStaffId());
+        vo.setPrescriptionDate(prescription.getPrescriptionDate());
+        vo.setStatus(prescription.getStatus());
+
+        // 3. 补全医生和科室信息
+        com.template.entity.Staff staff = staffMapper.selectById(prescription.getStaffId());
+        if (staff != null) {
+            vo.setStaffName(staff.getStaffName());
+            if (staff.getDeptId() != null) {
+                com.template.entity.Department dept = departmentMapper.selectById(staff.getDeptId());
+                if (dept != null) {
+                    vo.setDeptName(dept.getDeptName());
+                }
+            }
+        }
+
+        // 4. 补全患者信息
+        // 这里可以直接用 patientMapper，因为在类里已经注入了
+        // 假设你类里已经有 @Autowired private PatientMapper patientMapper;
+        // 如果没有，记得加一下
+        // Patient patient = patientMapper.selectById(prescription.getPatientId());
+        // if (patient != null) { vo.setPatientName(patient.getPatientName()); }
+
+        // 5. ★★★ 核心：查询药品明细 ★★★
+        LambdaQueryWrapper<com.template.entity.PrescriptionDetail> detailQuery = new LambdaQueryWrapper<>();
+        detailQuery.eq(com.template.entity.PrescriptionDetail::getPrescriptionId, prescriptionId);
+        List<com.template.entity.PrescriptionDetail> details = prescriptionDetailMapper.selectList(detailQuery);
+
+        List<com.template.vo.PharmacyPrescriptionVO.PrescriptionDetailVO> detailVOs = new java.util.ArrayList<>();
+        for (com.template.entity.PrescriptionDetail detail : details) {
+            com.template.vo.PharmacyPrescriptionVO.PrescriptionDetailVO detailVO = new com.template.vo.PharmacyPrescriptionVO.PrescriptionDetailVO();
+            // 复制基本属性
+            detailVO.setDetailId(detail.getDetailId());
+            detailVO.setMedicineId(detail.getMedicineId());
+            detailVO.setQuantity(detail.getQuantity());
+            detailVO.setUnitPrice(detail.getUnitPrice());
+            detailVO.setSubtotal(detail.getSubtotal());
+
+            // 查询药品名称
+            com.template.entity.Medicine medicine = medicineMapper.selectById(detail.getMedicineId());
+            if (medicine != null) {
+                detailVO.setMedicineName(medicine.getMedicineName());
+                detailVO.setSpecification(medicine.getSpecification());
+            }
+            detailVOs.add(detailVO);
+        }
+
+        vo.setDetails(detailVOs);
+        return vo;
     }
 }
 

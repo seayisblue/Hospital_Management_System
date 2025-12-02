@@ -52,5 +52,8 @@ public class Medicine implements Serializable {
      */
     @TableField("StockLevel")
     private Integer stockLevel;
+
+    @TableField("MinStock")
+    private Integer minStock;
 }
 

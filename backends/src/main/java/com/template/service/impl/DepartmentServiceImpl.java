@@ -12,6 +12,8 @@ import com.template.vo.DepartmentVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.template.entity.Staff;
+import com.template.mapper.StaffMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +29,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Autowired
     private DepartmentMapper departmentMapper;
 
+    @Autowired
+    private StaffMapper staffMapper;
     @Override
     public Integer createDepartment(DepartmentRequest request) {
         // 检查科室名称是否已存在
@@ -85,6 +89,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         DepartmentDetailVO vo = new DepartmentDetailVO();
         BeanUtils.copyProperties(dept, vo);
+
+        if (dept.getManagerId() != null) {
+            Staff staff = staffMapper.selectById(dept.getManagerId());
+            if (staff != null) {
+                vo.setManagerName(staff.getStaffName());
+            }
+        }
         return vo;
     }
 
@@ -94,6 +105,13 @@ public class DepartmentServiceImpl implements DepartmentService {
         return list.stream().map(dept -> {
             DepartmentVO vo = new DepartmentVO();
             BeanUtils.copyProperties(dept, vo);
+
+            if (dept.getManagerId() != null) {
+                Staff staff = staffMapper.selectById(dept.getManagerId());
+                if (staff != null) {
+                    vo.setManagerName(staff.getStaffName());
+                }
+            }
             return vo;
         }).collect(Collectors.toList());
     }

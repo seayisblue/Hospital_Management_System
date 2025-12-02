@@ -24,5 +24,9 @@ public class DepartmentDetailVO {
      * 科室描述
      */
     private String description;
+
+    private Integer managerId;
+    private String managerName;
+    private String workHours;
 }
 

@@ -22,5 +22,15 @@ public class DepartmentRequest {
      * 科室描述
      */
     private String description;
+
+    /**
+     * 科室主任ID
+     */
+    private Integer managerId;
+
+    /**
+     * 门诊时间
+     */
+    private String workHours;
 }
 

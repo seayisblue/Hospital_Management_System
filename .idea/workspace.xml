@@ -5,49 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4396145b-083f-4aad-9974-41ecfb0f3f87" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/controller/AdminDashboardController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/vo/AdminStatsVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontends/src/pages/admin/medicine-stock.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontends/src/pages/admin/on-site-registration.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontends/src/pages/admin/schedule-management.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontends/src/pages/patient/prescriptions.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontends/src/pages/patient/profile.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/controller/AppointmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/controller/AppointmentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/dto/MedicineCreateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/dto/MedicineCreateRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/entity/Medicine.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/entity/Medicine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/AppointmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/AppointmentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/AppointmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/AppointmentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/DoctorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/DoctorServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/MedicineServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/MedicineServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/PatientServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/PatientServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/vo/MedicineVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/vo/MedicineVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/components/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/components/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/dto/DepartmentRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/dto/DepartmentRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/entity/Department.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/entity/Department.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/DepartmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/DepartmentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/vo/DepartmentDetailVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/vo/DepartmentDetailVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/vo/DepartmentVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/vo/DepartmentVO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/department-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/department-management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/finance-center.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/finance-center.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/medicine-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/medicine-management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/staff-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/staff-management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/doctor/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/doctor/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/doctor/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/doctor/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/doctor/medical-record.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/doctor/medical-record.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/doctor/prescription.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/doctor/prescription.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/appointment.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/appointment.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/medical-records.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/medical-records.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/pharmacist/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/pharmacist/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/pharmacist/inventory.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/pharmacist/inventory.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/pharmacist/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/pharmacist/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/utils/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/utils/helpers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/sql/hospital_system.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/application.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/application.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,6 +116,7 @@
       <workItem from="1764343072045" duration="7255000" />
       <workItem from="1764384451209" duration="8436000" />
       <workItem from="1764675821018" duration="1292000" />
+      <workItem from="1764678511020" duration="3728000" />
     </task>
     <servers />
   </component>

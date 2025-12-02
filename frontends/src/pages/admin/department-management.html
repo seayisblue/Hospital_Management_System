@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>科室管理 - 医院门诊管理系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../../styles/common.css">
     <style>
         .dept-card {
@@ -15,385 +16,414 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
-        .doctor-count {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-        .status-active {
-            color: #28a745;
-        }
-        .status-inactive {
-            color: #dc3545;
+        .stats-card {
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
     </style>
 </head>
 <body>
-    <div id="navbar-container"></div>
+<div id="navbar-container"></div>
 
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>🏢 科室管理</h2>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeptModal">
-                ➕ 添加科室
-            </button>
-        </div>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>🏢 科室管理</h2>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeptModal">
+            <i class="bi bi-plus-lg"></i> 添加科室
+        </button>
+    </div>
 
-        <!-- 科室统计 -->
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-primary">12</div>
-                        <div class="text-muted">科室总数</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-success">86</div>
-                        <div class="text-muted">在职医生</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-info">324</div>
-                        <div class="text-muted">今日接诊量</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <div class="h4 text-warning">8</div>
-                        <div class="text-muted">热门科室</div>
-                    </div>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center stats-card">
+                <div class="card-body">
+                    <div class="h4 text-primary" id="stat-dept-count">-</div>
+                    <div class="text-muted">科室总数</div>
                 </div>
             </div>
         </div>
-
-        <!-- 科室列表 -->
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">科室列表</h5>
-                <div class="input-group" style="width: 300px;">
-                    <input type="text" class="form-control" placeholder="搜索科室名称..." id="searchDept">
-                    <button class="btn btn-outline-secondary" type="button">🔍</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row" id="deptList">
-                    <!-- 科室卡片将通过JavaScript动态生成 -->
+        <div class="col-md-3">
+            <div class="card text-center stats-card">
+                <div class="card-body">
+                    <div class="h4 text-success" id="stat-doc-count">-</div>
+                    <div class="text-muted">在职医生</div>
                 </div>
             </div>
         </div>
-
-        <!-- 科室排班管理 -->
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5 class="card-title mb-0">📅 科室排班概览</h5>
+        <div class="col-md-3">
+            <div class="card text-center stats-card">
+                <div class="card-body">
+                    <div class="h4 text-info">324</div>
+                    <div class="text-muted">今日接诊量</div>
+                </div>
             </div>
-            <div class="card-body">
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center stats-card">
+                <div class="card-body">
+                    <div class="h4 text-warning">8</div>
+                    <div class="text-muted">热门科室</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="card-title mb-0">科室列表</h5>
+            <div class="input-group" style="width: 300px;">
+                <input type="text" class="form-control" placeholder="搜索科室名称..." id="searchDept">
+                <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
+            </div>
+        </div>
+        <div class="card-body bg-light">
+            <div class="row" id="deptList">
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted">正在加载数据...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="card-title mb-0">📅 科室排班概览 (示例)</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-light border small text-muted">
+                <i class="bi bi-info-circle"></i> 提示：此处仅展示部分排班信息，完整排班管理请前往“排班管理”页面。
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>科室</th>
+                        <th>值班医生示例</th>
+                        <th>参考时间</th>
+                        <th>状态</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>内科</td>
+                        <td>张医生, 李医生</td>
+                        <td>08:00-17:00</td>
+                        <td><span class="badge bg-success">正常接诊</span></td>
+                    </tr>
+                    <tr>
+                        <td>外科</td>
+                        <td>王医生</td>
+                        <td>08:30-17:30</td>
+                        <td><span class="badge bg-success">正常接诊</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addDeptModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">添加新科室</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addDeptForm">
+                    <div class="mb-3">
+                        <label class="form-label">科室名称 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="deptName" required placeholder="例如：皮肤科">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">科室主任</label>
+                        <select class="form-select" id="deptHead">
+                            <option value="">正在加载医生列表...</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">门诊时间</label>
+                        <input type="text" class="form-control" id="deptHours" placeholder="例如：周一至周五 08:00-17:00">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">科室描述</label>
+                        <textarea class="form-control" id="deptDescription" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="addDepartment()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deptDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">科室详情 - <span id="detailDeptName"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <strong>科室ID:</strong> <span id="detailDeptCode" class="text-muted ms-2"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>科室主任:</strong> <span id="detailDeptHead" class="text-primary fw-bold ms-2"></span>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <strong>门诊时间:</strong> <span id="detailDeptHours" class="text-secondary ms-2"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <strong>科室描述:</strong>
+                        <div id="detailDeptDescription" class="mt-2 p-3 bg-light rounded text-secondary border"></div>
+                    </div>
+                </div>
+
+                <h6 class="border-bottom pb-2 mb-3"><i class="bi bi-people-fill"></i> 科室医生列表</h6>
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>科室</th>
-                                <th>今日值班医生</th>
-                                <th>门诊时间</th>
-                                <th>预约人数</th>
-                                <th>状态</th>
-                                <th>操作</th>
-                            </tr>
+                    <table class="table table-sm align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th>姓名</th>
+                            <th>职称</th>
+                            <th>角色</th>
+                            <th>状态</th>
+                        </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <strong>内科</strong>
-                                    <div class="text-muted small">张主任</div>
-                                </td>
-                                <td>张医生、李医生、王医生</td>
-                                <td>08:00-12:00, 14:00-17:00</td>
-                                <td>
-                                    <span class="badge bg-primary">45人</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-success">正常接诊</span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary">调整排班</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <strong>外科</strong>
-                                    <div class="text-muted small">王主任</div>
-                                </td>
-                                <td>赵医生、钱医生</td>
-                                <td>08:30-12:00, 14:30-17:30</td>
-                                <td>
-                                    <span class="badge bg-warning">28人</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-success">正常接诊</span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary">调整排班</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <strong>儿科</strong>
-                                    <div class="text-muted small">刘主任</div>
-                                </td>
-                                <td>刘医生、孙医生</td>
-                                <td>08:00-17:00（全天）</td>
-                                <td>
-                                    <span class="badge bg-danger">62人</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-warning">就诊高峰</span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-warning">增加医生</button>
-                                </td>
-                            </tr>
+                        <tbody id="deptDoctorsList">
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- 添加科室模态框 -->
-    <div class="modal fade" id="addDeptModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">添加新科室</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addDeptForm">
-                        <div class="mb-3">
-                            <label class="form-label">科室名称</label>
-                            <input type="text" class="form-control" id="deptName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">科室代码</label>
-                            <input type="text" class="form-control" id="deptCode" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">科室主任</label>
-                            <select class="form-select" id="deptHead">
-                                <option value="">请选择科室主任</option>
-                                <option value="1">张医生</option>
-                                <option value="2">王医生</option>
-                                <option value="3">李医生</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">科室描述</label>
-                            <textarea class="form-control" id="deptDescription" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">门诊时间</label>
-                            <input type="text" class="form-control" id="deptHours" placeholder="例如：08:00-12:00, 14:00-17:00">
-                        </div>
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="deptStatus" checked>
-                            <label class="form-check-label" for="deptStatus">立即启用该科室</label>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="addDepartment()">添加科室</button>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- 科室详情模态框 -->
-    <div class="modal fade" id="deptDetailModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">科室详情 - <span id="detailDeptName"></span></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <strong>科室代码:</strong> <span id="detailDeptCode"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>科室主任:</strong> <span id="detailDeptHead"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <strong>科室描述:</strong>
-                            <p id="detailDeptDescription" class="mt-1"></p>
-                        </div>
-                    </div>
-                    
-                    <h6>科室医生</h6>
-                    <div class="table-responsive">
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>医生姓名</th>
-                                    <th>职称</th>
-                                    <th>专长</th>
-                                    <th>门诊时间</th>
-                                    <th>状态</th>
-                                </tr>
-                            </thead>
-                            <tbody id="deptDoctorsList">
-                                <!-- 动态生成医生列表 -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary">编辑科室</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../utils/helpers.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../utils/helpers.js"></script>
+<script>
+    const API_BASE = 'http://localhost:8081';
+    let departments = [];
 
-    <script>
-        // 1. 定义全局变量
-        let departments = [];
-        const departmentDoctors = {}; // 医生数据暂时没有接口，先留空
+    document.addEventListener('DOMContentLoaded', function() {
+        loadNavbar();
+        fetchDepartments();
+        loadDoctorsForSelect();
+        updateStats();
+        setupSearch();
+    });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadNavbar();
-            fetchDepartments(); // 加载数据
-            setupEventListeners();
-        });
+    async function fetchDepartments() {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = '../admin/login.html';
 
-        // 2. ★★★ 获取科室列表 ★★★
-        async function fetchDepartments() {
-            const token = localStorage.getItem('token');
-            if (!token) return window.location.href = 'login.html';
-
-            try {
-                // 请求后端 8081 接口
-                const response = await fetch('http://localhost:8081/department', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    }
-                });
-
-                const result = await response.json();
-
-                if (result.code === 200) {
-                    // ★★★ 注意看这里！★★★
-                    // 药品接口是 result.data.records，但这个接口直接返回了列表，所以是 result.data
-                    departments = result.data;
-
-                    renderDepartmentCards();
-                } else {
-                    showMessage('获取失败: ' + result.message, 'error');
-                }
-            } catch (error) {
-                console.error(error);
-                showMessage('连接服务器失败', 'error');
-            }
-        }
-
-        // 3. 渲染卡片（字段名已修正）
-        function renderDepartmentCards() {
-            const container = document.getElementById('deptList');
-
-            if (!departments || departments.length === 0) {
-                container.innerHTML = '<div class="col-12 text-center">暂无科室数据</div>';
-                return;
-            }
-
-            container.innerHTML = departments.map(dept => `
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card dept-card h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <h5 class="card-title">${dept.deptName}</h5>
-                            <span class="badge bg-success">启用</span>
-                        </div>
-                        <div class="mb-2">
-                            <small class="text-muted">科室ID: ${dept.deptId}</small>
-                        </div>
-                        <p class="card-text text-muted small">${dept.description || '暂无描述'}</p>
-
-                        <div class="row text-center mt-3">
-                            <div class="col-6">
-                                <div class="doctor-count">-</div>
-                                <small class="text-muted">医生数量</small>
-                            </div>
-                            <div class="col-6">
-                                <div class="h5 text-primary">-</div>
-                                <small class="text-muted">月接诊量</small>
-                            </div>
-                        </div>
-                        <div class="mt-3 d-grid gap-2">
-                            <button class="btn btn-outline-primary btn-sm" onclick="viewDeptDetail(${dept.deptId})">
-                                查看详情
-                            </button>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-        }
-
-        // 搜索功能（纯前端过滤）
-        function setupEventListeners() {
-            document.getElementById('searchDept').addEventListener('input', function(e) {
-                const term = e.target.value.toLowerCase();
-                const cards = document.querySelectorAll('.dept-card');
-
-                cards.forEach(card => {
-                    // 找到当前卡片所在的 col 容器
-                    const col = card.closest('.col-md-6');
-                    const name = card.querySelector('.card-title').textContent.toLowerCase();
-
-                    if (name.includes(term)) {
-                        col.style.display = ''; // 显示
-                    } else {
-                        col.style.display = 'none'; // 隐藏
-                    }
-                });
+        try {
+            const response = await fetch(`${API_BASE}/department`, {
+                headers: { 'Authorization': token }
             });
+            const result = await response.json();
+
+            if (result.code === 200) {
+                departments = result.data;
+                renderDepartmentCards(departments);
+                // 实时更新科室总数统计
+                document.getElementById('stat-dept-count').textContent = departments.length;
+            } else {
+                showMessage('数据加载失败: ' + result.message, 'error');
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById('deptList').innerHTML =
+                '<div class="col-12 text-center text-danger py-5">无法连接到服务器，请检查后端是否启动</div>';
+        }
+    }
+
+    function renderDepartmentCards(data) {
+        const container = document.getElementById('deptList');
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div class="col-12 text-center text-muted py-5">暂无科室数据，请点击右上角添加</div>';
+            return;
         }
 
-        // 详情弹窗（简单展示）
-        function viewDeptDetail(deptId) {
-            const dept = departments.find(d => d.deptId === deptId);
-            if (!dept) return;
+        container.innerHTML = data.map(dept => `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card dept-card h-100 bg-white border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="card-title fw-bold text-dark mb-0">${dept.deptName}</h5>
+                                <span class="badge bg-success bg-opacity-10 text-success">正常</span>
+                            </div>
 
-            document.getElementById('detailDeptName').textContent = dept.deptName;
-            document.getElementById('detailDeptCode').textContent = dept.deptId;
-            document.getElementById('detailDeptDescription').textContent = dept.description;
+                            <div class="small text-muted mb-2">
+                                <i class="bi bi-person-badge me-1"></i>
+                                主任: <span class="text-dark">${dept.managerName || '未设置'}</span>
+                            </div>
+                            <div class="small text-muted mb-3">
+                                <i class="bi bi-clock me-1"></i>
+                                时间: <span>${dept.workHours || '未设置'}</span>
+                            </div>
 
-            // 清空医生列表（因为后端没给）
-            document.getElementById('deptDoctorsList').innerHTML = '<tr><td colspan="5" class="text-center">暂无医生数据</td></tr>';
+                            <p class="card-text text-secondary small text-truncate-2" style="min-height: 40px;">
+                                ${dept.description || '暂无详细描述'}
+                            </p>
 
-            const modal = new bootstrap.Modal(document.getElementById('deptDetailModal'));
-            modal.show();
+                            <div class="d-grid mt-3">
+                                <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="viewDeptDetail(${dept.deptId})">
+                                    查看详情
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    async function addDepartment() {
+        const name = document.getElementById('deptName').value.trim();
+        const desc = document.getElementById('deptDescription').value.trim();
+        const head = document.getElementById('deptHead').value;
+        const hours = document.getElementById('deptHours').value.trim();
+
+        if (!name) {
+            showMessage('请输入科室名称', 'warning');
+            return;
         }
 
-        // 占位函数，防止报错
-        function addDepartment() { alert('添加功能暂未连接'); }
-    </script>
+        const payload = {
+            deptName: name,
+            description: desc,
+            managerId: head || null,  // 对应后端 Integer managerId
+            workHours: hours          // 对应后端 String workHours
+        };
+
+        try {
+            const response = await fetch(`${API_BASE}/department`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token')
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (result.code === 200) {
+                showMessage('添加成功！', 'success');
+
+                bootstrap.Modal.getInstance(document.getElementById('addDeptModal')).hide();
+
+                document.getElementById('addDeptForm').reset();
+
+                fetchDepartments();
+            } else {
+                showMessage(result.message || '添加失败', 'error');
+            }
+        } catch (error) {
+            showMessage('网络请求错误', 'error');
+        }
+    }
+
+    async function viewDeptDetail(deptId) {
+        const dept = departments.find(d => d.deptId === deptId);
+        if (!dept) return;
+
+        document.getElementById('detailDeptName').textContent = dept.deptName;
+        document.getElementById('detailDeptCode').textContent = dept.deptId;
+        document.getElementById('detailDeptHead').textContent = dept.managerName || '暂未设置';
+        document.getElementById('detailDeptHours').textContent = dept.workHours || '暂未设置'; // 新增
+        document.getElementById('detailDeptDescription').textContent = dept.description || '暂无描述';
+
+        const tbody = document.getElementById('deptDoctorsList');
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3"><div class="spinner-border spinner-border-sm text-secondary"></div> <span class="text-muted ms-2">正在加载人员...</span></td></tr>';
+
+        const modal = new bootstrap.Modal(document.getElementById('deptDetailModal'));
+        modal.show();
+
+        try {
+            // 查询该科室下的所有员工
+            const response = await fetch(`${API_BASE}/staff?deptId=${deptId}&page=1&pageSize=100`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            const result = await response.json();
+
+            if (result.code === 200 && result.data.records.length > 0) {
+                // 筛选出医生角色的员工
+                const doctors = result.data.records.filter(s => s.role && s.role.includes('医'));
+
+                if(doctors.length > 0) {
+                    tbody.innerHTML = doctors.map(doc => `
+                            <tr>
+                                <td class="fw-bold">${doc.staffName}</td>
+                                <td>${doc.title || '-'}</td>
+                                <td><span class="badge bg-info text-dark">${doc.role}</span></td>
+                                <td><span class="badge bg-success">在职</span></td>
+                            </tr>
+                        `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">该科室暂无医生记录</td></tr>';
+                }
+            } else {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">该科室暂无人员记录</td></tr>';
+            }
+        } catch (error) {
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-3">加载人员列表失败</td></tr>';
+        }
+    }
+
+    async function loadDoctorsForSelect() {
+        try {
+            const response = await fetch(`${API_BASE}/staff?page=1&pageSize=200`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            const result = await response.json();
+            if(result.code === 200) {
+                const select = document.getElementById('deptHead');
+                const doctors = result.data.records.filter(s => s.role && s.role.includes('医'));
+
+                select.innerHTML = '<option value="">请选择科室主任</option>' +
+                    doctors.map(d => `<option value="${d.staffId}">${d.staffName} (${d.title || d.role})</option>`).join('');
+            }
+        } catch(e) { console.error('加载医生下拉框失败', e); }
+    }
+
+    async function updateStats() {
+        try {
+            // 查询医生总数
+            const response = await fetch(`${API_BASE}/staff?role=医生&page=1&pageSize=1`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            const result = await response.json();
+            if(result.code === 200) {
+                document.getElementById('stat-doc-count').textContent = result.data.total;
+            }
+        } catch(e) { console.log('统计加载失败'); }
+    }
+
+
+    function setupSearch() {
+        document.getElementById('searchDept').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = departments.filter(d => d.deptName.toLowerCase().includes(term));
+            renderDepartmentCards(filtered);
+        });
+    }
+</script>
 </body>
 </html>

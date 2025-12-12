@@ -81,6 +81,11 @@
                     // 只有存了 Token，之后的“添加医生”、“查询列表”才能通过验证
                     localStorage.setItem('token', result.data.token);
                     localStorage.setItem('staffInfo', JSON.stringify(result.data));
+                    localStorage.setItem('userRole', 'admin'); // 添加这一行
+                    // 清除可能存在的其他角色信息
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('doctorInfo');
+    localStorage.removeItem('pharmacistInfo');
 
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
@@ -94,5 +99,7 @@
             }
         });
     </script>
+    <script src="../../utils/helpers.js"></script>
+
 </body>
 </html>

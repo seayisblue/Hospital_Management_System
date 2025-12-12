@@ -7,7 +7,14 @@
     "dev": "live-server",
     "build": "echo '构建完成'"
   },
-  "keywords": ["医院", "管理系统", "前端"],
+  "keywords": [
+    "医院",
+    "管理系统",
+    "前端"
+  ],
   "author": "你的名字",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
 }

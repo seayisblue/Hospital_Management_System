@@ -117,3 +117,94 @@ body {
         margin-bottom: 15px;
     }
 }
+
+/* 主样式：覆盖所有由 showMessage 函数生成的提示框 */
+.alert.alert-message {
+    /* 移除原生的Bootstrap定位和边距 */
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+
+    /* 固定尺寸和布局 */
+    min-width: 280px !important;
+    max-width: 80% !important;
+    padding: 24px 40px 24px 30px !important; /* 右侧多留点空间给关闭按钮 */
+    text-align: center !important;
+
+    /* 覆盖Bootstrap默认的边框、圆角和背景 */
+    border: none !important;
+    border-radius: 12px !important;
+    background-color: #4CAF50 !important; /* 默认绿色，对应success类型 */
+
+    /* 字体样式 */
+    color: white !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 1.5 !important;
+
+    /* 阴影和层级 */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+    z-index: 99999 !important;
+
+    /* 淡入动画 */
+    animation: toastFadeIn 0.4s ease-out forwards;
+}
+
+/* 为不同类型的提示定义不同的背景色 */
+.alert.alert-message.alert-success {
+    background-color: #4CAF50 !important; /* 成功 - 绿色 */
+}
+.alert.alert-message.alert-error {
+    background-color: #f44336 !important; /* 错误 - 红色 */
+}
+.alert.alert-message.alert-warning {
+    background-color: #ff9800 !important; /* 警告 - 橙色 */
+}
+.alert.alert-message.alert-info {
+    background-color: #2196F3 !important; /* 信息 - 蓝色 */
+}
+
+/* 调整关闭按钮的样式，使其在深色背景上更清晰 */
+.alert.alert-message .btn-close {
+    filter: invert(1) brightness(2); /* 将Bootstrap的黑色图标反转为白色 */
+    opacity: 0.9;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.alert.alert-message .btn-close:hover {
+    opacity: 1;
+}
+
+/* 自定义确认模态框样式 */
+#confirmDispenseModal .modal-content {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+#confirmDispenseModal .modal-header {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border-bottom: none;
+    padding: 1.5rem;
+}
+
+#confirmDispenseModal .modal-body {
+    padding: 2rem;
+}
+
+#confirmDispenseModal .bi-capsule {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* 加载动画 */
+.spinner-border {
+    vertical-align: middle;
+}

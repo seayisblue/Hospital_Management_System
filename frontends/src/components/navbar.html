@@ -3,7 +3,6 @@
     <div class="container">
         <a class="navbar-brand" href="#">
             🏥 医院门诊管理系统
-            <small class="ms-2 opacity-75" id="role-indicator">[角色]</small>
         </a>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -11,67 +10,12 @@
         </button>
         
         <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- 导航菜单将通过JavaScript动态生成 -->
             <ul class="navbar-nav me-auto" id="main-nav">
-                <!-- 患者端导航 -->
-                <li class="nav-item patient-nav">
-                    <a class="nav-link" href="../patient/dashboard.html">患者首页</a>
-                </li>
-                <li class="nav-item patient-nav">
-                    <a class="nav-link" href="../patient/appointment.html">挂号预约</a>
-                </li>
-                <li class="nav-item patient-nav">
-                    <a class="nav-link" href="../patient/medical-records.html">就诊记录</a>
-                </li>
-                <li class="nav-item patient-nav">
-                    <a class="nav-link" href="../patient/profile.html">个人信息</a>
-                </li>
-                
-                <!-- 管理员端导航 -->
-                <li class="nav-item admin-nav">
-                    <a class="nav-link" href="../admin/dashboard.html">管理首页</a>
-                </li>
-                <li class="nav-item admin-nav">
-                    <a class="nav-link" href="../admin/staff-management.html">职工管理</a>
-                </li>
-                <li class="nav-item admin-nav">
-                    <a class="nav-link" href="../admin/department-management.html">科室管理</a>
-                </li>
-                <li class="nav-item admin-nav">
-                    <a class="nav-link" href="../admin/medicine-management.html">药品管理</a>
-                </li>
-                <li class="nav-item admin-nav">
-                    <a class="nav-link" href="../admin/finance-center.html">财务中心</a>
-                </li>
-                <li class="nav-item admin-nav">
-                    <a class="nav-link" href="../admin/on-site-registration.html">现场挂号</a>
-                </li>
-                <li class="nav-item admin-nav">
-                    <a class="nav-link" href="../admin/medicine-stock.html">药品入库</a>
-                </li>
-                <li class="nav-item admin-nav">
-                    <a class="nav-link" href="../admin/schedule-management.html">排班管理</a>
-                </li>
-                
-                <!-- 医生端导航 -->
-                <li class="nav-item doctor-nav">
-                    <a class="nav-link" href="../doctor/dashboard.html">医生首页</a>
-                </li>
-                <li class="nav-item doctor-nav">
-                    <a class="nav-link" href="../doctor/medical-record.html">电子病历</a>
-                </li>
-                <li class="nav-item doctor-nav">
-                    <a class="nav-link" href="../doctor/prescription.html">开具处方</a>
-                </li>
-                
-                <!-- 药剂师端导航 -->
-                <li class="nav-item pharmacist-nav">
-                    <a class="nav-link" href="../pharmacist/dashboard.html">药房首页</a>
-                </li>
-                <li class="nav-item pharmacist-nav">
-                    <a class="nav-link" href="../pharmacist/inventory.html">库存管理</a>
-                </li>
+                <!-- 这里的内容将由JavaScript动态生成 -->
             </ul>
             
+            <!-- 用户信息部分 -->
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -80,14 +24,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#" onclick="showMessage('个人设置功能开发中', 'info')">个人设置</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item" href="#" onclick="switchRole('patient')">切换到患者视图</a>
-                            <a class="dropdown-item" href="#" onclick="switchRole('admin')">切换到管理员视图</a>
-                            <a class="dropdown-item" href="#" onclick="switchRole('doctor')">切换到医生视图</a>
-                            <a class="dropdown-item" href="#" onclick="switchRole('pharmacist')">切换到药剂师视图</a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="../patient/login.html">退出登录</a></li>
+                        <li><a class="dropdown-item" href="../patient/login.html" onclick="handleLogout()">退出登录</a></li>
                     </ul>
                 </li>
             </ul>
@@ -96,48 +33,192 @@
 </nav>
 
 <script>
-    // 根据当前页面显示对应的导航项
-    function updateNavigation() {
-        const isAdminPage = window.location.pathname.includes('/admin/');
-        const isPatientPage = window.location.pathname.includes('/patient/');
-        const isDoctorPage = window.location.pathname.includes('/doctor/');
-        const isPharmacistPage = window.location.pathname.includes('/pharmacist/');
+    // 定义各角色的菜单项
+    const roleMenus = {
+        'patient': [
+            { text: '患者首页', href: '../patient/dashboard.html', icon: '🏠' },
+            { text: '挂号预约', href: '../patient/appointment.html', icon: '📅' },
+            { text: '就诊记录', href: '../patient/medical-records.html', icon: '📋' },
+            { text: '我的处方', href: '../patient/prescriptions.html', icon: '💊' },
+            { text: '个人信息', href: '../patient/profile.html', icon: '👤' }
+        ],
+        'admin': [
+            { text: '管理首页', href: '../admin/dashboard.html', icon: '⚙️' },
+            { text: '职工管理', href: '../admin/staff-management.html', icon: '👥' },
+            { text: '科室管理', href: '../admin/department-management.html', icon: '🏢' },
+            { text: '药品管理', href: '../admin/medicine-management.html', icon: '💊' },
+            { text: '财务中心', href: '../admin/finance-center.html', icon: '💰' },
+            { text: '现场挂号', href: '../admin/on-site-registration.html', icon: '📝' },
+            { text: '药品入库', href: '../admin/medicine-stock.html', icon: '📦' },
+            { text: '排班管理', href: '../admin/schedule-management.html', icon: '📅' }
+        ],
+        'doctor': [
+            { text: '医生首页', href: '../doctor/dashboard.html', icon: '🩺' },
+            { text: '电子病历', href: '../doctor/medical-record.html', icon: '📄' },
+            { text: '开具处方', href: '../doctor/prescription.html', icon: '📝' }
+        ],
+        'pharmacist': [
+            { text: '药房首页', href: '../pharmacist/dashboard.html', icon: '🏪' },
+            { text: '库存管理', href: '../pharmacist/inventory.html', icon: '📦' },
+            { text: '处方发药', href: '../pharmacist/prescriptions.html', icon: '💊' }
+        ]
+    };
+
+    // 角色显示名称
+    const roleDisplayNames = {
+        'patient': '患者',
+        'admin': '管理员',
+        'doctor': '医生',
+        'pharmacist': '药剂师'
+    };
+
+    // 生成导航菜单
+    function generateNavigation() {
+        console.log('开始生成导航菜单...');
         
-        if (isAdminPage) {
-            document.querySelectorAll('.patient-nav, .doctor-nav, .pharmacist-nav').forEach(nav => nav.style.display = 'none');
-            document.querySelectorAll('.admin-nav').forEach(nav => nav.style.display = 'block');
-            document.getElementById('role-indicator').textContent = '[管理员]';
-            document.getElementById('user-name').textContent = '管理员';
-        } else if (isPatientPage) {
-            document.querySelectorAll('.admin-nav, .doctor-nav, .pharmacist-nav').forEach(nav => nav.style.display = 'none');
-            document.querySelectorAll('.patient-nav').forEach(nav => nav.style.display = 'block');
-            document.getElementById('role-indicator').textContent = '[患者]';
-            document.getElementById('user-name').textContent = '患者';
-        } else if (isDoctorPage) {
-            document.querySelectorAll('.patient-nav, .admin-nav, .pharmacist-nav').forEach(nav => nav.style.display = 'none');
-            document.querySelectorAll('.doctor-nav').forEach(nav => nav.style.display = 'block');
-            document.getElementById('role-indicator').textContent = '[医生]';
-            document.getElementById('user-name').textContent = '医生';
-        } else if (isPharmacistPage) {
-            document.querySelectorAll('.patient-nav, .admin-nav, .doctor-nav').forEach(nav => nav.style.display = 'none');
-            document.querySelectorAll('.pharmacist-nav').forEach(nav => nav.style.display = 'block');
-            document.getElementById('role-indicator').textContent = '[药剂师]';
-            document.getElementById('user-name').textContent = '药剂师';
+        // 1. 获取当前角色（多种方式尝试）
+        let currentRole = null;
+        
+        // 方式1：从URL路径判断
+        const path = window.location.pathname;
+        console.log('当前路径:', path);
+        
+        if (path.includes('/admin/')) {
+            currentRole = 'admin';
+            console.log('从路径判断为: 管理员');
+        } else if (path.includes('/doctor/')) {
+            currentRole = 'doctor';
+            console.log('从路径判断为: 医生');
+        } else if (path.includes('/pharmacist/')) {
+            currentRole = 'pharmacist';
+            console.log('从路径判断为: 药剂师');
+        } else if (path.includes('/patient/')) {
+            currentRole = 'patient';
+            console.log('从路径判断为: 患者');
         }
-    }
-    
-    function switchRole(role) {
-        if (role === 'patient') {
-            window.location.href = '../patient/dashboard.html';
-        } else if (role === 'admin') {
-            window.location.href = '../admin/dashboard.html';
-        } else if (role === 'doctor') {
-            window.location.href = '../doctor/dashboard.html';
-        } else if (role === 'pharmacist') {
-            window.location.href = '../pharmacist/dashboard.html';
+        
+        // 方式2：从localStorage获取（如果登录时已保存）
+        const savedRole = localStorage.getItem('userRole');
+        if (savedRole) {
+            currentRole = savedRole;
+            console.log('从localStorage获取角色:', savedRole);
         }
+        
+        // 方式3：从页面标题判断
+        if (!currentRole) {
+            const title = document.title;
+            if (title.includes('管理员')) currentRole = 'admin';
+            else if (title.includes('医生')) currentRole = 'doctor';
+            else if (title.includes('药剂师')) currentRole = 'pharmacist';
+            else if (title.includes('患者')) currentRole = 'patient';
+        }
+        
+        // 默认角色
+        if (!currentRole) {
+            currentRole = 'patient';
+            console.log('使用默认角色: 患者');
+        }
+        
+        console.log('最终确定角色:', currentRole);
+        
+        // 2. 生成菜单HTML
+        const menuItems = roleMenus[currentRole] || roleMenus.patient;
+        let menuHTML = '';
+        
+        menuItems.forEach(item => {
+            menuHTML += `
+                <li class="nav-item">
+                    <a class="nav-link" href="${item.href}">
+                        ${item.icon} ${item.text}
+                    </a>
+                </li>
+            `;
+        });
+        
+        // 3. 更新DOM
+        const mainNav = document.getElementById('main-nav');
+        if (mainNav) {
+            mainNav.innerHTML = menuHTML;
+            console.log('菜单已更新，项目数:', menuItems.length);
+        }
+        
+        // 4. 更新角色指示器（如果需要的话）
+        const roleIndicator = document.getElementById('role-indicator');
+        if (roleIndicator) {
+            roleIndicator.textContent = `[${roleDisplayNames[currentRole]}]`;
+        }
+        
+        // 5. 更新用户名
+        const userNameElement = document.getElementById('user-name');
+        if (userNameElement) {
+            // 尝试从各种可能的存储位置获取用户名
+            let userName = '用户';
+            
+            // 患者
+            try {
+                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                if (userInfo && userInfo.patientName) userName = userInfo.patientName;
+            } catch(e) {}
+            
+            // 医生、管理员、药剂师
+            try {
+                const staffInfo = JSON.parse(localStorage.getItem('staffInfo'));
+                if (staffInfo && staffInfo.staffName) userName = staffInfo.staffName;
+            } catch(e) {}
+            
+            try {
+                const doctorInfo = JSON.parse(localStorage.getItem('doctorInfo'));
+                if (doctorInfo && doctorInfo.staffName) userName = doctorInfo.staffName;
+            } catch(e) {}
+            
+            try {
+                const pharmacistInfo = JSON.parse(localStorage.getItem('pharmacistInfo'));
+                if (pharmacistInfo && pharmacistInfo.staffName) userName = pharmacistInfo.staffName;
+            } catch(e) {}
+            
+            userNameElement.textContent = userName;
+        }
+        
+        return currentRole;
     }
+
+    // 退出登录处理
+    function handleLogout() {
+        console.log('退出登录');
+        
+        // 清除所有登录信息
+        localStorage.removeItem('token');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userInfo');
+        localStorage.removeItem('staffInfo');
+        localStorage.removeItem('doctorInfo');
+        localStorage.removeItem('pharmacistInfo');
+        
+        // 跳转到登录页面
+        window.location.href = '../patient/login.html';
+        
+        // 阻止默认链接行为
+        return false;
+    }
+
+    // 页面加载时立即生成导航
+    console.log('页面加载，开始初始化导航...');
     
-    // 页面加载时更新导航
-    document.addEventListener('DOMContentLoaded', updateNavigation);
+    // 立即执行一次
+    setTimeout(() => {
+        generateNavigation();
+    }, 10);
+    
+    // DOM加载完成后再次执行确保正确
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM加载完成，重新生成导航...');
+        generateNavigation();
+    });
+    
+    // 如果是异步加载，添加一个监听器
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', generateNavigation);
+    } else {
+        generateNavigation();
+    }
 </script>

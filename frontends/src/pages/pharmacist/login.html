@@ -82,6 +82,12 @@
                     // 3. 保存 Token 和身份信息
                     localStorage.setItem('token', result.data.token);
                     localStorage.setItem('pharmacistInfo', JSON.stringify(result.data));
+                    localStorage.setItem('userRole', 'pharmacist'); 
+
+                    // 清除可能存在的其他角色信息
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('staffInfo');
+    localStorage.removeItem('doctorInfo');
 
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
@@ -95,5 +101,6 @@
             }
         });
     </script>
+    <script src="../../utils/helpers.js"></script>
 </body>
 </html>

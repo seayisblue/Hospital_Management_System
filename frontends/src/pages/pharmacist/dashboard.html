@@ -6,6 +6,8 @@
     <title>药房工作站 - 医院门诊管理系统</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 添加 Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../../styles/common.css">
 </head>
 <body>
@@ -190,6 +192,42 @@
         </div>
     </div>
 
+    <!-- 发药确认模态框 -->
+    <div class="modal fade" id="confirmDispenseModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-check-circle-fill me-2"></i>确认发药
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-4">
+                        <i class="bi bi-capsule text-success" style="font-size: 4rem;"></i>
+                    </div>
+                    <h4 class="mb-3" id="confirmMessage"></h4>
+                    <p class="text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        确认后将扣除相应库存并记录发药操作
+                    </p>
+                    <div class="alert alert-warning mt-3" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        此操作不可撤销，请仔细核对药品信息
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>取消
+                    </button>
+                    <button type="button" class="btn btn-success px-4" id="confirmDispenseBtn">
+                        <i class="bi bi-check-circle me-2"></i>确认发药
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../utils/helpers.js"></script>
 
@@ -199,6 +237,9 @@
             loadNavbar();
             loadPharmacistInfo();
             fetchPendingPrescriptions(); // ★★★ 获取待发药列表 ★★★
+            
+            // 绑定确认按钮点击事件
+            document.getElementById('confirmDispenseBtn').addEventListener('click', confirmDispense);
         });
 
         function loadPharmacistInfo() {
@@ -248,7 +289,7 @@
 
         // 2. 渲染表格
         function renderTable(list) {
-            const tbody = document.querySelector('table tbody'); // 或者用 getElementById('prescriptionList')
+            const tbody = document.querySelector('table tbody');
 
             if (list.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无待发药处方</td></tr>';
@@ -274,10 +315,34 @@
         }
 
         // 3. ★★★ 核心功能：发药 ★★★
-        async function dispenseMedicine(prescriptionId) {
-            if (!confirm(`确认发放处方 [${prescriptionId}] 的药品吗？`)) return;
+        let currentPrescriptionIdForDispense = null;
 
+        // 点击发药按钮时调用
+        function dispenseMedicine(prescriptionId) {
+            currentPrescriptionIdForDispense = prescriptionId;
+            
+            // 设置确认消息
+            document.getElementById('confirmMessage').textContent = 
+                `确认发放处方 [${prescriptionId}] 的药品吗？`;
+            
+            // 显示确认模态框
+            const confirmModal = new bootstrap.Modal(document.getElementById('confirmDispenseModal'));
+            confirmModal.show();
+        }
+
+        // 确认发药的函数
+        async function confirmDispense() {
+            if (!currentPrescriptionIdForDispense) return;
+            
+            const prescriptionId = currentPrescriptionIdForDispense;
+            
             try {
+                // 显示加载状态
+                const confirmBtn = document.getElementById('confirmDispenseBtn');
+                const originalText = confirmBtn.innerHTML;
+                confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>发药中...';
+                confirmBtn.disabled = true;
+                
                 const response = await fetch('http://localhost:8081/pharmacy/dispense', {
                     method: 'POST',
                     headers: {
@@ -289,27 +354,49 @@
 
                 const result = await response.json();
 
+                // 恢复按钮状态
+                confirmBtn.innerHTML = originalText;
+                confirmBtn.disabled = false;
+                
+                // 关闭确认模态框
+                const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmDispenseModal'));
+                if (confirmModal) {
+                    confirmModal.hide();
+                }
+                
                 if (result.code === 200) {
-                    showMessage('发药成功！库存已扣减', 'success');
-                    fetchPendingPrescriptions(); // 刷新列表，刚才那条应该消失
+                    // 显示成功消息
+                    showMessage('✅ 发药成功！药品库存已更新', 'success');
+                    
+                    // 刷新处方列表
+                    fetchPendingPrescriptions();
+                    
+                    // 如果详情模态框是打开的，也关闭它
+                    const detailModal = bootstrap.Modal.getInstance(document.getElementById('prescriptionModal'));
+                    if (detailModal) {
+                        detailModal.hide();
+                    }
                 } else {
                     showMessage('发药失败: ' + result.message, 'error');
                 }
             } catch (error) {
                 console.error(error);
-                showMessage('操作失败', 'error');
+                
+                // 恢复按钮状态
+                const confirmBtn = document.getElementById('confirmDispenseBtn');
+                confirmBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>确认发药';
+                confirmBtn.disabled = false;
+                
+                showMessage('网络错误，请稍后重试', 'error');
             }
+            
+            currentPrescriptionIdForDispense = null;
         }
 
         // 查看详情 (简单弹窗展示)
-        // 1. 我们需要先把获取到的列表存到一个全局变量里，方便查看详情时取用
         let currentPrescriptionList = [];
 
-        // 修改 fetchPendingPrescriptions 里的逻辑
-        // 找到这行：const list = result.data;
-        // 在它下面加一行：currentPrescriptionList = list;
-
-        // 2. 真正实现查看详情功能
+        // 真正实现查看详情功能
         function viewDetails(id) {
             // 从全局列表中找到当前点击的处方
             const prescription = currentPrescriptionList.find(p => p.prescriptionId === id);
@@ -322,48 +409,43 @@
             // 填充模态框标题
             document.getElementById('modalPrescriptionId').textContent = prescription.prescriptionId;
 
-            // 填充模态框里的病人信息
-            // 注意：你需要确保 dashboard.html 的模态框 HTML 结构里有对应的 id
-            // 如果没有，我们可以用简单粗暴的方式直接替换 body 内容
-
             const modalBody = document.querySelector('#prescriptionModal .modal-body');
             modalBody.innerHTML = `
-        <div class="row mb-3">
-            <div class="col-md-6"><strong>患者:</strong> ${prescription.patientName}</div>
-            <div class="col-md-6"><strong>开具医生:</strong> ${prescription.staffName} (${prescription.deptName})</div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6"><strong>时间:</strong> ${prescription.prescriptionDate.replace('T', ' ').substring(0, 16)}</div>
-            <div class="col-md-6"><strong>总金额:</strong> <span class="text-danger fw-bold">¥${prescription.billAmount || '-'}</span></div>
-        </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>患者:</strong> ${prescription.patientName}</div>
+                    <div class="col-md-6"><strong>开具医生:</strong> ${prescription.staffName} (${prescription.deptName})</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>时间:</strong> ${prescription.prescriptionDate.replace('T', ' ').substring(0, 16)}</div>
+                    <div class="col-md-6"><strong>总金额:</strong> <span class="text-danger fw-bold">¥${prescription.billAmount || '-'}</span></div>
+                </div>
 
-        <h6 class="border-bottom pb-2">💊 药品明细</h6>
-        <table class="table table-bordered table-sm">
-            <thead class="table-light">
-                <tr>
-                    <th>药品名称</th>
-                    <th>规格</th>
-                    <th>数量</th>
-                    <th>单价</th>
-                    <th>小计</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${prescription.details.map(d => `
-                    <tr>
-                        <td>${d.medicineName}</td>
-                        <td>${d.specification || '-'}</td>
-                        <td>${d.quantity}</td>
-                        <td>¥${d.unitPrice}</td>
-                        <td>¥${d.subtotal}</td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    `;
+                <h6 class="border-bottom pb-2">💊 药品明细</h6>
+                <table class="table table-bordered table-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th>药品名称</th>
+                            <th>规格</th>
+                            <th>数量</th>
+                            <th>单价</th>
+                            <th>小计</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${prescription.details ? prescription.details.map(d => `
+                            <tr>
+                                <td>${d.medicineName}</td>
+                                <td>${d.specification || '-'}</td>
+                                <td>${d.quantity}</td>
+                                <td>¥${d.unitPrice}</td>
+                                <td>¥${d.subtotal}</td>
+                            </tr>
+                        `).join('') : '<tr><td colspan="5" class="text-center">无药品信息</td></tr>'}
+                    </tbody>
+                </table>
+            `;
 
             // 设置"确认发药"按钮的点击事件
-            // 先移除旧的监听，防止重复绑定（或者直接改 onclick 属性最简单）
             const confirmBtn = document.querySelector('#prescriptionModal .btn-success');
             confirmBtn.onclick = function() {
                 dispenseFromModal(id); // 传入当前的 ID
@@ -376,13 +458,17 @@
 
         // 辅助函数：从模态框确认发药
         function dispenseFromModal(id) {
-            // 关闭模态框
+            // 关闭详情模态框
             const modalEl = document.getElementById('prescriptionModal');
             const modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
-
-            // 调用发药逻辑
-            dispenseMedicine(id);
+            if (modal) {
+                modal.hide();
+            }
+            
+            // 显示确认发药模态框
+            setTimeout(() => {
+                dispenseMedicine(id);
+            }, 300); // 稍微延迟，让用户看到模态框关闭
         }
     </script>
 </body>

@@ -31,53 +31,88 @@
             margin-bottom: 5px;
             display: inline-block;
         }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .filter-buttons .btn {
+            min-width: 80px;
+        }
+        .record-content {
+            min-height: 120px;
+        }
+        @media (max-width: 768px) {
+            .stats-card {
+                margin-bottom: 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="navbar-container"></div>
 
     <div class="container mt-4">
+        <!-- 页面标题和筛选按钮 -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>📋 我的就诊记录</h2>
-            <div class="btn-group">
+            <h2 class="mb-0">📋 我的就诊记录</h2>
+            <div class="btn-group filter-buttons">
                 <button class="btn btn-outline-primary active" data-filter="all">全部</button>
                 <button class="btn btn-outline-primary" data-filter="recent">最近3个月</button>
                 <button class="btn btn-outline-primary" data-filter="year">今年</button>
             </div>
         </div>
 
-        <!-- 统计信息 -->
+        <!-- 统计信息 - 合并为一栏 -->
         <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body" id="recordList">
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <div class="stats-number" id="totalRecords">0</div>
+                        <div>就诊次数</div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body" id="recordList">
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <div class="stats-number" id="totalPrescriptions">0</div>
+                        <div>开具处方</div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body" id="recordList">
-                    </div>
-                        <div class="h4 text-info">5</div>
-                        <div class="text-muted">开具处方</div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <div class="stats-number" id="recentRecords">0</div>
+                        <div>近期就诊</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 就诊记录列表 -->
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">就诊历史</h5>
+        <!-- 主要就诊记录区域 -->
+        <div class="row">
+            <!-- 就诊记录列表（主要区域，占满宽度） -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">就诊历史记录</h5>
+                        <small class="text-muted" id="showingCount">正在显示 0 条记录</small>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="recordListContainer">
+                            <!-- 动态加载就诊记录 -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body" id="recordList">
-            </div>
+        </div>
     </div>
 
     <!-- 病历详情模态框 -->
@@ -124,6 +159,7 @@
     <script>
         // 全局变量存储病历数据
         let medicalRecords = [];
+        let currentFilter = 'all';
 
         document.addEventListener('DOMContentLoaded', function() {
             loadNavbar();
@@ -137,7 +173,6 @@
             if (!token) return window.location.href = 'login.html';
 
             try {
-                // 接口: GET /appointment/medical-records
                 const response = await fetch('http://localhost:8081/appointment/medical-records', {
                     method: 'GET',
                     headers: {
@@ -150,6 +185,7 @@
 
                 if (result.code === 200) {
                     medicalRecords = result.data;
+                    updateStatistics();
                     renderRecords();
                 } else {
                     if (result.code === 401) window.location.href = 'login.html';
@@ -161,78 +197,159 @@
             }
         }
 
-        // 2. 渲染病历卡片列表
-        function renderRecords() {
-            const container = document.getElementById('recordList');
+        // 2. 更新统计数据
+        function updateStatistics() {
+            const totalRecords = medicalRecords.length;
+            
+            // 计算最近3个月的就诊次数
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            const recentRecords = medicalRecords.filter(record => {
+                if (!record.createTime) return false;
+                const recordDate = new Date(record.createTime);
+                return recordDate >= threeMonthsAgo;
+            }).length;
+            
+            // 计算今年就诊次数
+            const currentYear = new Date().getFullYear();
+            const yearRecords = medicalRecords.filter(record => {
+                if (!record.createTime) return false;
+                const recordDate = new Date(record.createTime);
+                return recordDate.getFullYear() === currentYear;
+            }).length;
+            
+            // 更新显示
+            document.getElementById('totalRecords').textContent = totalRecords;
+            document.getElementById('recentRecords').textContent = recentRecords;
+            document.getElementById('totalPrescriptions').textContent = yearRecords;
+        }
 
-            if (medicalRecords.length === 0) {
-                container.innerHTML = '<div class="text-center p-5 text-muted">暂无就诊记录</div>';
+        // 3. 渲染病历卡片列表
+        function renderRecords() {
+            const container = document.getElementById('recordListContainer');
+            
+            // 应用筛选
+            let filteredRecords = medicalRecords;
+            const now = new Date();
+            
+            if (currentFilter === 'recent') {
+                const threeMonthsAgo = new Date();
+                threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+                filteredRecords = medicalRecords.filter(record => {
+                    if (!record.createTime) return false;
+                    const recordDate = new Date(record.createTime);
+                    return recordDate >= threeMonthsAgo;
+                });
+            } else if (currentFilter === 'year') {
+                const currentYear = now.getFullYear();
+                filteredRecords = medicalRecords.filter(record => {
+                    if (!record.createTime) return false;
+                    const recordDate = new Date(record.createTime);
+                    return recordDate.getFullYear() === currentYear;
+                });
+            }
+            
+            // 更新显示计数
+            document.getElementById('showingCount').textContent = 
+                `正在显示 ${filteredRecords.length} 条记录`;
+
+            if (filteredRecords.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center p-5 text-muted">
+                        <div class="mb-3" style="font-size: 3rem;">📄</div>
+                        <h5>暂无就诊记录</h5>
+                        <p class="mb-0">您还没有任何就诊记录</p>
+                    </div>`;
                 return;
             }
 
-            container.innerHTML = medicalRecords.map(record => `
-            <div class="card record-card mb-3">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <div class="d-flex justify-content-between align-items-start">
+            // 按时间降序排列（最近的在前）
+            filteredRecords.sort((a, b) => {
+                return new Date(b.createTime) - new Date(a.createTime);
+            });
+
+            container.innerHTML = filteredRecords.map(record => `
+                <div class="record-card border-bottom p-4">
+                    <div class="row align-items-center">
+                        <!-- 左侧：主要就诊信息 -->
+                        <div class="col-lg-9 col-md-8 record-content">
+                            <div class="mb-2">
+                                <span class="badge bg-light text-dark me-2">${record.deptName}</span>
+                                <span class="text-primary fw-bold">${record.staffName} 医生</span>
+                                <span class="badge bg-success ms-2">已完成</span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="mb-2">
+                                    <strong class="text-dark">诊断：</strong>
+                                    <span class="text-primary">${record.assessment || '未填写'}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <strong class="text-dark">主诉：</strong>
+                                    <span class="text-muted">${record.subjective || '未填写'}</span>
+                                </div>
                                 <div>
-                                    <h5 class="card-title">
-                                        ${record.deptName} - ${record.staffName}
-                                        <span class="badge bg-success ms-2">已完成</span>
-                                    </h5>
-                                    <p class="card-text text-muted mb-2">
-                                        <strong>诊断：</strong>${record.assessment || '未填写'}<br>
-                                        <strong>主诉：</strong>${record.subjective || '未填写'}
-                                    </p>
-                                    <div class="mb-2">
-                                        <strong>治疗方案/医嘱：</strong>
-                                        <span class="text-secondary">${record.plan || '无'}</span>
+                                    <strong class="text-dark">治疗方案/医嘱：</strong>
+                                    <div class="mt-1 p-2 bg-light rounded">
+                                        ${record.plan ? record.plan.replace(/\n/g, '<br>') : '无'}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 text-end border-start">
-                            <small class="text-muted d-block mb-2">${record.createTime ? record.createTime.replace('T', ' ') : ''}</small>
-                            <button class="btn btn-sm btn-outline-primary w-100 mb-2"
-                                onclick="viewDetail(${record.recordId})">
-                                查看详情
-                            </button>
+                        
+                        <!-- 右侧：时间和操作 -->
+                        <div class="col-lg-3 col-md-4 text-end">
+                            <div class="mb-3">
+                                <div class="text-muted small mb-1">就诊时间</div>
+                                <div class="fw-bold">${record.createTime ? record.createTime.replace('T', ' ').substring(0, 16) : ''}</div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary btn-sm"
+                                    onclick="viewDetail(${record.recordId})">
+                                    <i class="bi bi-eye me-1"></i>查看详情
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
         }
 
-        // 3. 查看详情（弹窗）
+        // 4. 查看详情（弹窗）
         function viewDetail(recordId) {
             const record = medicalRecords.find(r => r.recordId === recordId);
             if (!record) return;
 
             const content = document.getElementById('recordDetailContent');
             content.innerHTML = `
-            <div class="row mb-3">
-                <div class="col-md-6"><strong>就诊时间:</strong> ${record.createTime.replace('T', ' ')}</div>
-                <div class="col-md-6"><strong>科室医生:</strong> ${record.deptName} - ${record.staffName}</div>
-            </div>
-            <div class="mb-3"><strong>主诉:</strong><p class="ms-3">${record.subjective}</p></div>
-            <div class="mb-3"><strong>查体:</strong><p class="ms-3">${record.objective || '无'}</p></div>
-            <div class="mb-3"><strong>初步诊断:</strong><p class="ms-3 text-primary">${record.assessment}</p></div>
-            <div class="mb-3"><strong>治疗方案:</strong><p class="ms-3">${record.plan || '无'}</p></div>
-        `;
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>就诊时间:</strong> ${record.createTime.replace('T', ' ')}</div>
+                    <div class="col-md-6"><strong>科室医生:</strong> ${record.deptName} - ${record.staffName}</div>
+                </div>
+                <div class="mb-3"><strong>主诉:</strong><p class="ms-3">${record.subjective}</p></div>
+                <div class="mb-3"><strong>查体:</strong><p class="ms-3">${record.objective || '无'}</p></div>
+                <div class="mb-3"><strong>初步诊断:</strong><p class="ms-3 text-primary">${record.assessment}</p></div>
+                <div class="mb-3"><strong>治疗方案:</strong><p class="ms-3">${record.plan || '无'}</p></div>
+            `;
 
             const modal = new bootstrap.Modal(document.getElementById('recordDetailModal'));
             modal.show();
         }
 
-        // 绑定筛选按钮事件（目前仅做样式切换，后端接口暂不支持复杂筛选，前端数据量小可暂不处理过滤）
+        // 5. 绑定筛选按钮事件
         function setupEventListeners() {
             document.querySelectorAll('[data-filter]').forEach(btn => {
                 btn.addEventListener('click', function() {
+                    // 更新按钮状态
                     document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    // 这里可以扩展前端过滤逻辑
+                    
+                    // 更新筛选条件
+                    currentFilter = this.getAttribute('data-filter');
+                    
+                    // 重新渲染记录
+                    renderRecords();
                 });
             });
         }

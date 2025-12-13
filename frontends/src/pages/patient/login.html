@@ -94,6 +94,11 @@
                     // 以后每次请求都要出示这个 Token，否则后端不理你
                     localStorage.setItem('token', result.data.token);
                     localStorage.setItem('userInfo', JSON.stringify(result.data));
+                    localStorage.setItem('userRole', 'patient'); 
+                     // 清除可能存在的其他角色信息
+                    localStorage.removeItem('staffInfo');
+                    localStorage.removeItem('doctorInfo');
+                    localStorage.removeItem('pharmacistInfo');
 
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
@@ -109,5 +114,6 @@
             }
         });
     </script>
+    <script src="../../utils/helpers.js"></script>
 </body>
 </html>

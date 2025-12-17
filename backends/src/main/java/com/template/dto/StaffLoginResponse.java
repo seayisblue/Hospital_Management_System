@@ -34,5 +34,19 @@ public class StaffLoginResponse {
      * 登录账号
      */
     private String loginName;
+    /**
+     * 职称
+     */
+    private String title;
+
+    /**
+     * 科室名称
+     */
+    private String deptName;
+
+    private Integer deptId;   // 科室ID
+    private Boolean isDeptManager; // 是否是科室主任
+
+
 }
 

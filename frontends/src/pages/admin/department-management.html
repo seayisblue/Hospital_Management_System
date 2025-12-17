@@ -27,6 +27,7 @@
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="dashboard.html" class="btn btn-outline-secondary me-2">🏠 首页</a>
         <h2>🏢 科室管理</h2>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeptModal">
             <i class="bi bi-plus-lg"></i> 添加科室
@@ -53,16 +54,16 @@
         <div class="col-md-3">
             <div class="card text-center stats-card">
                 <div class="card-body">
-                    <div class="h4 text-info">324</div>
-                    <div class="text-muted">今日接诊量</div>
+                    <div class="h4 text-info" id="stat-visit-count">-</div>
+                    <div class="text-muted">今日预约量</div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-center stats-card">
                 <div class="card-body">
-                    <div class="h4 text-warning">8</div>
-                    <div class="text-muted">热门科室</div>
+                    <div class="h4 text-warning" id="stat-revenue">-</div>
+                    <div class="text-muted">今日收入 (元)</div>
                 </div>
             </div>
         </div>
@@ -99,24 +100,13 @@
                     <thead class="table-light">
                     <tr>
                         <th>科室</th>
-                        <th>值班医生示例</th>
-                        <th>参考时间</th>
-                        <th>状态</th>
-                    </tr>
+                        <th>值班医生</th>
+                        <th>排班日期</th>
+                        <th>时间段</th>
+                        <th>状态</th> </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td>内科</td>
-                        <td>张医生, 李医生</td>
-                        <td>08:00-17:00</td>
-                        <td><span class="badge bg-success">正常接诊</span></td>
-                    </tr>
-                    <tr>
-                        <td>外科</td>
-                        <td>王医生</td>
-                        <td>08:30-17:30</td>
-                        <td><span class="badge bg-success">正常接诊</span></td>
-                    </tr>
+                    <tbody id="scheduleList">
+                    <tr><td colspan="5" class="text-center py-3 text-muted">正在加载排班数据...</td></tr>
                     </tbody>
                 </table>
             </div>

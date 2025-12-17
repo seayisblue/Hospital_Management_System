@@ -81,65 +81,15 @@
                         <!-- 科室选择 -->
                         <div id="step1" class="step-content">
                             <h5>请选择就诊科室</h5>
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <div class="card doctor-card" data-dept="1">
-                                        <div class="card-body text-center">
-                                            <div class="h3 text-primary">❤️</div>
-                                            <h6>内科</h6>
-                                            <small class="text-muted">感冒、发烧、高血压等</small>
-                                        </div>
+                            <div class="row" id="deptList">
+                                <div class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
                                     </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card doctor-card" data-dept="2">
-                                        <div class="card-body text-center">
-                                            <div class="h3 text-success">🦴</div>
-                                            <h6>外科</h6>
-                                            <small class="text-muted">创伤、手术、骨科等</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card doctor-card" data-dept="3">
-                                        <div class="card-body text-center">
-                                            <div class="h3 text-warning">👶</div>
-                                            <h6>儿科</h6>
-                                            <small class="text-muted">儿童疾病、生长发育</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card doctor-card" data-dept="妇产科">
-                                        <div class="card-body text-center">
-                                            <div class="h3 text-danger">🤰</div>
-                                            <h6>妇产科</h6>
-                                            <small class="text-muted">妇科疾病、孕产检查</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card doctor-card" data-dept="眼科">
-                                        <div class="card-body text-center">
-                                            <div class="h3 text-info">👁️</div>
-                                            <h6>眼科</h6>
-                                            <small class="text-muted">视力检查、眼部疾病</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card doctor-card" data-dept="口腔科">
-                                        <div class="card-body text-center">
-                                            <div class="h3 text-secondary">🦷</div>
-                                            <h6>口腔科</h6>
-                                            <small class="text-muted">牙齿检查、口腔治疗</small>
-                                        </div>
-                                    </div>
+                                    <p class="mt-2">正在加载科室列表...</p>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                <button class="btn btn-primary" onclick="nextStep(1)">下一步</button>
-                            </div>
+
                         </div>
 
                         <!-- 医生选择 -->
@@ -225,25 +175,91 @@
             schedule: null // 最终选中的排班对象
         };
 
+        // 定义科室图标映射（为了界面美观，匹配后端返回的科室名称）
+        const deptIcons = {
+            '内科': { icon: '❤️', desc: '感冒、发烧、高血压等' },
+            '外科': { icon: '🦴', desc: '创伤、手术、骨科等' },
+            '儿科': { icon: '👶', desc: '儿童疾病、生长发育' },
+            '妇产科': { icon: '🤰', desc: '妇科疾病、孕产检查' },
+            '眼科': { icon: '👁️', desc: '视力检查、眼部疾病' },
+            '口腔科': { icon: '🦷', desc: '牙齿检查、口腔治疗' },
+            '皮肤科': { icon: '🧖', desc: '皮肤过敏、皮炎等' },
+            'default': { icon: '🏥', desc: '综合诊疗科室' }
+        };
+
         // 缓存从后端查回来的排班列表
         let availableSchedules = [];
 
         document.addEventListener('DOMContentLoaded', function() {
             loadNavbar();
-            initPage();
+            fetchDepartments();
         });
-
-        function initPage() {
-            // 1. 绑定科室点击事件
-            document.querySelectorAll('.doctor-card[data-dept]').forEach(card => {
-                card.addEventListener('click', function() {
-                    document.querySelectorAll('.doctor-card').forEach(c => c.classList.remove('selected'));
-                    this.classList.add('selected');
-
-                    appointmentData.deptId = this.dataset.dept;
-                    appointmentData.deptName = this.querySelector('h6').innerText;
+        // 1. 从后端获取科室列表
+        async function fetchDepartments() {
+            try {
+                const response = await fetch('http://localhost:8081/department', {
+                    method: 'GET',
+                    headers: { 'Authorization': localStorage.getItem('token') }
                 });
-            });
+                const result = await response.json();
+                if (result.code === 200) {
+                    renderDepartments(result.data);
+                } else {
+                    showMessage('加载科室失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('deptList').innerHTML = '<div class="text-danger p-3">服务器连接失败</div>';
+            }
+        }
+
+        function renderDepartments(departments) {
+            const container = document.getElementById('deptList');
+            if (!departments || departments.length === 0) {
+                container.innerHTML = '<div class="text-muted p-3">暂无科室数据</div>';
+                return;
+            }
+
+            container.innerHTML = departments.map(dept => {
+                const style = deptIcons[dept.deptName] || deptIcons['default'];
+                const desc = dept.description || style.desc; // 优先用数据库里的描述
+
+                // ★★★ 注意：这里使用了 onclick="selectDept(...)" ★★★
+                // 所以 selectDept 函数必须在全局作用域下才能被找到
+                return `
+            <div class="col-md-4 mb-3">
+                <div class="card doctor-card" onclick="selectDept(${dept.deptId}, '${dept.deptName}', this)">
+                    <div class="card-body text-center">
+                        <div class="h3 text-primary">${style.icon}</div>
+                        <h6>${dept.deptName}</h6>
+                        <small class="text-muted text-truncate d-block">${desc}</small>
+                    </div>
+                </div>
+            </div>`;
+            }).join('');
+        }
+
+        // ==========================================
+        // 3. 核心交互函数 (必须放在全局作用域)
+        // ==========================================
+
+        // ★★★ 这个函数不能放在 DOMContentLoaded 里面，否则 HTML 里的 onclick 找不到它 ★★★
+        function selectDept(deptId, deptName, element) {
+            // 1. 移除所有卡片的选中样式
+            document.querySelectorAll('#deptList .doctor-card').forEach(c => c.classList.remove('selected'));
+            // 2. 给当前点击的卡片添加选中样式
+            element.classList.add('selected');
+
+            // 3. 更新数据
+            appointmentData.deptId = deptId;
+            appointmentData.deptName = deptName;
+
+            // 4. (可选) 清空后续步骤的数据，防止用户回退修改科室后数据错乱
+            appointmentData.doctor = null;
+            appointmentData.schedule = null;
+
+            console.log(`已选择科室: ${deptName} (ID: ${deptId})`);
+            nextStep(1);
         }
 
         // 流程控制：下一步
@@ -307,17 +323,23 @@
             if(!token) return window.location.href = 'login.html';
 
             try {
-                // 接口: GET /appointment/schedules?deptId=1
+                // ★★★ 修正点：改为正确的排班查询接口，并带上 deptId 参数 ★★★
                 const response = await fetch(`http://localhost:8081/appointment/schedules?deptId=${deptId}`, {
                     method: 'GET',
-                    headers: {
-                        'Authorization': token
-                    }
+                    headers: { 'Authorization': localStorage.getItem('token') }
                 });
+
                 const result = await response.json();
+
                 if (result.code === 200) {
                     availableSchedules = result.data; // 拿到排班列表
                     console.log('排班数据:', availableSchedules);
+
+                    // ★★★ 建议增加一个判断：如果没有排班，直接提示 ★★★
+                    if (!availableSchedules || availableSchedules.length === 0) {
+                        // 注意：这里返回空数组是正常的（说明该科室最近没排班），不是报错
+                        // 但是会导致下一步是空的，所以最好在这里return出去或者在nextStep里拦截
+                    }
                 } else {
                     showMessage(result.message, 'error');
                 }

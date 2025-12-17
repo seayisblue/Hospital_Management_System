@@ -19,21 +19,21 @@ public interface ScheduleService {
      * @param request 创建请求
      * @return 排班ID
      */
-    Integer createSchedule(ScheduleCreateRequest request);
+    Integer createSchedule(ScheduleCreateRequest request, Integer operatorId);
 
     /**
      * 更新排班
      *
      * @param request 更新请求
      */
-    void updateSchedule(ScheduleUpdateRequest request);
+    void updateSchedule(ScheduleUpdateRequest request, Integer operatorId);
 
     /**
      * 删除排班
      *
      * @param scheduleId 排班ID
      */
-    void deleteSchedule(Integer scheduleId);
+    void deleteSchedule(Integer scheduleId, Integer operatorId);
 
     /**
      * 分页查询排班

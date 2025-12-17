@@ -12,8 +12,10 @@
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="dashboard.html" class="btn btn-outline-secondary me-2">🏠 首页</a>
         <h2>📅 医生排班管理</h2>
-        <button class="btn btn-primary" onclick="openAddModal()">
+
+        <button class="btn btn-primary" id="btnAddSchedule" style="display:none" onclick="openAddModal()">
             ➕ 新增排班
         </button>
     </div>
@@ -21,20 +23,21 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-3">
-                    <select class="form-select" id="searchDept" onchange="loadDoctors(this.value, 'searchDoctor')">
-                        <option value="">所有科室</option>
-                    </select>
-                </div>
+
                 <div class="col-md-3">
                     <select class="form-select" id="searchDoctor">
                         <option value="">所有医生</option>
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="date" class="form-control" id="searchDate">
+                    <select class="form-select" id="searchDept">
+                        <option value="">所有科室</option>
+                    </select>
                 </div>
                 <div class="col-md-3">
+                    <input type="date" class="form-control" id="searchDate">
+                </div>
+                <div class="col-md-2">
                     <button class="btn btn-primary w-100" onclick="fetchSchedules()">查询</button>
                 </div>
             </div>
@@ -72,21 +75,20 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">新增排班</h5>
+
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="addForm">
                     <div class="mb-3">
-                        <label class="form-label">选择科室</label>
-                        <select class="form-select" id="modalDept" required onchange="loadDoctors(this.value, 'modalStaff')">
-                            <option value="">请选择科室</option>
+                        <label class="form-label">所属科室</label>
+                        <select class="form-select" id="modalDept" disabled>
                         </select>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">选择医生</label>
                         <select class="form-select" id="modalStaff" name="staffId" required>
-                            <option value="">请先选择科室</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -121,55 +123,87 @@
 <script>
     let scheduleList = [];
     let currentPage = 1;
+    let currentDeptId = null;
 
     document.addEventListener('DOMContentLoaded', function() {
         loadNavbar();
-        loadDepartments(); // 加载科室选项
-        fetchSchedules();  // 加载列表
+        initDoctorEnvironment();
     });
 
-    // 1. 加载科室 (用于下拉框)
-    async function loadDepartments() {
-        try {
-            const response = await fetch('http://localhost:8081/department', {
-                headers: { 'Authorization': localStorage.getItem('token') }
-            });
-            const result = await response.json();
-            if (result.code === 200) {
-                const options = '<option value="">所有科室</option>' +
-                    result.data.map(d => `<option value="${d.deptId}">${d.deptName}</option>`).join('');
-
-                // 填充搜索框和模态框的科室下拉
-                document.getElementById('searchDept').innerHTML = options;
-                document.getElementById('modalDept').innerHTML = options.replace('所有科室', '请选择科室');
-            }
-        } catch (e) { console.error(e); }
-    }
-
-    // 2. 级联加载医生
-    async function loadDoctors(deptId, targetSelectId) {
-        const targetSelect = document.getElementById(targetSelectId);
-        targetSelect.innerHTML = '<option value="">加载中...</option>';
-
-        if (!deptId) {
-            targetSelect.innerHTML = '<option value="">请先选择科室</option>';
+    // 1. 初始化环境 (核心修改)
+    async function initDoctorEnvironment() {
+        const user = JSON.parse(localStorage.getItem('doctorInfo') || '{}');
+        if (!user.deptId) {
+            alert("无法获取您的科室信息，请重新登录");
             return;
         }
+        currentDeptId = user.deptId;
 
+        // 1.1 设置科室显示 (锁定)
+        const deptSelects = ['searchDept', 'modalDept'];
+        deptSelects.forEach(id => {
+            const sel = document.getElementById(id);
+            if(sel) {
+                sel.innerHTML = `<option value="${user.deptId}" selected>${user.deptName || '本科室'}</option>`;
+                sel.disabled = true;
+            }
+        });
+
+        // 1.2 显示新增按钮 (如果是科主任)
+        if (user.isDeptManager === true) {
+            document.getElementById('btnAddSchedule').style.display = 'block';
+        }
+
+        // 1.3 加载医生列表 (注意：这里加了 await)
+        // 先加载模态框的医生（方便新增用）
+        await loadDoctors(currentDeptId, 'modalStaff');
+        // 再加载搜索框的医生
+        await loadDoctors(currentDeptId, 'searchDoctor');
+
+        // 1.4 设置搜索框的默认选中状态 (解决你的第一个问题)
+        const searchSelect = document.getElementById('searchDoctor');
+
+        if (user.isDeptManager === true) {
+            //如果是主任：默认选“所有医生”
+            searchSelect.value = "";
+            searchSelect.disabled = false; // 确保可选
+        } else {
+            //如果是普通医生：锁定选自己，不允许查别人
+            searchSelect.value = user.staffId;
+            searchSelect.disabled = true;
+        }
+
+        // 1.5 最后再查数据 (确保参数都就位了)
+        fetchSchedules();
+    }
+
+    // 2. 加载医生列表
+    async function loadDoctors(deptId, targetSelectId) {
+        const targetSelect = document.getElementById(targetSelectId);
         try {
-            // 接口: /staff?deptId=xx&role=医生&pageSize=100
-            const response = await fetch(`http://localhost:8081/staff?deptId=${deptId}&role=医生&pageSize=100`, {
+            // 去掉 &role=医生，查询科室所有人
+            const response = await fetch(`http://localhost:8081/staff?deptId=${deptId}&pageSize=100`, {
                 headers: { 'Authorization': localStorage.getItem('token') }
             });
             const result = await response.json();
 
             if (result.code === 200) {
-                if (result.data.records.length === 0) {
-                    targetSelect.innerHTML = '<option value="">该科室暂无医生</option>';
-                } else {
-                    targetSelect.innerHTML = '<option value="">请选择医生</option>' +
-                        result.data.records.map(s => `<option value="${s.staffId}">${s.staffName} (${s.title||'医师'})</option>`).join('');
+                // 生成选项 HTML
+                let optionsHtml = result.data.records.map(s =>
+                    `<option value="${s.staffId}">${s.staffName} ${s.title ? '('+s.title+')' : ''}</option>`
+                ).join('');
+
+                // 如果是搜索框，头部插入“所有医生”
+                if(targetSelectId === 'searchDoctor') {
+                    optionsHtml = '<option value="">所有医生</option>' + optionsHtml;
                 }
+
+                // 如果是模态框，头部插入提示
+                if(targetSelectId === 'modalStaff') {
+                    optionsHtml = '<option value="">请选择医生</option>' + optionsHtml;
+                }
+
+                targetSelect.innerHTML = optionsHtml;
             }
         } catch (e) { console.error(e); }
     }
@@ -179,14 +213,20 @@
         const token = localStorage.getItem('token');
         if (!token) return window.location.href = 'login.html';
 
+        // 获取参数
         const staffId = document.getElementById('searchDoctor').value;
         const deptId = document.getElementById('searchDept').value;
         const date = document.getElementById('searchDate').value;
 
-        let url = `http://localhost:8081/admin/schedule/page?current=${currentPage}&pageSize=10`;
+        // 拼接 URL
+        let url = `http://localhost:8081/schedule/page?current=${currentPage}&pageSize=10`;
+
+        // 只有当选择了特定医生时，才传 staffId
+        // 如果 staffId 为空字符串(即“所有医生”)，就不传这个参数，后端就会查所有
         if (staffId) url += `&staffId=${staffId}`;
+
         if (deptId) url += `&deptId=${deptId}`;
-        if (date) url += `&startDate=${date}&endDate=${date}`; // 精确查某一天
+        if (date) url += `&startDate=${date}&endDate=${date}`;
 
         try {
             const response = await fetch(url, {
@@ -197,29 +237,29 @@
             if (result.code === 200) {
                 scheduleList = result.data.records;
                 renderTable();
+                renderPagination(result.data.total, result.data.size); // 别忘了分页
             } else {
                 showMessage('加载失败: ' + result.message, 'error');
             }
         } catch (e) {
+            console.error(e); // 打印错误方便调试
             showMessage('连接服务器失败', 'error');
         }
     }
 
-    // 4. 渲染表格
+    // 4. 渲染表格 (保持不变)
     function renderTable() {
         const tbody = document.getElementById('scheduleTable');
-        if (scheduleList.length === 0) {
+        if (!scheduleList || scheduleList.length === 0) {
             tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">暂无排班数据</td></tr>';
             return;
         }
 
         tbody.innerHTML = scheduleList.map(item => {
-            // 计算状态
             let statusBadge = '<span class="badge bg-success">可挂号</span>';
             if (item.availableSlots <= 0) {
                 statusBadge = '<span class="badge bg-secondary">已满</span>';
             }
-
             return `
                     <tr>
                         <td>${item.scheduleDate}</td>
@@ -227,9 +267,7 @@
                         <td>${item.deptName}</td>
                         <td><strong>${item.staffName}</strong></td>
                         <td>${item.title || '-'}</td>
-                        <td>
-                            <span class="text-primary fw-bold">${item.bookedSlots}</span> / ${item.totalSlots}
-                        </td>
+                        <td><span class="text-primary fw-bold">${item.bookedSlots}</span> / ${item.totalSlots}</td>
                         <td>${statusBadge}</td>
                         <td>
                             <button class="btn btn-sm btn-outline-danger"
@@ -243,36 +281,60 @@
         }).join('');
     }
 
-    // 5. 打开新增弹窗
+    // 简单的分页渲染 (如果没有引用 helper 里的)
+    function renderPagination(total, size) {
+        const totalPages = Math.ceil(total / size);
+        const pagination = document.getElementById('pagination');
+        if(totalPages <= 1) {
+            pagination.innerHTML = '';
+            return;
+        }
+
+        let html = '';
+        html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">上一页</a>
+                 </li>`;
+
+        html += `<li class="page-item disabled"><span class="page-link">第 ${currentPage} / ${totalPages} 页</span></li>`;
+
+        html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">下一页</a>
+                 </li>`;
+        pagination.innerHTML = html;
+    }
+
+    function changePage(page) {
+        if(page < 1) return;
+        currentPage = page;
+        fetchSchedules();
+    }
+
+    // 5. 打开弹窗 (保持逻辑优化)
     function openAddModal() {
         document.getElementById('addForm').reset();
-        // 重置医生下拉框
-        document.getElementById('modalStaff').innerHTML = '<option value="">请先选择科室</option>';
-        // 默认日期明天
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         document.querySelector('input[name="scheduleDate"]').valueAsDate = tomorrow;
 
+        // 确保模态框里的医生列表也被重置显示
+        document.getElementById('modalStaff').value = "";
+
         new bootstrap.Modal(document.getElementById('addModal')).show();
     }
 
-    // 6. 提交新增
+    // 6. 提交新增 (保持不变)
     async function submitAdd() {
         const form = document.getElementById('addForm');
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
+        if (!form.checkValidity()) { form.reportValidity(); return; }
 
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-
-        // 类型转换
         data.staffId = parseInt(data.staffId);
         data.totalSlots = parseInt(data.totalSlots);
+        data.deptId = parseInt(currentDeptId);
 
         try {
-            const response = await fetch('http://localhost:8081/admin/schedule', {
+            const response = await fetch('http://localhost:8081/schedule', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -280,26 +342,22 @@
                 },
                 body: JSON.stringify(data)
             });
-
             const result = await response.json();
             if (result.code === 200) {
                 showMessage('排班创建成功！', 'success');
                 bootstrap.Modal.getInstance(document.getElementById('addModal')).hide();
-                fetchSchedules();
+                fetchSchedules(); // 刷新列表
             } else {
                 showMessage(result.message, 'error');
             }
-        } catch (e) {
-            showMessage('操作失败', 'error');
-        }
+        } catch (e) { showMessage('操作失败', 'error'); }
     }
 
-    // 7. 删除排班
+    // 7. 删除 (保持不变)
     async function deleteSchedule(id) {
         if (!confirm('确定删除该排班吗？')) return;
-
         try {
-            const response = await fetch(`http://localhost:8081/admin/schedule/${id}`, {
+            const response = await fetch(`http://localhost:8081/schedule/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': localStorage.getItem('token') }
             });
@@ -310,9 +368,7 @@
             } else {
                 showMessage(result.message, 'error');
             }
-        } catch (e) {
-            showMessage('操作失败', 'error');
-        }
+        } catch (e) { showMessage('操作失败', 'error'); }
     }
 </script>
 </body>

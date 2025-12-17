@@ -15,547 +15,506 @@
             background-color: #f8d7da !important;
             border-left: 4px solid #dc3545;
         }
-        .stock-good {
-            border-left: 4px solid #28a745;
-        }
-        .inventory-card {
-            transition: all 0.3s ease;
-        }
-        .inventory-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
+
         .stock-level {
             font-weight: bold;
             font-size: 1.1rem;
         }
-        .stock-progress {
-            height: 8px;
+        /* 统一高度，避免按钮和输入框对不齐 */
+        .uniform-height {
+            height: 38px;
         }
-        .batch-info {
-            font-size: 0.875rem;
-            color: #6c757d;
-        }
-        .filter-active {
-            background-color: #667eea !important;
-            color: white !important;
+        /* 操作列按钮间距 */
+        .action-btn {
+            margin-right: 4px;
         }
     </style>
 </head>
 <body>
-    <div id="navbar-container"></div>
+<div id="navbar-container"></div>
 
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>📦 库存管理</h2>
-            <div>
-                <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#stockInModal">
-                    📥 药品入库
-                </button>
-                <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#adjustStockModal">
-                    📊 库存调整
-                </button>
-            </div>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="dashboard.html" class="btn btn-outline-secondary me-2">🏠 首页</a>
+        <h2>📦 库存管理</h2>
+        <div class="invisible">
+            <a href="#" class="btn btn-outline-secondary">🏠 首页</a>
         </div>
+    </div>
 
-        <!-- 库存概览 -->
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card text-center inventory-card">
-                    <div class="card-body">
-                        <div class="h4 text-primary">156</div>
-                        <div class="text-muted">药品品类</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center inventory-card">
-                    <div class="card-body">
-                        <div class="h4 text-success">¥286,540</div>
-                        <div class="text-muted">库存总值</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center inventory-card">
-                    <div class="card-body">
-                        <div class="h4 text-warning">12</div>
-                        <div class="text-muted">库存预警</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center inventory-card">
-                    <div class="card-body">
-                        <div class="h4 text-danger">3</div>
-                        <div class="text-muted">缺货药品</div>
-                    </div>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center inventory-card">
+                <div class="card-body">
+                    <div class="h4 text-primary" id="stat-total">0</div>
+                    <div class="text-muted">药品品类</div>
                 </div>
             </div>
         </div>
-
-        <!-- 筛选和搜索 -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" placeholder="搜索药品名称..." id="searchMedicine">
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-select" id="categoryFilter">
-                            <option value="">所有分类</option>
-                            <option value="抗生素">抗生素</option>
-                            <option value="感冒药">感冒药</option>
-                            <option value="心血管">心血管</option>
-                            <option value="维生素">维生素</option>
-                            <option value="外用">外用</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-select" id="stockFilter">
-                            <option value="">所有库存状态</option>
-                            <option value="critical">库存紧张</option>
-                            <option value="low">库存不足</option>
-                            <option value="good">库存正常</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-primary w-100" onclick="applyFilters()">筛选</button>
-                    </div>
+        <div class="col-md-3">
+            <div class="card text-center inventory-card">
+                <div class="card-body">
+                    <div class="h4 text-success" id="stat-value">¥0</div>
+                    <div class="text-muted">库存总值</div>
                 </div>
             </div>
         </div>
-
-        <!-- 库存列表 -->
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">药品库存列表</h5>
-                <div class="btn-group">
-                    <button class="btn btn-sm btn-outline-secondary active" onclick="changeView('table')">表格视图</button>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="changeView('card')">卡片视图</button>
+        <div class="col-md-3">
+            <div class="card text-center inventory-card">
+                <div class="card-body">
+                    <div class="h4 text-warning" id="stat-low">0</div>
+                    <div class="text-muted">库存预警</div>
                 </div>
-            </div>
-            <div class="card-body">
-                <!-- 表格视图 -->
-                <div id="tableView">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>药品ID</th>
-                                    <th>药品名称</th>
-                                    <th>规格</th>
-                                    <th>分类</th>
-                                    <th>当前库存</th>
-                                    <th>库存状态</th>
-                                    <th>最近入库</th>
-                                    <th>操作</th>
-                                </tr>
-                            </thead>
-                            <tbody id="inventoryTable">
-                                <!-- 动态生成库存数据 -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 卡片视图 -->
-                <div id="cardView" class="d-none">
-                    <div class="row" id="inventoryCards">
-                        <!-- 动态生成库存卡片 -->
-                    </div>
-                </div>
-
-                <!-- 分页 -->
-                <nav class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#">上一页</a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">下一页</a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
         </div>
-
-        <!-- 库存预警区域 -->
-        <div class="card mt-4">
-            <div class="card-header bg-warning text-dark">
-                <h5 class="card-title mb-0">⚠️ 库存预警</h5>
-            </div>
-            <div class="card-body">
-                <div class="row" id="warningItems">
-                    <!-- 动态生成预警项目 -->
+        <div class="col-md-3">
+            <div class="card text-center inventory-card">
+                <div class="card-body">
+                    <div class="h4 text-danger" id="stat-out">0</div>
+                    <div class="text-muted">缺货药品</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 药品入库模态框 -->
-    <div class="modal fade" id="stockInModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">📥 药品入库</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <!-- 左侧：搜索 -->
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text">🔍</span>
+                        <input type="text"
+                               class="form-control uniform-height"
+                               placeholder="输入药品名称"
+                               id="searchMedicine">
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <form id="stockInForm">
-                        <div class="mb-3">
-                            <label class="form-label">选择药品</label>
-                            <select class="form-select" id="stockInMedicine" required>
-                                <option value="">请选择药品</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">入库数量</label>
-                            <input type="number" class="form-control" id="stockInQuantity" min="1" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">入库原因</label>
-                            <select class="form-select" id="stockInReason">
-                                <option value="采购入库" selected>采购入库</option>
-                                <option value="盘盈入库">盘盈入库</option>
-                                <option value="退药入库">退药入库</option>
-                                <option value="其他">其他</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="processStockIn()">确认入库</button>
+
+                <!-- 右侧：库存状态（关键在 ms-auto） -->
+                <div class="col-md-3 ms-auto">
+                    <select class="form-select uniform-height" id="stockFilter">
+                        <option value="">所有库存状态</option>
+                        <option value="critical">🔴 缺货</option>
+                        <option value="low">🟡 预警</option>
+                        <option value="good">🟢 充足</option>
+                    </select>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 库存调整模态框 -->
-    <div class="modal fade" id="adjustStockModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">📊 库存调整</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div id="tableView">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                        <tr>
+                            <th class="ps-3">ID</th>
+                            <th>药品名称</th>
+                            <th>规格 / 厂家</th>
+                            <th>单价</th>
+                            <th>库存数</th>
+                            <th>状态</th>
+                            <th class="text-end pe-3">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="inventoryTable">
+                        </tbody>
+                    </table>
                 </div>
-                <div class="modal-body">
-                    <form id="adjustStockForm">
-                        <div class="mb-3">
-                            <label class="form-label">选择药品</label>
-                            <select class="form-select" id="adjustMedicine" required>
-                                <option value="">请选择药品</option>
-                                <!-- 动态填充药品选项 -->
+            </div>
+
+
+        </div>
+        <div class="card-footer bg-white">
+            <nav>
+                <ul class="pagination justify-content-center mb-0">
+                    <li class="page-item disabled"><a class="page-link">上一页</a></li>
+                    <li class="page-item active"><a class="page-link">1</a></li>
+                    <li class="page-item disabled"><a class="page-link">下一页</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <div class="alert alert-warning mt-4 d-none" id="warningAlert">
+        <h5>⚠️ 缺货与预警提醒</h5>
+        <div class="row" id="warningItems"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="stockInModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">📥 药品入库</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="stockInForm">
+                    <div class="mb-3">
+                        <label class="form-label">药品名称</label>
+                        <select class="form-select" id="stockInMedicine" required>
+                            <option value="">加载中...</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">入库数量</label>
+                        <input type="number" class="form-control" id="stockInQuantity" min="1" placeholder="输入正整数" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">入库类型</label>
+                        <select class="form-select" id="stockInReason">
+                            <option value="采购入库" selected>采购入库</option>
+                            <option value="盘盈入库">盘盈入库</option>
+                            <option value="退药入库">退药入库</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="processStockIn()">确认入库</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="adjustStockModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">📊 库存调整 (盘点/报损)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="adjustStockForm">
+                    <div class="mb-3">
+                        <label class="form-label">当前药品</label>
+                        <select class="form-select" id="adjustMedicine" required disabled>
+                            <option value="">加载中...</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-light border small">
+                        此功能用于修正库存差异。如需正常进货请使用“入库”。
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label">调整方向</label>
+                            <select class="form-select" id="adjustType">
+                                <option value="increase">➕ 增加库存</option>
+                                <option value="decrease">➖ 减少库存</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">调整类型</label>
-                            <select class="form-select" id="adjustType" required>
-                                <option value="increase">增加库存</option>
-                                <option value="decrease">减少库存</option>
-                                <option value="set">设置库存</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">调整数量</label>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">数量</label>
                             <input type="number" class="form-control" id="adjustQuantity" min="1" required>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">调整原因</label>
-                            <select class="form-select" id="adjustReason" required>
-                                <option value="">请选择原因</option>
-                                <option value="盘点差异">盘点差异</option>
-                                <option value="报损">报损</option>
-                                <option value="其他">其他</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">备注说明</label>
-                            <textarea class="form-control" id="adjustNotes" rows="2"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="processStockAdjust()">确认调整</button>
-                </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">调整原因</label>
+                        <select class="form-select" id="adjustReason">
+                            <option value="盘点差异">盘点差异</option>
+                            <option value="报损">药品报损/过期</option>
+                            <option value="数据修正">数据错误修正</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-warning" onclick="processStockAdjust()">提交调整</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- 库存详情模态框 -->
-    <div class="modal fade" id="stockDetailModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">📋 库存详情 - <span id="detailMedicineName"></span></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <strong>当前库存:</strong> <span id="detailCurrentStock" class="stock-level"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>库存状态:</strong> <span id="detailStockStatus"></span>
-                        </div>
-                    </div>
-                    
-                    <h6>库存流水</h6>
-                    <div class="table-responsive">
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>时间</th>
-                                    <th>类型</th>
-                                    <th>数量</th>
-                                    <th>原因</th>
-                                    <th>操作人</th>
-                                </tr>
-                            </thead>
-                            <tbody id="stockHistory">
-                                <!-- 动态生成库存流水 -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                </div>
+<div class="modal fade" id="stockDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">📋 库存流水 - <span id="detailMedicineName"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr><th>时间</th><th>变动类型</th><th>数量</th><th>单号</th></tr>
+                    </thead>
+                    <tbody id="stockHistory"></tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../utils/helpers.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../utils/helpers.js"></script>
 
-    <script>
-        // 全局变量
-        let inventoryList = [];
-        let allMedicines = []; // 用于下拉框选择
-        let currentMedicineLogs = []; // 当前查看的流水
+<script>
+    let inventoryList = [];
+    let displayedList = [];
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadNavbar();
-            fetchInventory(); // 加载库存列表
-            setupEventListeners();
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+        loadNavbar();
+        fetchInventory();
 
-        // 1. ★★★ 获取库存列表 (复用药品查询接口) ★★★
-        async function fetchInventory() {
-            const token = localStorage.getItem('token');
-            if (!token) return window.location.href = 'login.html';
+        document.getElementById('searchMedicine').addEventListener('input', applyFilters);
+        document.getElementById('stockFilter').addEventListener('change', applyFilters);
+    });
 
-            try {
-                // 接口: GET /medicine (这里我们取100条展示)
-                const response = await fetch('http://localhost:8081/medicine?page=1&pageSize=100', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    }
-                });
+    async function fetchInventory() {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'login.html';
 
-                const result = await response.json();
-
-                if (result.code === 200) {
-                    inventoryList = result.data.records;
-                    allMedicines = result.data.records; // 存一份给下拉框用
-                    renderInventoryTable();
-                    updateStats(); // 更新顶部统计卡片
-                } else {
-                    if (result.code === 401) window.location.href = 'login.html';
-                    else showMessage('加载失败: ' + result.message, 'error');
-                }
-            } catch (error) {
-                console.error(error);
-                showMessage('连接服务器失败', 'error');
+        try {
+            const response = await fetch('http://localhost:8081/medicine?page=1&pageSize=100', {
+                headers: { 'Authorization': token }
+            });
+            const result = await response.json();
+            if (result.code === 200) {
+                inventoryList = result.data.records;
+                displayedList = inventoryList;
+                renderAll();
+            } else {
+                showMessage(result.message, 'error');
             }
+        } catch (e) {
+            console.error(e);
+            showMessage('网络错误', 'error');
+        }
+    }
+
+    function renderAll() {
+        renderTable();
+
+        updateStats();
+        renderWarningItems();
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('inventoryTable');
+        if (displayedList.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">暂无数据</td></tr>';
+            return;
         }
 
-        // 2. 渲染库存表格
-        function renderInventoryTable() {
-            const tbody = document.getElementById('inventoryTable');
+        tbody.innerHTML = displayedList.map(item => {
+            const min = item.minStock || 20;
+            let statusBadge = '<span class="badge bg-success">充足</span>';
+            let rowClass = '';
 
-            if (inventoryList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">暂无药品数据</td></tr>';
-                return;
+            if (item.stockLevel <= 0) {
+                statusBadge = '<span class="badge bg-danger">缺货</span>';
+                rowClass = 'stock-critical';
+            } else if (item.stockLevel < min) {
+                statusBadge = '<span class="badge bg-warning text-dark">预警</span>';
+                rowClass = 'stock-low';
             }
 
-            tbody.innerHTML = inventoryList.map(item => {
-                // 计算库存状态 (假设安全库存为20)
-                const minStock = 20;
-                let statusBadge = '<span class="badge bg-success">充足</span>';
-                let rowClass = '';
-
-                if (item.stockLevel === 0) {
-                    statusBadge = '<span class="badge bg-danger">缺货</span>';
-                    rowClass = 'table-danger';
-                } else if (item.stockLevel < minStock) {
-                    statusBadge = '<span class="badge bg-warning text-dark">紧张</span>';
-                    rowClass = 'table-warning';
-                }
-
-                return `
+            return `
                 <tr class="${rowClass}">
-                    <td>${item.medicineId}</td>
+                    <td class="ps-3">${item.medicineId}</td>
                     <td>
-                        <strong>${item.medicineName}</strong>
-                        <div class="small text-muted">${item.specification || '-'}</div>
+                        <div class="fw-bold">${item.medicineName}</div>
                     </td>
-                    <td>${item.manufacturer || '-'}</td>
+                    <td>
+                        <small class="d-block text-muted">${item.specification || '-'}</small>
+                        <small class="text-secondary">${item.manufacturer || '-'}</small>
+                    </td>
                     <td>¥${item.unitPrice}</td>
-                    <td class="fw-bold">${item.stockLevel}</td>
+                    <td><span class="fs-5 fw-bold">${item.stockLevel}</span></td>
                     <td>${statusBadge}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary" onclick="viewStockHistory(${item.medicineId}, '${item.medicineName}')">流水</button>
-                        <button class="btn btn-sm btn-primary" onclick="openStockInModal(${item.medicineId})">入库</button>
+                    <td class="text-end pe-3">
+                        <button class="btn btn-sm btn-outline-primary action-btn" onclick="openStockInModal(${item.medicineId})">入库</button>
+                        <button class="btn btn-sm btn-outline-warning action-btn" onclick="openAdjustStockModal(${item.medicineId})">调整</button>
+                        <button class="btn btn-sm btn-light border" onclick="viewLogs(${item.medicineId}, '${item.medicineName}')">流水</button>
                     </td>
-                </tr>
-            `;
-            }).join('');
+                </tr>`;
+        }).join('');
+    }
+
+
+
+    function updateStats() {
+        document.getElementById('stat-total').textContent = inventoryList.length;
+        document.getElementById('stat-value').textContent = '¥' + inventoryList.reduce((s,i)=>s+i.unitPrice*i.stockLevel,0).toLocaleString();
+        document.getElementById('stat-low').textContent = inventoryList.filter(i=>i.stockLevel>0 && i.stockLevel<(i.minStock||20)).length;
+        document.getElementById('stat-out').textContent = inventoryList.filter(i=>i.stockLevel<=0).length;
+    }
+
+    function renderWarningItems() {
+        const warningList = inventoryList.filter(i => i.stockLevel < (i.minStock||20));
+        const container = document.getElementById('warningItems');
+        const alertBox = document.getElementById('warningAlert');
+
+        if(warningList.length === 0) {
+            alertBox.classList.add('d-none');
+            return;
         }
 
-        // 3. ★★★ 准备入库弹窗 ★★★
-        function openStockInModal(medicineId) {
-            // 填充药品下拉框
-            const select = document.getElementById('stockInMedicine');
-            select.innerHTML = '<option value="">请选择药品</option>' +
-                allMedicines.map(m => `<option value="${m.medicineId}">${m.medicineName}</option>`).join('');
+        alertBox.classList.remove('d-none');
+        container.innerHTML = warningList.map(item => `
+                <div class="col-md-3 mb-2">
+                    <div class="d-flex justify-content-between border p-2 bg-white rounded">
+                        <div>
+                            <div class="fw-bold">${item.medicineName}</div>
+                            <small class="text-danger">余: ${item.stockLevel}</small>
+                        </div>
+                        <button class="btn btn-sm btn-link" onclick="openStockInModal(${item.medicineId})">补货</button>
+                    </div>
+                </div>
+            `).join('');
+    }
 
-            // 如果传了ID，自动选中
-            if (medicineId) {
-                select.value = medicineId;
-            }
+    // ★★★ 核心逻辑：打开入库弹窗 ★★★
+    function openStockInModal(medicineId) {
+        const select = document.getElementById('stockInMedicine');
+        // 填充下拉框
+        select.innerHTML = '<option value="">请选择药品...</option>' +
+            inventoryList.map(m => `<option value="${m.medicineId}">${m.medicineName} (余: ${m.stockLevel})</option>`).join('');
 
-            // 重置其他字段
-            document.getElementById('stockInQuantity').value = '';
-            document.getElementById('stockInReason').value = '采购入库';
-
-            const modal = new bootstrap.Modal(document.getElementById('stockInModal'));
-            modal.show();
+        // 如果传了ID（从表格点击），则选中并禁用下拉框
+        if(medicineId) {
+            select.value = medicineId;
+            select.disabled = true;
+        } else {
+            select.value = "";
+            select.disabled = false; // 顶部按钮点击，允许自选
         }
 
-        // 4. ★★★ 提交入库 ★★★
-        async function processStockIn() {
-            const medicineId = document.getElementById('stockInMedicine').value;
-            const quantity = document.getElementById('stockInQuantity').value;
-            const reason = document.getElementById('stockInReason').value;
+        document.getElementById('stockInQuantity').value = '';
+        new bootstrap.Modal(document.getElementById('stockInModal')).show();
+    }
 
-            if (!medicineId || !quantity || quantity <= 0) {
-                showMessage('请填写正确的药品和数量', 'warning');
-                return;
-            }
+    // ★★★ 核心逻辑：打开调整弹窗 ★★★
+    function openAdjustStockModal(medicineId) {
+        const select = document.getElementById('adjustMedicine');
+        select.innerHTML = inventoryList.map(m => `<option value="${m.medicineId}">${m.medicineName}</option>`).join('');
 
-            try {
-                // 接口: POST /inventory/inbound
-                const response = await fetch('http://localhost:8081/inventory/inbound', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': localStorage.getItem('token')
-                    },
-                    body: JSON.stringify({
-                        medicineId: parseInt(medicineId),
-                        quantity: parseInt(quantity),
-                        reason: reason
-                    })
-                });
+        // 调整必须指定药品，所以如果是从顶部点的（没传ID），先默认选第一个或者提示
+        if(medicineId) {
+            select.value = medicineId;
+        }
+        select.disabled = true; // 调整通常针对单品，禁用修改防止误操作
 
-                const result = await response.json();
+        document.getElementById('adjustQuantity').value = '';
+        new bootstrap.Modal(document.getElementById('adjustStockModal')).show();
+    }
 
-                if (result.code === 200) {
-                    showMessage('入库成功！', 'success');
-                    bootstrap.Modal.getInstance(document.getElementById('stockInModal')).hide();
-                    fetchInventory(); // 刷新列表，库存应该增加了
-                } else {
-                    showMessage('入库失败: ' + result.message, 'error');
-                }
-            } catch (error) {
-                console.error(error);
-                showMessage('操作失败', 'error');
-            }
+
+
+    function applyFilters() {
+        const kw = document.getElementById('searchMedicine').value.toLowerCase();
+        const type = document.getElementById('stockFilter').value;
+
+        displayedList = inventoryList.filter(item => {
+            const matchName = item.medicineName.toLowerCase().includes(kw);
+            const min = item.minStock || 20;
+            let matchType = true;
+            if(type === 'critical') matchType = item.stockLevel < min;
+            if(type === 'good') matchType = item.stockLevel >= min;
+            return matchName && matchType;
+        });
+        renderTable();
+
+    }
+
+    // 入库提交
+    async function processStockIn() {
+        const id = document.getElementById('stockInMedicine').value;
+        const qty = document.getElementById('stockInQuantity').value;
+        const reason = document.getElementById('stockInReason').value;
+        if(!id || !qty || qty<=0) { showMessage('无效数据', 'warning'); return; }
+
+        try {
+            await fetch('http://localhost:8081/inventory/inbound', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json', 'Authorization': localStorage.getItem('token')},
+                body: JSON.stringify({ medicineId: id, quantity: parseInt(qty), reason: reason })
+            });
+            showMessage('入库成功', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('stockInModal')).hide();
+            fetchInventory();
+        } catch(e) { showMessage('操作失败', 'error'); }
+    }
+
+    // 调整提交
+    async function processStockAdjust() {
+        const id = document.getElementById('adjustMedicine').value;
+        const type = document.getElementById('adjustType').value; // 'increase' 或 'decrease'
+        let qty = parseInt(document.getElementById('adjustQuantity').value); // 获取绝对值
+        const reason = document.getElementById('adjustReason').value;
+
+        // 1. 基础校验
+        if (!id || !qty || qty <= 0) {
+            showMessage('请填写完整的调整信息（数量必须为正整数）', 'warning');
+            return;
         }
 
-        // 5. ★★★ 查看库存流水 ★★★
-        async function viewStockHistory(medicineId, medicineName) {
-            document.getElementById('detailMedicineName').textContent = medicineName;
-
-            try {
-                // 接口: GET /inventory/logs?medicineId=xxx
-                const response = await fetch(`http://localhost:8081/inventory/logs?medicineId=${medicineId}&page=1&pageSize=20`, {
-                    method: 'GET',
-                    headers: { 'Authorization': localStorage.getItem('token') }
-                });
-
-                const result = await response.json();
-                if (result.code === 200) {
-                    renderHistoryTable(result.data.records);
-                    new bootstrap.Modal(document.getElementById('stockDetailModal')).show();
-                }
-            } catch (error) {
-                console.error(error);
-            }
+        // 2. 关键逻辑：如果是“减少库存”，把数量转为负数
+        if (type === 'decrease') {
+            qty = -qty;
         }
 
-        function renderHistoryTable(logs) {
-            const tbody = document.getElementById('stockHistory');
-            if (!logs || logs.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="text-center">暂无记录</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = logs.map(log => {
-                const isAdd = log.changeQuantity > 0;
-                const colorClass = isAdd ? 'text-success' : 'text-danger';
-                const sign = isAdd ? '+' : '';
-
-                return `
-                <tr>
-                    <td>${log.createTime.replace('T', ' ')}</td>
-                    <td>${log.reason}</td>
-                    <td class="${colorClass} fw-bold">${sign}${log.changeQuantity}</td>
-                    <td>${log.relatedId ? '#' + log.relatedId : '-'}</td>
-                </tr>
-            `;
-            }).join('');
-        }
-
-        // 更新顶部统计
-        function updateStats() {
-            // 简单计算一下总库存价值
-            const totalValue = inventoryList.reduce((sum, item) => sum + (item.unitPrice * item.stockLevel), 0);
-            const lowStockCount = inventoryList.filter(i => i.stockLevel < 20).length;
-
-            // 需要确保HTML里有这些ID才能更新，这里做个简单的容错
-            const cardValues = document.querySelectorAll('.card-body .h4');
-            if(cardValues.length >= 3) {
-                cardValues[0].textContent = inventoryList.length; // 品类
-                cardValues[1].textContent = '¥' + totalValue.toFixed(0); // 总值
-                cardValues[2].textContent = lowStockCount; // 预警
-            }
-        }
-
-        function setupEventListeners() {
-            // 简单的搜索
-            document.getElementById('searchMedicine').addEventListener('input', function(e) {
-                const term = e.target.value.toLowerCase();
-                const rows = document.querySelectorAll('#inventoryTable tr');
-                rows.forEach(row => {
-                    const text = row.innerText.toLowerCase();
-                    row.style.display = text.includes(term) ? '' : 'none';
-                });
+        try {
+            // 3. 调用刚才写的后端接口 /inventory/adjust
+            const response = await fetch('http://localhost:8081/inventory/adjust', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    medicineId: parseInt(id),
+                    quantity: qty, // 发送带符号的整数 (如 -5 或 5)
+                    reason: reason
+                })
             });
 
-            // 绑定入库确认按钮 (如果用了onclick这里可以省略，但建议统一管理)
-        }
+            const result = await response.json();
 
-        // 占位函数
-        function processStockAdjust() { alert('库存调整功能暂未开放，请使用"入库"功能'); }
-    </script>
+            if (result.code === 200) {
+                showMessage('库存调整成功！', 'success');
+                // 关闭弹窗
+                bootstrap.Modal.getInstance(document.getElementById('adjustStockModal')).hide();
+                // 刷新列表
+                fetchInventory();
+            } else {
+                showMessage('调整失败: ' + result.message, 'error');
+            }
+        } catch (error) {
+            console.error(error);
+            showMessage('网络连接错误', 'error');
+        }
+    }
+
+    // 查看流水
+    async function viewLogs(id, name) {
+        document.getElementById('detailMedicineName').textContent = name;
+        const tbody = document.getElementById('stockHistory');
+        tbody.innerHTML = '<tr><td colspan="4">加载中...</td></tr>';
+        new bootstrap.Modal(document.getElementById('stockDetailModal')).show();
+
+        try {
+            const res = await fetch(`http://localhost:8081/inventory/logs?medicineId=${id}`, {
+                headers: {'Authorization': localStorage.getItem('token')}
+            });
+            const data = await res.json();
+            const logs = data.data.records || [];
+            tbody.innerHTML = logs.length ? logs.map(l => `
+                    <tr>
+                        <td>${l.createTime.replace('T',' ')}</td>
+                        <td>${l.reason}</td>
+                        <td class="${l.changeQuantity>0?'text-success':'text-danger'} fw-bold">${l.changeQuantity>0?'+':''}${l.changeQuantity}</td>
+                        <td>${l.relatedId||'-'}</td>
+                    </tr>`).join('') : '<tr><td colspan="4" class="text-center text-muted">暂无记录</td></tr>';
+        } catch(e) { tbody.innerHTML = '<tr><td colspan="4">加载失败</td></tr>'; }
+    }
+</script>
 </body>
 </html>

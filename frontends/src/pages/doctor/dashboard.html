@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>医生工作站 - 医院门诊管理系统</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../styles/common.css">
     <style>
@@ -27,114 +27,21 @@
     </style>
 </head>
 <body>
-    <div id="navbar-container"></div>
+<div id="navbar-container"></div>
 
-    <div class="container mt-4">
-        <!-- 医生信息横幅 -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <h4>👨‍⚕️ 张医生，欢迎回来！</h4>
-                                <p class="mb-0">内科 - 主任医师 | 今日接诊数: <strong>12</strong> 人</p>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <div class="h5">📅 2024年1月15日</div>
-                                <div>星期一 09:30 AM</div>
-                            </div>
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 id="welcome-msg">👨‍⚕️ 医生，欢迎回来！</h4>
+                            <p class="mb-0" id="doctor-details">加载中...</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <!-- 就诊队列 -->
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">📋 今日就诊队列</h5>
-                        <span class="badge bg-primary">8人等待</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group" id="patientQueue">
-
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 今日已完成就诊 -->
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">✅ 今日已完成就诊</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>患者</th>
-                                        <th>诊断</th>
-                                        <th>就诊时间</th>
-                                        <th>状态</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>赵六</td>
-                                        <td>上呼吸道感染</td>
-                                        <td>08:00-08:20</td>
-                                        <td><span class="badge bg-success">已完成</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>钱七</td>
-                                        <td>高血压随访</td>
-                                        <td>08:25-08:45</td>
-                                        <td><span class="badge bg-success">已完成</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 快捷功能 -->
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body text-center">
-                        <div class="h1 text-primary">📝</div>
-                        <h5>电子病历模板</h5>
-                        <p class="card-text">常用病历模板和诊断方案</p>
-                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#templatesModal">查看模板</button>
-                    </div>
-                </div>
-
-                <div class="card mb-4">
-                    <div class="card-body text-center">
-                        <div class="h1 text-success">💊</div>
-                        <h5>药品目录</h5>
-                        <p class="card-text">常用药品信息和用法</p>
-                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#medicinesModal">查看药品</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-body text-center">
-                        <div class="h1 text-info">📊</div>
-                        <h5>工作统计</h5>
-                        <div class="row text-center mt-3">
-                            <div class="col-6">
-                                <div class="h5 text-primary">12</div>
-                                <small>今日接诊</small>
-                            </div>
-                            <div class="col-6">
-                                <div class="h5 text-success">8</div>
-                                <small>开具处方</small>
-                            </div>
+                        <div class="col-md-4 text-end">
+                            <div class="h5" id="current-date">--月--日</div>
+                            <div id="current-time">--:--</div>
                         </div>
                     </div>
                 </div>
@@ -142,215 +49,256 @@
         </div>
     </div>
 
-    <!-- 病历模板模态框 -->
-    <div class="modal fade" id="templatesModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">📝 电子病历模板</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">📋 今日就诊队列</h5>
+                    <span class="badge bg-primary" id="waiting-count">加载中...</span>
                 </div>
-                <div class="modal-body">
-                    <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">上呼吸道感染模板</h6>
-                                <small>常用</small>
-                            </div>
-                            <p class="mb-1">主诉：发热、咳嗽、咽痛。查体：咽部充血，扁桃体不大...</p>
+                <div class="card-body">
+                    <div class="list-group" id="patientQueue">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- 我的排班卡片 -->
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">📅 我的排班</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2 align-items-center">
+                        <span>今天 (周一)</span>
+                        <span class="badge bg-success">✅ 正在出诊</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>明天 (周二)</span>
+                        <span class="badge bg-secondary">休息</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>后天 (周三)</span>
+                        <span class="text-muted small">09:00 - 17:00</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0" id="dept-schedule-manager" style="display: none;">
+                    <div class="d-grid">
+                        <a href="schedule-management.html" class="btn btn-outline-primary">
+                            <i class="bi bi-calendar-week"></i> 管理科室排班
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">高血压随访模板</h6>
-                                <small>常用</small>
-                            </div>
-                            <p class="mb-1">主诉：血压控制情况。查体：BP 130/85mmHg，心率78次/分...</p>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">糖尿病管理模板</h6>
-                                <small>专科</small>
-                            </div>
-                            <p class="mb-1">主诉：血糖控制情况。查体：随机血糖8.5mmol/L...</p>
-                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 医院通知卡片 -->
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">📢 医院通知</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 text-truncate">系统维护通知</h6>
+                            <small class="text-muted">刚刚</small>
+                        </div>
+                        <p class="mb-1 small text-muted text-truncate">今晚 23:00 进行系统升级，请及时保存...</p>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 text-truncate">流感诊疗规范更新</h6>
+                            <small class="text-muted">昨天</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 今日数据卡片 - 修改为带header的样式 -->
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">📊 今日数据</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center mt-2">
+                        <div class="col-6 border-end">
+                            <h3 class="text-primary mb-0" id="today-count">0</h3>
+                            <small class="text-muted">接诊人数</small>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-success mb-0" id="prescription-count">0</h3>
+                            <small class="text-muted">处方数量</small>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- 药品目录模态框 -->
-    <div class="modal fade" id="medicinesModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">💊 常用药品目录</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>药品名称</th>
-                                    <th>规格</th>
-                                    <th>用法</th>
-                                    <th>单价</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>阿莫西林胶囊</td>
-                                    <td>0.25g*24粒</td>
-                                    <td>0.5g tid</td>
-                                    <td>¥25.00</td>
-                                </tr>
-                                <tr>
-                                    <td>感冒灵颗粒</td>
-                                    <td>10g*9袋</td>
-                                    <td>1袋 tid</td>
-                                    <td>¥18.50</td>
-                                </tr>
-                                <tr>
-                                    <td>降压片</td>
-                                    <td>30片</td>
-                                    <td>1片 qd</td>
-                                    <td>¥32.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../utils/helpers.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../utils/helpers.js"></script>
+<script>
+    let currentPatientList = [];
 
-    <script>
-        // 页面加载时自动执行
-        document.addEventListener('DOMContentLoaded', function() {
-            loadNavbar();
-            loadDoctorInfo();      // 加载医生名字
-            fetchPendingPatients();// ★★★ 去后端拉取病人列表 ★★★
-        });
+    // 页面加载时自动执行
+    document.addEventListener('DOMContentLoaded', function() {
+        loadNavbar();
+        loadDoctorInfo();      // 加载医生信息
+        fetchPendingPatients();// 加载病人列表
+        updateDateTime();      // 初始化时间
+        setInterval(updateDateTime, 1000); // 每秒更新时间
 
-        // 显示欢迎信息
-        function loadDoctorInfo() {
-            const infoStr = localStorage.getItem('doctorInfo');
-            if (infoStr) {
-                const info = JSON.parse(infoStr);
-                // 找到页面上显示名字的地方（根据你的HTML结构可能需要微调选择器，或者直接用下面的简单粗暴法）
-                const welcomeTitle = document.querySelector('.card-body h4');
-                if(welcomeTitle) welcomeTitle.innerHTML = `👨‍⚕️ ${info.staffName}，欢迎回来！`;
+        // 模拟加载工作统计（等后端有接口了再替换）
+        loadWorkStats();
+    });
+
+    // 显示欢迎信息
+    function loadDoctorInfo() {
+        const infoStr = localStorage.getItem('doctorInfo');
+        if (infoStr) {
+            const info = JSON.parse(infoStr);
+
+            // 1. 更新欢迎语 (原有代码)
+            const welcomeMsg = document.getElementById('welcome-msg');
+            if(welcomeMsg) {
+                welcomeMsg.innerHTML = `👨‍⚕️ ${info.staffName}，欢迎回来！`;
             }
-        }
 
-        let currentPatientList = [];
-        // ★★★ 核心：获取待就诊列表 ★★★
-        async function fetchPendingPatients() {
-            const token = localStorage.getItem('token');
-            if (!token) return window.location.href = 'login.html';
+            // 2. 更新科室和职称 (原有代码)
+            const details = document.getElementById('doctor-details');
+            if(details) {
+                const dept = info.deptName || '暂无科室';
+                const title = info.title || '医师';
+                details.innerHTML = `${dept} - ${title}`;
+            }
 
-            try {
-                // 1. 调用后端接口：查询该医生的待就诊挂号
-                const response = await fetch('http://localhost:8081/doctor/appointments/pending', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token // 带上门票
-                    }
-                });
-
-                const result = await response.json();
-
-                if (result.code === 200) {
-                    const patients = result.data;
-                    currentPatientList = patients;
-                    renderPatientQueue(patients); // 渲染列表
-
-                    // 更新右上角的“X人等待”
-                    const badge = document.querySelector('.card-header .badge');
-                    if(badge) badge.textContent = `${patients.length}人等待`;
-
-                } else {
-                    if (result.code === 401) {
-                        alert('登录过期');
-                        window.location.href = 'login.html';
-                    } else {
-                        showMessage('加载患者列表失败: ' + result.message, 'error');
-                    }
+            if (info.isDeptManager === true) {
+                const managerBtn = document.getElementById('dept-schedule-manager');
+                if (managerBtn) {
+                    managerBtn.style.display = 'block';
                 }
-            } catch (error) {
-                console.error(error);
-                showMessage('服务器连接失败', 'error');
             }
         }
+    }
 
-        // 渲染列表 HTML
-        function renderPatientQueue(patients) {
-            const container = document.getElementById('patientQueue');
+    // 获取待就诊列表
+    async function fetchPendingPatients() {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'login.html';
 
-            if (patients.length === 0) {
-                container.innerHTML = '<div class="text-center p-4 text-muted">暂无待就诊患者</div>';
-                return;
+        try {
+            // 接口：查询该医生的待就诊挂号
+            const response = await fetch('http://localhost:8081/doctor/appointments/pending', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                }
+            });
+
+            const result = await response.json();
+
+            if (result.code === 200) {
+                const patients = result.data;
+                currentPatientList = patients;
+                renderPatientQueue(patients);
+
+                // 更新等待人数
+                const badge = document.getElementById('waiting-count');
+                if(badge) badge.textContent = `${patients.length}人等待`;
+
+                // 简单模拟：假设今日接诊人数就是待诊人数（实际应该从后端查 Completed 状态的单子）
+                // document.getElementById('today-count').textContent = patients.length;
+
+            } else {
+                if (result.code === 401) {
+                    alert('登录过期');
+                    window.location.href = 'login.html';
+                } else {
+                    showMessage('加载患者列表失败: ' + result.message, 'error');
+                }
             }
+        } catch (error) {
+            console.error(error);
+            showMessage('服务器连接失败', 'error');
+        }
+    }
 
-            container.innerHTML = patients.map(p => `
-            <div class="list-group-item patient-list-item" data-appointment-id="${p.appointmentId}">
-                <div class="d-flex w-100 justify-content-between">
+    function renderPatientQueue(patients) {
+        const container = document.getElementById('patientQueue');
+
+        if (patients.length === 0) {
+            container.innerHTML = '<div class="text-center p-5 text-muted">🎉 暂无待就诊患者，休息一下吧</div>';
+            return;
+        }
+
+        container.innerHTML = patients.map(p => `
+            <div class="list-group-item patient-list-item border-start border-4 border-primary" data-appointment-id="${p.appointmentId}">
+                <div class="d-flex w-100 justify-content-between align-items-center">
                     <div>
-                        <h6 class="mb-1">
-                            ${p.patientName}
-                            <span class="badge bg-light text-dark">${p.patientGender}</span>
-                            <span class="badge bg-light text-dark">${p.patientAge}岁</span>
-                        </h6>
-                        <p class="mb-1">预约时间：${formatTime(p.appointmentTime)}</p>
-                        <small class="text-muted">排班时段: ${p.scheduleDate} ${p.timeSlot}</small>
-                    </div>
-                    <div class="text-end">
-                        <span class="badge bg-warning mb-2">待就诊</span>
-                        <div>
-                            <button class="btn btn-sm btn-primary" onclick="startConsultation(${p.appointmentId})">
-                                开始接诊
-                            </button>
+                        <div class="d-flex align-items-center mb-1">
+                            <h6 class="mb-0 fw-bold me-2">${p.patientName}</h6>
+                            <span class="badge bg-light text-dark border me-1">${p.patientGender}</span>
+                            <span class="badge bg-light text-dark border">${p.patientAge}岁</span>
                         </div>
+                        <p class="mb-0 text-muted small">
+                            <i class="bi bi-clock"></i> 预约: ${formatTime(p.appointmentTime)}
+                        </p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary btn-sm px-3" onclick="startConsultation(${p.appointmentId})">
+                            接诊
+                        </button>
                     </div>
                 </div>
             </div>
         `).join('');
+    }
+
+    // 模拟加载统计数据（占位函数）
+    function loadWorkStats() {
+        // 这里以后可以接后端接口 /doctor/stats
+        // 目前先保持 0 或者随机数模拟一下效果
+        // document.getElementById('today-count').textContent = '5';
+        // document.getElementById('prescription-count').textContent = '3';
+    }
+
+    // 日期格式化
+    function formatTime(dateTimeStr) {
+        if(!dateTimeStr) return '';
+        return dateTimeStr.replace('T', ' ').substring(0, 16);
+    }
+
+    // 实时时间更新
+    function updateDateTime() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+        const timeStr = now.toLocaleTimeString('zh-CN', { weekday: 'long', hour12: false, hour: '2-digit', minute: '2-digit' });
+
+        const dateEl = document.getElementById('current-date');
+        const timeEl = document.getElementById('current-time');
+
+        if(dateEl) dateEl.textContent = `📅 ${dateStr}`;
+        if(timeEl) timeEl.textContent = timeStr;
+    }
+
+    // 开始接诊
+    function startConsultation(appointmentId) {
+        const patient = currentPatientList.find(p => p.appointmentId === appointmentId);
+        if (patient) {
+            localStorage.setItem('currentPatientInfo', JSON.stringify({
+                name: patient.patientName,
+                gender: patient.patientGender,
+                age: patient.patientAge,
+                phone: patient.patientPhone,
+                id: patient.patientId
+            }));
         }
-
-        // 简单的日期格式化工具
-        function formatTime(dateTimeStr) {
-            if(!dateTimeStr) return '';
-            return dateTimeStr.replace('T', ' ').substring(0, 16);
-        }
-
-        // 点击接诊
-        function startConsultation(appointmentId) {
-            // 1. 从全局列表中找到当前点击的患者对象
-            const patient = currentPatientList.find(p => p.appointmentId === appointmentId);
-
-            if (patient) {
-                // 2. ★★★ 把患者信息存入缓存 ★★★
-                localStorage.setItem('currentPatientInfo', JSON.stringify({
-                    name: patient.patientName,
-                    gender: patient.patientGender,
-                    age: patient.patientAge,
-                    phone: patient.patientPhone,
-                    id: patient.patientId
-                }));
-            }
-
-            // 3. 存挂号ID并跳转
-            localStorage.setItem('currentAppointmentId', appointmentId);
-            showMessage(`开始接诊...`, 'success');
-            setTimeout(() => {
-                window.location.href = `medical-record.html?appointmentId=${appointmentId}`;
-            }, 500);
-        }
-    </script>
+        localStorage.setItem('currentAppointmentId', appointmentId);
+        window.location.href = `medical-record.html?appointmentId=${appointmentId}`;
+    }
+</script>
 </body>
 </html>

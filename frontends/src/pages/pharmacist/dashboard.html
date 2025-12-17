@@ -117,7 +117,7 @@
                         <div class="h1 text-primary">📦</div>
                         <h5>库存管理</h5>
                         <p class="card-text">药品入库和库存调整</p>
-                        <button class="btn btn-outline-primary w-100" onclick="manageInventory()">管理库存</button>
+                        <a href="inventory.html" class="btn btn-outline-primary w-100">管理库存</a>
                     </div>
                 </div>
 
@@ -308,7 +308,6 @@
                 <td><span class="badge bg-warning">${item.status}</span></td>
                 <td>
                     <button class="btn btn-sm btn-primary" onclick="viewDetails(${item.prescriptionId})">查看</button>
-                    <button class="btn btn-sm btn-success" onclick="dispenseMedicine(${item.prescriptionId})">发药</button>
                 </td>
             </tr>
         `).join('');
@@ -323,7 +322,7 @@
             
             // 设置确认消息
             document.getElementById('confirmMessage').textContent = 
-                `确认发放处方 [${prescriptionId}] 的药品吗？`;
+                `确认发放药品吗？`;
             
             // 显示确认模态框
             const confirmModal = new bootstrap.Modal(document.getElementById('confirmDispenseModal'));
@@ -366,7 +365,7 @@
                 
                 if (result.code === 200) {
                     // 显示成功消息
-                    showMessage('✅ 发药成功！药品库存已更新', 'success');
+                    showMessage('✅ 发药成功！', 'success');
                     
                     // 刷新处方列表
                     fetchPendingPrescriptions();

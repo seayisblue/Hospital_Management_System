@@ -40,5 +40,13 @@ public class InventoryController {
         Page<InventoryLogVO> page = inventoryService.getInventoryLogPage(request);
         return Result.success(page);
     }
+    /**
+     * 库存调整 (盘点/报损/修正)
+     */
+    @PostMapping("/adjust")
+    public Result<Boolean> adjustStock(@Valid @RequestBody com.template.dto.InventoryAdjustRequest request) {
+        inventoryService.adjustStock(request);
+        return Result.success("库存调整成功", true);
+    }
 }
 

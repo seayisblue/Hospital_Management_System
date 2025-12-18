@@ -6,129 +6,319 @@
     <title>医生工作站 - 医院门诊管理系统</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="../../styles/common.css">
+
     <style>
-        .patient-list-item {
-            transition: all 0.3s ease;
-            cursor: pointer;
+        :root {
+            --theme-start: #4CA1AF;
+            --theme-end: #C4E0E5;
+            --border-light: #edf2f7;
+            --text-muted: #94a3b8;
         }
-        .patient-list-item:hover {
-            background-color: #f8f9fa;
-            transform: translateX(5px);
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            margin: 0; padding: 0;
+            overflow-x: hidden;
         }
-        .urgent-badge {
-            animation: pulse 2s infinite;
+
+        /* 沉浸式顶栏 */
+        .header-section {
+            background: linear-gradient(135deg, var(--theme-start), var(--theme-end));
+            padding: 25px 0px 65px 0px;
+            color: white;
+            height: 180px;
         }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        .big-time {
+            font-size: 5rem;
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -2px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .stats-summary { margin-top: 45px; }
+
+        /* 内容面板 */
+        .content-panel {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            margin-bottom: 24px;
+
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+
+        .panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-header h5 {
+            font-size: 1.2rem; font-weight: 700; margin: 0;
+            display: flex; align-items: center;
+        }
+
+        .panel-header i { margin-right: 8px; color: var(--theme-start); }
+
+        /* 快捷排班看板 */
+        .schedule-brief { padding: 20px; }
+        .widget-row {
+            display: flex; justify-content: space-between;
+            padding: 12px 0; border-bottom: 1px dashed #f1f5f9;
+            font-size: 0.9rem;
+        }
+        .widget-row:last-child { border-bottom: none; }
+
+        /* 可折叠日历区 */
+        .calendar-collapse-btn {
+            width: 100%;
+            padding: 10px;
+            background: #f8fafc;
+            border: none;
+            border-top: 1px solid var(--border-light);
+            color: var(--theme-start);
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .calendar-collapse-btn:hover { background: #f1f5f9; }
+
+        .calendar-body {
+            padding: 15px;
+            border-top: 1px solid var(--border-light);
+            background: #fff;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+        .cal-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 800; padding-bottom: 8px; }
+
+        .cal-date {
+            aspect-ratio: 1;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; cursor: pointer; border-radius: 6px;
+            transition: 0.2s; border: 1px solid transparent;
+        }
+
+        .cal-past { color: #d1d5db; cursor: default; }
+
+        /* 排班方框填充效果 */
+        .cal-scheduled {
+            background-color: var(--theme-start);
+            color: white !important;
+            font-weight: 700;
+            border-radius: 4px;
+        }
+
+        .cal-date.selected {
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--theme-start);
+        }
+
+        /* 其他布局 */
+        .notice-item { padding: 15px 20px; border-bottom: 1px solid #f8fafc; }
+        .patient-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #f8fafc; }
+
+        /* 药物列表特有样式 */
+        .drug-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #f8fafc; }
+        .drug-info { flex: 1; }
+        .drug-name { font-weight: 700; color: #1e293b; }
+        .drug-spec { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+
+        .btn-action {
+            background: var(--theme-start); color: white; border: none;
+            padding: 6px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+        }
+
+        .nav-tabs-custom {
+            background: #fff; padding: 0 15px; border-bottom: 1px solid var(--border-light);
+        }
+        .nav-tabs-custom .nav-link {
+            border: none; color: var(--text-muted); padding: 15px 18px; font-weight: 600; font-size: 0.9rem;
+        }
+        .nav-tabs-custom .nav-link.active {
+            color: var(--theme-start); border-bottom: 3px solid var(--theme-start); background: none;
+        }
+
+        /* 优化后的管理按钮样式 */
+        #dept-schedule-manager .btn-outline-primary {
+            background-color: #f1f5f9; /* 浅灰色背景 */
+            border: none;
+            border-left: 4px solid var(--theme-start); /* 左侧主题色强调线 */
+            color: #475569; /* 深灰文字 */
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #dept-schedule-manager .btn-outline-primary:hover {
+            background-color: #e2e8f0;
+            color: var(--theme-start);
+        }
+
+        #dept-schedule-manager .btn-outline-primary::after {
+            content: 'chevron_right'; /* 增加一个向右的箭头图标感 */
+            font-family: 'Material Icons Outlined';
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-<div id="navbar-container"></div>
 
-<div class="container mt-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h4 id="welcome-msg">👨‍⚕️ 医生，欢迎回来！</h4>
-                            <p class="mb-0" id="doctor-details">加载中...</p>
-                        </div>
-                        <div class="col-md-4 text-end">
-                            <div class="h5" id="current-date">--月--日</div>
-                            <div id="current-time">--:--</div>
-                        </div>
-                    </div>
-                </div>
+<div class="header-section">
+    <div class="container">
+        <a href="../index.html" class="back-link">
+            <i class="material-icons-outlined">arrow_back</i> 返回门户
+        </a>
+        <div class="row align-items-end">
+            <div class="col-md-6">
+                <h2 id="welcome-msg" style="font-size: 2.6rem;" class="fw-bold mb-1">...</h2>
+                <p class="opacity-75 mb-0" id="doctor-details">医生站环境就绪</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="big-time" id="current-time">00:00</div>
+                <div class="big-date" id="current-date">正在同步时间...</div>
             </div>
         </div>
     </div>
+</div>
 
+<div class="container stats-summary">
     <div class="row">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">📋 今日就诊队列</h5>
-                    <span class="badge bg-primary" id="waiting-count">加载中...</span>
-                </div>
-                <div class="card-body">
-                    <div class="list-group" id="patientQueue">
+            <div class="content-panel">
+                <ul class="nav nav-tabs nav-tabs-custom" id="patientTabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#pending" onclick="fetchPendingPatients()">
+                            <i class="material-icons-outlined" style="font-size: 18px; vertical-align: middle; margin-right: 4px;">assignment_ind</i>待诊队列
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#history" onclick="fetchHistoryPatients()">
+                            <i class="material-icons-outlined" style="font-size: 18px; vertical-align: middle; margin-right: 4px;">history</i>诊治历史
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#search">
+                            <i class="material-icons-outlined" style="font-size: 18px; vertical-align: middle; margin-right: 4px;">person_search</i>患者搜索
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#drug-search">
+                            <i class="material-icons-outlined" style="font-size: 18px; vertical-align: middle; margin-right: 4px;">medical_services</i>药物手册
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="pending">
+                        <div id="patientQueue"></div>
+                    </div>
+                    <div class="tab-pane fade" id="history">
+                        <div class="p-3 bg-light border-bottom d-flex align-items-center gap-2">
+                            <input type="date" class="form-control form-control-sm w-auto" id="historyDate" onchange="fetchHistoryPatients()">
+                            <small class="text-muted">选择日期回溯历史记录</small>
+                        </div>
+                        <div id="historyList"></div>
+                    </div>
+                    <div class="tab-pane fade" id="search">
+                        <div class="p-3 bg-light border-bottom">
+                            <input type="text" class="form-control" placeholder="搜索患者姓名、手机号..." oninput="searchPatients(this.value)">
+                        </div>
+                        <div id="searchResult"></div>
+                    </div>
+                    <div class="tab-pane fade" id="drug-search">
+                        <div class="p-3 bg-light border-bottom">
+                            <input type="text" class="form-control" placeholder="输入药物名称或简拼搜索..." oninput="searchDrugs(this.value)">
+                        </div>
+                        <div id="drugList">
+                            <div class="p-5 text-center text-muted small">输入关键词搜索院内药品库</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
-            <!-- 我的排班卡片 -->
-            <div class="card mb-4">
-                <div class="card-header bg-white">
-                    <h5 class="card-title mb-0">📅 我的排班</h5>
+            <div class="content-panel">
+                <div class="panel-header">
+                    <h5><i class="material-icons-outlined">calendar_today</i> 出诊安排</h5>
                 </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-2 align-items-center">
-                        <span>今天 (周一)</span>
-                        <span class="badge bg-success">✅ 正在出诊</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>明天 (周二)</span>
-                        <span class="badge bg-secondary">休息</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span>后天 (周三)</span>
-                        <span class="text-muted small">09:00 - 17:00</span>
-                    </div>
-                </div>
-                <div class="card-footer bg-white border-top-0" id="dept-schedule-manager" style="display: none;">
-                    <div class="d-grid">
-                        <a href="schedule-management.html" class="btn btn-outline-primary">
-                            <i class="bi bi-calendar-week"></i> 管理科室排班
-                        </a>
-                    </div>
-                </div>
-            </div>
 
-            <!-- 医院通知卡片 -->
-            <div class="card mb-4">
-                <div class="card-header bg-white">
-                    <h5 class="card-title mb-0">📢 医院通知</h5>
+                <div class="schedule-brief">
+                    <div class="widget-row">
+                        <span>明天 (周五)</span>
+                        <span>09:00 - 17:00</span>
+                    </div>
+                    <div class="widget-row">
+                        <span>后天 (周六)</span>
+                        <span class="text-muted">休息</span>
+                    </div>
                 </div>
-                <div class="list-group list-group-flush">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-truncate">系统维护通知</h6>
-                            <small class="text-muted">刚刚</small>
+
+                <button class="calendar-collapse-btn" type="button" data-bs-toggle="collapse" data-bs-target="#calendarCollapse">
+                    <i class="material-icons-outlined" style="font-size: 18px; margin-right: 5px;">date_range</i>
+                    查看排班日历
+                </button>
+
+                <div class="collapse" id="calendarCollapse">
+                    <div class="calendar-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3 px-2">
+                            <button class="btn btn-sm p-0" onclick="changeMonth(-1)"><i class="material-icons-outlined">chevron_left</i></button>
+                            <span id="calendarMonth" class="fw-bold small">2025年12月</span>
+                            <button class="btn btn-sm p-0" onclick="changeMonth(1)"><i class="material-icons-outlined">chevron_right</i></button>
                         </div>
-                        <p class="mb-1 small text-muted text-truncate">今晚 23:00 进行系统升级，请及时保存...</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-truncate">流感诊疗规范更新</h6>
-                            <small class="text-muted">昨天</small>
+                        <div class="calendar-grid" id="calendarGrid"></div>
+
+                        <div id="selectedSchedule" class="mt-3 p-2 bg-light rounded" style="font-size: 0.75rem; min-height: 40px;">
+                            <span class="text-muted">点击日历有班日期查看详情</span>
                         </div>
+                    </div>
+                </div>
+
+                <div id="dept-schedule-manager" class="p-3 border-top" style="display: none;">
+                    <a href="schedule-management.html" class="btn btn-outline-primary w-100 fw-bold">
+                        <span>管理科室排班</span>
                     </a>
                 </div>
             </div>
 
-            <!-- 今日数据卡片 - 修改为带header的样式 -->
-            <div class="card">
-                <div class="card-header bg-white">
-                    <h5 class="card-title mb-0">📊 今日数据</h5>
+            <div class="content-panel">
+                <div class="panel-header">
+                    <h5><i class="material-icons-outlined">campaign</i> 医院通知</h5>
                 </div>
-                <div class="card-body">
-                    <div class="row text-center mt-2">
-                        <div class="col-6 border-end">
-                            <h3 class="text-primary mb-0" id="today-count">0</h3>
-                            <small class="text-muted">接诊人数</small>
-                        </div>
-                        <div class="col-6">
-                            <h3 class="text-success mb-0" id="prescription-count">0</h3>
-                            <small class="text-muted">处方数量</small>
-                        </div>
+                <div id="noticeList">
+                    <div class="notice-item">
+                        <div class="fw-bold small">系统维护通知</div>
+                        <div class="extra-small text-muted mt-1">今晚 23:00 进行例行维护。</div>
                     </div>
                 </div>
             </div>
@@ -140,165 +330,131 @@
 <script src="../../utils/helpers.js"></script>
 
 <script>
-    let currentPatientList = [];
+    let currentMonth = new Date();
+    // 模拟有排班的日期
+    const scheduleDates = ['2025-12-18', '2025-12-19', '2025-12-25', '2025-12-31', '2026-01-05'];
 
-    // 页面加载时自动执行
-    document.addEventListener('DOMContentLoaded', function() {
-        loadNavbar();
-        loadDoctorInfo();      // 加载医生信息
-        fetchPendingPatients();// 加载病人列表
-        updateDateTime();      // 初始化时间
-        setInterval(updateDateTime, 1000); // 每秒更新时间
+    // 模拟药物库
+    const mockDrugs = [
+        { name: '阿莫西林胶囊', spec: '0.25g*24粒', usage: '口服，一日三次', stock: '充足' },
+        { name: '布洛芬缓释胶囊', spec: '0.3g*10粒', usage: '口服，痛时使用', stock: '20' },
+        { name: '对乙酰氨基酚片', spec: '0.5g*12片', usage: '口服，发热使用', stock: '50' },
+        { name: '维生素C片', spec: '0.1g*100片', usage: '口服，一日一次', stock: '充足' }
+    ];
 
-        // 模拟加载工作统计（等后端有接口了再替换）
-        loadWorkStats();
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDoctorInfo();
+        fetchPendingPatients();
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        renderCalendar();
     });
 
-    // 显示欢迎信息
+    // 医生信息加载
     function loadDoctorInfo() {
-        const infoStr = localStorage.getItem('doctorInfo');
-        if (infoStr) {
-            const info = JSON.parse(infoStr);
+        const info = JSON.parse(localStorage.getItem('doctorInfo') || '{}');
+        document.getElementById('welcome-msg').textContent = `${info.staffName || '医生'}，您好`;
+        document.getElementById('doctor-details').textContent = `${info.deptName || '未定科室'} · ${info.title || '医师'}`;
+        if (info.isDeptManager) document.getElementById('dept-schedule-manager').style.display = 'block';
+    }
 
-            // 1. 更新欢迎语 (原有代码)
-            const welcomeMsg = document.getElementById('welcome-msg');
-            if(welcomeMsg) {
-                welcomeMsg.innerHTML = `👨‍⚕️ ${info.staffName}，欢迎回来！`;
-            }
+    // 时间显示
+    function updateDateTime() {
+        const now = new Date();
+        document.getElementById('current-time').textContent = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+    }
 
-            // 2. 更新科室和职称 (原有代码)
-            const details = document.getElementById('doctor-details');
-            if(details) {
-                const dept = info.deptName || '暂无科室';
-                const title = info.title || '医师';
-                details.innerHTML = `${dept} - ${title}`;
-            }
-
-            if (info.isDeptManager === true) {
-                const managerBtn = document.getElementById('dept-schedule-manager');
-                if (managerBtn) {
-                    managerBtn.style.display = 'block';
-                }
-            }
+    // 日历逻辑
+    function renderCalendar() {
+        const grid = document.getElementById('calendarGrid');
+        const monthLabel = document.getElementById('calendarMonth');
+        grid.innerHTML = '';
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+        monthLabel.textContent = `${year}年${month + 1}月`;
+        ['日','一','二','三','四','五','六'].forEach(d => grid.innerHTML += `<div class="cal-label">${d}</div>`);
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const today = new Date(); today.setHours(0,0,0,0);
+        for(let i=0; i<firstDay; i++) grid.innerHTML += `<div></div>`;
+        for(let d=1; d<=daysInMonth; d++) {
+            const dateObj = new Date(year, month, d);
+            const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const isScheduled = scheduleDates.includes(dateStr);
+            let classList = "cal-date";
+            if (dateObj < today) classList += " cal-past";
+            else if (isScheduled) classList += " cal-scheduled";
+            grid.innerHTML += `<div class="${classList}" onclick="handleDateClick('${dateStr}', ${dateObj >= today}, this)">${d}</div>`;
         }
     }
 
-    // 获取待就诊列表
-    async function fetchPendingPatients() {
-        const token = localStorage.getItem('token');
-        if (!token) return window.location.href = 'login.html';
-
-        try {
-            // 接口：查询该医生的待就诊挂号
-            const response = await fetch('http://localhost:8081/doctor/appointments/pending', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                }
-            });
-
-            const result = await response.json();
-
-            if (result.code === 200) {
-                const patients = result.data;
-                currentPatientList = patients;
-                renderPatientQueue(patients);
-
-                // 更新等待人数
-                const badge = document.getElementById('waiting-count');
-                if(badge) badge.textContent = `${patients.length}人等待`;
-
-                // 简单模拟：假设今日接诊人数就是待诊人数（实际应该从后端查 Completed 状态的单子）
-                // document.getElementById('today-count').textContent = patients.length;
-
-            } else {
-                if (result.code === 401) {
-                    alert('登录过期');
-                    window.location.href = 'login.html';
-                } else {
-                    showMessage('加载患者列表失败: ' + result.message, 'error');
-                }
-            }
-        } catch (error) {
-            console.error(error);
-            showMessage('服务器连接失败', 'error');
-        }
+    function handleDateClick(dateStr, isFuture, el) {
+        if (!isFuture) return;
+        document.querySelectorAll('.cal-date').forEach(d => d.classList.remove('selected'));
+        el.classList.add('selected');
+        const detail = document.getElementById('selectedSchedule');
+        detail.innerHTML = scheduleDates.includes(dateStr) ? `<strong>${dateStr}:</strong> 09:00 - 17:00 出诊` : `<span class="text-muted">${dateStr} 暂无排班</span>`;
     }
 
-    function renderPatientQueue(patients) {
-        const container = document.getElementById('patientQueue');
+    function changeMonth(step) {
+        currentMonth.setMonth(currentMonth.getMonth() + step);
+        renderCalendar();
+    }
 
-        if (patients.length === 0) {
-            container.innerHTML = '<div class="text-center p-5 text-muted">🎉 暂无待就诊患者，休息一下吧</div>';
+    // 药物搜索逻辑
+    function searchDrugs(query) {
+        const container = document.getElementById('drugList');
+        if (!query) {
+            container.innerHTML = '<div class="p-5 text-center text-muted small">输入关键词搜索院内药品库</div>';
             return;
         }
-
-        container.innerHTML = patients.map(p => `
-            <div class="list-group-item patient-list-item border-start border-4 border-primary" data-appointment-id="${p.appointmentId}">
-                <div class="d-flex w-100 justify-content-between align-items-center">
-                    <div>
-                        <div class="d-flex align-items-center mb-1">
-                            <h6 class="mb-0 fw-bold me-2">${p.patientName}</h6>
-                            <span class="badge bg-light text-dark border me-1">${p.patientGender}</span>
-                            <span class="badge bg-light text-dark border">${p.patientAge}岁</span>
-                        </div>
-                        <p class="mb-0 text-muted small">
-                            <i class="bi bi-clock"></i> 预约: ${formatTime(p.appointmentTime)}
-                        </p>
-                    </div>
-                    <div>
-                        <button class="btn btn-primary btn-sm px-3" onclick="startConsultation(${p.appointmentId})">
-                            接诊
-                        </button>
-                    </div>
+        const filtered = mockDrugs.filter(d => d.name.includes(query));
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="p-5 text-center text-muted small">未找到匹配药物</div>';
+            return;
+        }
+        container.innerHTML = filtered.map(d => `
+            <div class="drug-item">
+                <div class="drug-info">
+                    <div class="drug-name">${d.name}</div>
+                    <div class="drug-spec">规格：${d.spec} | 用法：${d.usage}</div>
+                </div>
+                <div class="text-end">
+                    <span class="badge ${d.stock==='充足'?'bg-success':'bg-warning'}">${d.stock==='充足'?'有货':('库存:'+d.stock)}</span>
                 </div>
             </div>
         `).join('');
     }
 
-    // 模拟加载统计数据（占位函数）
-    function loadWorkStats() {
-        // 这里以后可以接后端接口 /doctor/stats
-        // 目前先保持 0 或者随机数模拟一下效果
-        // document.getElementById('today-count').textContent = '5';
-        // document.getElementById('prescription-count').textContent = '3';
+    // 患者列表加载
+    async function fetchPendingPatients() {
+        const container = document.getElementById('patientQueue');
+        container.innerHTML = '<div class="p-4 text-center text-muted">正在加载队列...</div>';
+        try {
+            const r = await fetch('http://localhost:8081/doctor/appointments/pending', { headers: { 'Authorization': localStorage.getItem('token') } });
+            const res = await r.json();
+            if (res.code === 200) {
+                if (res.data.length === 0) container.innerHTML = '<div class="p-5 text-center text-muted">当前无候诊患者</div>';
+                else container.innerHTML = res.data.map(p => `
+                    <div class="patient-item">
+                        <div style="flex:1">
+                            <div class="fw-bold">${p.patientName} <span class="badge bg-light text-dark fw-normal ms-1">${p.patientAge}岁</span></div>
+                            <div class="small text-muted mt-1">${p.patientGender} · 预约 ${p.appointmentTime.split('T')[1].substring(0,5)}</div>
+                        </div>
+                        <button class="btn-action" onclick="startConsultation(${p.appointmentId})">接诊</button>
+                    </div>
+                `).join('');
+            }
+        } catch (e) { container.innerHTML = '加载失败'; }
     }
 
-    // 日期格式化
-    function formatTime(dateTimeStr) {
-        if(!dateTimeStr) return '';
-        return dateTimeStr.replace('T', ' ').substring(0, 16);
+    function startConsultation(id) {
+        window.location.href = `medical-record.html?appointmentId=${id}`;
     }
 
-    // 实时时间更新
-    function updateDateTime() {
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
-        const timeStr = now.toLocaleTimeString('zh-CN', { weekday: 'long', hour12: false, hour: '2-digit', minute: '2-digit' });
-
-        const dateEl = document.getElementById('current-date');
-        const timeEl = document.getElementById('current-time');
-
-        if(dateEl) dateEl.textContent = `📅 ${dateStr}`;
-        if(timeEl) timeEl.textContent = timeStr;
-    }
-
-    // 开始接诊
-    function startConsultation(appointmentId) {
-        const patient = currentPatientList.find(p => p.appointmentId === appointmentId);
-        if (patient) {
-            localStorage.setItem('currentPatientInfo', JSON.stringify({
-                name: patient.patientName,
-                gender: patient.patientGender,
-                age: patient.patientAge,
-                phone: patient.patientPhone,
-                id: patient.patientId
-            }));
-        }
-        localStorage.setItem('currentAppointmentId', appointmentId);
-        window.location.href = `medical-record.html?appointmentId=${appointmentId}`;
-    }
+    function fetchHistoryPatients() { /* 后端接口待定 */ }
+    function searchPatients(v) { /* 搜索逻辑待定 */ }
 </script>
 </body>
 </html>

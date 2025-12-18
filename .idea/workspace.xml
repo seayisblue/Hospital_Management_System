@@ -4,32 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4396145b-083f-4aad-9974-41ecfb0f3f87" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/dto/InventoryAdjustRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/controller/InventoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/controller/InventoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/controller/ScheduleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/controller/ScheduleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/dto/StaffLoginResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/dto/StaffLoginResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/InventoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/InventoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/ScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/ScheduleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/InventoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/InventoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/ScheduleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/ScheduleServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/StaffServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/StaffServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backends/src/main/resources/sql/hospital_system.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backends/src/main/resources/sql/hospital_system.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/department-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/department-management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/finance-center.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/finance-center.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/medicine-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/medicine-management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/medicine-stock.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/medicine-stock.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/on-site-registration.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/on-site-registration.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/schedule-management.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/admin/staff-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/admin/staff-management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/doctor/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/doctor/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/patient/appointment.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/patient/appointment.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/pharmacist/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/pharmacist/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontends/src/pages/pharmacist/inventory.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontends/src/pages/pharmacist/inventory.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/application.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/application.log" afterDir="false" />
-    </list>
+    <list default="true" id="4396145b-083f-4aad-9974-41ecfb0f3f87" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -148,7 +123,7 @@
       <workItem from="1765874493713" duration="616000" />
       <workItem from="1765884416319" duration="8953000" />
       <workItem from="1765947485403" duration="13893000" />
-      <workItem from="1765974322260" duration="8671000" />
+      <workItem from="1765974322260" duration="9085000" />
     </task>
     <servers />
   </component>
@@ -170,7 +145,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/backends/src/main/java/com/template/service/impl/ScheduleServiceImpl.java</url>
-          <line>212</line>
+          <line>192</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>

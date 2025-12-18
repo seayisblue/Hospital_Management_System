@@ -1,30 +1,34 @@
-<!-- 导航栏组件 -->
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
     <div class="container">
-        <a class="navbar-brand" href="#">
-            🏥 医院门诊管理系统
+        <a class="navbar-brand d-flex align-items-center fw-bold" href="#" style="color: #3F7E89; font-size: 1.4rem;">
+            <i class="bi bi-hospital-fill me-2"></i>
+            <span>四川大学江安医院</span>
         </a>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-        
+
         <div class="collapse navbar-collapse" id="navbarNav">
-            <!-- 导航菜单将通过JavaScript动态生成 -->
-            <ul class="navbar-nav me-auto" id="main-nav">
-                <!-- 这里的内容将由JavaScript动态生成 -->
+            <ul class="navbar-nav ms-auto" id="main-nav">
             </ul>
-            
-            <!-- 用户信息部分 -->
-            <ul class="navbar-nav">
+
+            <ul class="navbar-nav ms-lg-3 border-lg-start ps-lg-3">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        👤 <span id="user-name">用户</span>
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <div class="avatar-circle me-2">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <span id="user-name" class="fw-medium text-dark">用户</span>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" onclick="showMessage('个人设置功能开发中', 'info')">个人设置</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                        <li><a class="dropdown-item" href="#" onclick="showMessage('个人设置功能开发中', 'info')">
+                            <i class="bi bi-gear me-2"></i>个人设置</a>
+                        </li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="../patient/login.html" onclick="handleLogout()">退出登录</a></li>
+                        <li><a class="dropdown-item text-danger" href="../patient/login.html" onclick="handleLogout()">
+                            <i class="bi bi-box-arrow-right me-2"></i>退出登录</a>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -32,193 +36,122 @@
     </div>
 </nav>
 
+<style>
+    /* 导航栏专属精致样式 */
+    .navbar {
+        padding: 0.6rem 0 !important; /* 保持你之前调整的高度 */
+
+        /* 核心修改：使用你的主题色 #C4E0E5，并设置 0.9 的透明度 */
+        /* 如果想要完全不透明，可以直接写 background-color: #C4E0E5 !important; */
+        background-color: rgba(196, 224, 229, 1) !important;
+
+        border-bottom: none !important;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05); /* 增加极淡的投影 */
+        position: fixed;
+        width: 100%;
+        z-index: 1030;
+        transition: all 0.3s ease;
+    }
+
+    /* 导航链接颜色 */
+    .nav-link {
+        color: #333 !important; /* 确保在白色/透明背景上文字清晰 */
+        font-weight: 500;
+    }
+
+    /* 之前提到的从左到右渐变边缘（如果还需要的话） */
+    /* 注意：如果背景是纵向透明的，这个边缘条建议设细一点，或者设为 0.5 透明度 */
+
+    .nav-link i { font-size: 1.1rem; }
+    .nav-link:hover { color: #4CA1AF !important; }
+    .nav-link.active { color: #4CA1AF !important; position: relative; }
+    .nav-link.active::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 1rem;
+        right: 1rem;
+        height: 3px;
+        background: #4CA1AF;
+        border-radius: 2px;
+    }
+    .avatar-circle {
+        width: 32px; height: 32px;
+        background-color: #f0f2f5;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        color: #4CA1AF;
+    }
+</style>
+
 <script>
-    // 定义各角色的菜单项
+    // 1. 将原有的 Emoji 图标全部换成 Bootstrap Icons 类名
     const roleMenus = {
         'patient': [
-            { text: '患者首页', href: '../patient/dashboard.html', icon: '🏠' },
-            { text: '挂号预约', href: '../patient/appointment.html', icon: '📅' },
-            { text: '就诊记录', href: '../patient/medical-records.html', icon: '📋' },
-            { text: '我的处方', href: '../patient/prescriptions.html', icon: '💊' },
-            { text: '个人信息', href: '../patient/profile.html', icon: '👤' }
+            { text: '首页', href: '../patient/dashboard.html', icon: 'bi-house-door' },
+            { text: '挂号预约', href: '../patient/appointment.html', icon: 'bi-calendar-plus' },
+            { text: '就诊记录', href: '../patient/medical-records.html', icon: 'bi-file-earmark-medical' },
+            { text: '我的处方', href: '../patient/prescriptions.html', icon: 'bi-capsule' },
+            { text: '个人信息', href: '../patient/profile.html', icon: 'bi-person-vcard' }
         ],
         'admin': [
-            { text: '管理首页', href: '../admin/dashboard.html', icon: '⚙️' },
-            { text: '职工管理', href: '../admin/staff-management.html', icon: '👥' },
-            { text: '科室管理', href: '../admin/department-management.html', icon: '🏢' },
-            { text: '药品管理', href: '../admin/medicine-management.html', icon: '💊' },
-            { text: '财务中心', href: '../admin/finance-center.html', icon: '💰' },
-            { text: '现场挂号', href: '../admin/on-site-registration.html', icon: '📝' },
-            { text: '药品入库', href: '../admin/medicine-stock.html', icon: '📦' },
-            { text: '排班管理', href: '../admin/schedule-management.html', icon: '📅' }
+            { text: '管理首页', href: '../admin/dashboard.html', icon: 'bi-speedometer2' },
+            { text: '职工管理', href: '../admin/staff-management.html', icon: 'bi-people' },
+            { text: '科室管理', href: '../admin/department-management.html', icon: 'bi-building' },
+            { text: '药品管理', href: '../admin/medicine-management.html', icon: 'bi-capsule-pill' },
+            { text: '财务中心', href: '../admin/finance-center.html', icon: 'bi-wallet2' }
         ],
         'doctor': [
-            { text: '医生首页', href: '../doctor/dashboard.html', icon: '🩺' },
-            { text: '电子病历', href: '../doctor/medical-record.html', icon: '📄' },
-            { text: '开具处方', href: '../doctor/prescription.html', icon: '📝' }
+            { text: '医生首页', href: '../doctor/dashboard.html', icon: 'bi-clipboard2-pulse' },
+            { text: '电子病历', href: '../doctor/medical-record.html', icon: 'bi-journal-medical' },
+            { text: '开具处方', href: '../doctor/prescription.html', icon: 'bi-pencil-square' }
         ],
         'pharmacist': [
-            { text: '药房首页', href: '../pharmacist/dashboard.html', icon: '🏪' },
-            { text: '库存管理', href: '../pharmacist/inventory.html', icon: '📦' },
-            { text: '处方发药', href: '../pharmacist/prescriptions.html', icon: '💊' }
+            { text: '药房首页', href: '../pharmacist/dashboard.html', icon: 'bi-shop' },
+            { text: '库存管理', href: '../pharmacist/inventory.html', icon: 'bi-box-seam' },
+            { text: '处方发药', href: '../pharmacist/prescriptions.html', icon: 'bi-pills' }
         ]
     };
 
-    // 角色显示名称
-    const roleDisplayNames = {
-        'patient': '患者',
-        'admin': '管理员',
-        'doctor': '医生',
-        'pharmacist': '药剂师'
-    };
-
-    // 生成导航菜单
     function generateNavigation() {
-        console.log('开始生成导航菜单...');
-        
-        // 1. 获取当前角色（多种方式尝试）
-        let currentRole = null;
-        
-        // 方式1：从URL路径判断
-        const path = window.location.pathname;
-        console.log('当前路径:', path);
-        
-        if (path.includes('/admin/')) {
-            currentRole = 'admin';
-            console.log('从路径判断为: 管理员');
-        } else if (path.includes('/doctor/')) {
-            currentRole = 'doctor';
-            console.log('从路径判断为: 医生');
-        } else if (path.includes('/pharmacist/')) {
-            currentRole = 'pharmacist';
-            console.log('从路径判断为: 药剂师');
-        } else if (path.includes('/patient/')) {
-            currentRole = 'patient';
-            console.log('从路径判断为: 患者');
-        }
-        
-        // 方式2：从localStorage获取（如果登录时已保存）
-        const savedRole = localStorage.getItem('userRole');
-        if (savedRole) {
-            currentRole = savedRole;
-            console.log('从localStorage获取角色:', savedRole);
-        }
-        
-        // 方式3：从页面标题判断
-        if (!currentRole) {
-            const title = document.title;
-            if (title.includes('管理员')) currentRole = 'admin';
-            else if (title.includes('医生')) currentRole = 'doctor';
-            else if (title.includes('药剂师')) currentRole = 'pharmacist';
-            else if (title.includes('患者')) currentRole = 'patient';
-        }
-        
-        // 默认角色
-        if (!currentRole) {
-            currentRole = 'patient';
-            console.log('使用默认角色: 患者');
-        }
-        
-        console.log('最终确定角色:', currentRole);
-        
-        // 2. 生成菜单HTML
+        // ... 获取角色逻辑 ...
         const menuItems = roleMenus[currentRole] || roleMenus.patient;
-        let menuHTML = '';
-        
-        menuItems.forEach(item => {
-            menuHTML += `
+        const mainNav = document.getElementById('main-nav');
+
+        if (mainNav) {
+            mainNav.innerHTML = menuItems.map(item => {
+                const isActive = window.location.pathname.includes(item.href) ? 'active' : '';
+                // 确保这里没有 btn-primary 或 bg-primary 这种带蓝紫色的类
+                return `
                 <li class="nav-item">
-                    <a class="nav-link" href="${item.href}">
-                        ${item.icon} ${item.text}
+                    <a class="nav-link ${isActive}" href="${item.href}">
+                        <i class="bi ${item.icon} me-1"></i> ${item.text}
                     </a>
                 </li>
             `;
-        });
-        
-        // 3. 更新DOM
-        const mainNav = document.getElementById('main-nav');
-        if (mainNav) {
-            mainNav.innerHTML = menuHTML;
-            console.log('菜单已更新，项目数:', menuItems.length);
+            }).join('');
         }
-        
-        // 4. 更新角色指示器（如果需要的话）
-        const roleIndicator = document.getElementById('role-indicator');
-        if (roleIndicator) {
-            roleIndicator.textContent = `[${roleDisplayNames[currentRole]}]`;
-        }
-        
-        // 5. 更新用户名
-        const userNameElement = document.getElementById('user-name');
-        if (userNameElement) {
-            // 尝试从各种可能的存储位置获取用户名
-            let userName = '用户';
-            
-            // 患者
-            try {
-                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-                if (userInfo && userInfo.patientName) userName = userInfo.patientName;
-            } catch(e) {}
-            
-            // 医生、管理员、药剂师
-            try {
-                const staffInfo = JSON.parse(localStorage.getItem('staffInfo'));
-                if (staffInfo && staffInfo.staffName) userName = staffInfo.staffName;
-            } catch(e) {}
-            
-            try {
-                const doctorInfo = JSON.parse(localStorage.getItem('doctorInfo'));
-                if (doctorInfo && doctorInfo.staffName) userName = doctorInfo.staffName;
-            } catch(e) {}
-            
-            try {
-                const pharmacistInfo = JSON.parse(localStorage.getItem('pharmacistInfo'));
-                if (pharmacistInfo && pharmacistInfo.staffName) userName = pharmacistInfo.staffName;
-            } catch(e) {}
-            
-            userNameElement.textContent = userName;
-        }
-        
-        return currentRole;
     }
 
-    // 退出登录处理
+        // 更新用户名显示
+        const userNameElement = document.getElementById('user-name');
+        if (userNameElement) {
+            let name = '用户';
+            try {
+                const info = JSON.parse(localStorage.getItem('userInfo') || localStorage.getItem('staffInfo') || localStorage.getItem('doctorInfo'));
+                if (info) name = info.patientName || info.staffName || '用户';
+            } catch(e) {}
+            userNameElement.textContent = name;
+        }
+    }
+
+    // 退出登录
     function handleLogout() {
-        console.log('退出登录');
-        
-        // 清除所有登录信息
-        localStorage.removeItem('token');
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('userInfo');
-        localStorage.removeItem('staffInfo');
-        localStorage.removeItem('doctorInfo');
-        localStorage.removeItem('pharmacistInfo');
-        
-        // 跳转到登录页面
+        localStorage.clear();
         window.location.href = '../patient/login.html';
-        
-        // 阻止默认链接行为
         return false;
     }
 
-    // 页面加载时立即生成导航
-    console.log('页面加载，开始初始化导航...');
-    
-    // 立即执行一次
-    setTimeout(() => {
-        generateNavigation();
-    }, 10);
-    
-    // DOM加载完成后再次执行确保正确
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM加载完成，重新生成导航...');
-        generateNavigation();
-    });
-    
-    // 如果是异步加载，添加一个监听器
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', generateNavigation);
-    } else {
-        generateNavigation();
-    }
+    // 初始化
+    setTimeout(generateNavigation, 10);
 </script>

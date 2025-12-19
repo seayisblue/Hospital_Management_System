@@ -402,6 +402,11 @@
 
     async function submitPrescription() {
         if (prescriptionItems.length === 0) return showMessage('请添加药品', 'warning');
+
+        // 从 localStorage 获取当前挂号 ID (你在 medical-record.html 应该存过)
+        const appointmentId = localStorage.getItem('currentAppointmentId');
+        const token = localStorage.getItem('token');
+
         const requestData = {
             recordId: parseInt(recordId),
             items: prescriptionItems.map(item => ({
@@ -414,17 +419,38 @@
         };
 
         try {
+            // 1. 提交处方
             const response = await fetch('http://localhost:8081/doctor/prescription', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') },
+                headers: { 'Content-Type': 'application/json', 'Authorization': token },
                 body: JSON.stringify(requestData)
             });
             const result = await response.json();
+
             if (result.code === 200) {
-                showMessage('处方签署成功', 'success');
+                // ★★★ 关键：提交处方成功后，立即更新挂号单状态 ★★★
+                if (appointmentId) {
+                    await fetch(`http://localhost:8081/admin/appointment/${appointmentId}/status?status=${encodeURIComponent('已就诊')}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': token }
+                    });
+                }
+
+                showMessage('处方签署成功，就诊已完成', 'success');
+
+                // 清理缓存并跳转
+                localStorage.removeItem('currentAppointmentId');
+                localStorage.removeItem('currentRecordId');
+                localStorage.removeItem('currentPatientInfo');
+
                 setTimeout(() => window.location.href = 'dashboard.html', 1500);
+            } else {
+                showMessage('提交失败: ' + result.message, 'error');
             }
-        } catch (e) { showMessage('提交失败', 'error'); }
+        } catch (e) {
+            console.error(e);
+            showMessage('提交失败，请检查网络', 'error');
+        }
     }
 
     function saveDraft() { showMessage('草稿已保存', 'info'); }

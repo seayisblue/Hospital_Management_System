@@ -132,20 +132,19 @@
         async function completeMedicalRecord() {
             const token = localStorage.getItem('token');
 
-            // 获取医生填写的四个文本框
+            // 获取数据
             const subjective = document.getElementById('subjective').value;
             const objective = document.getElementById('objective').value;
             const assessment = document.getElementById('assessment').value;
             const plan = document.getElementById('plan').value;
 
-            // 简单校验
             if (!subjective || !assessment) {
-                showMessage('请至少填写【主诉】和【初步诊断】', 'warning');
+                alert('请至少填写【主诉】和【初步诊断】');
                 return;
             }
 
             try {
-                // 发送请求
+                // 第一步：提交病历
                 const response = await fetch('http://localhost:8081/doctor/medical-record', {
                     method: 'POST',
                     headers: {
@@ -153,7 +152,7 @@
                         'Authorization': token
                     },
                     body: JSON.stringify({
-                        appointmentId: parseInt(appointmentId), // 必须是数字
+                        appointmentId: parseInt(appointmentId),
                         subjective: subjective,
                         objective: objective,
                         assessment: assessment,
@@ -164,22 +163,37 @@
                 const result = await response.json();
 
                 if (result.code === 200) {
-                    showMessage('病历创建成功！请继续开具处方', 'success');
+                    // ★★★ 第二步：更新挂号单状态为“已就诊” ★★★
+                    // 只有更新了状态，返回首页时待诊队列才会消失
+                    await updateAppointmentStatus(appointmentId, '已就诊');
 
-                    // ★★★ 关键：拿到 recordId 并保存 ★★★
-                    // 下一个页面（处方页）需要知道是给哪个病历开药
+                    alert('病历创建成功！状态已更新');
+
                     const recordId = result.data;
                     localStorage.setItem('currentRecordId', recordId);
 
-                    // 禁用修改，引导下一步
                     disableForm();
-
                 } else {
-                    showMessage('提交失败: ' + result.message, 'error');
+                    alert('提交失败: ' + result.message);
                 }
             } catch (error) {
                 console.error(error);
-                showMessage('连接服务器失败', 'error');
+                alert('连接服务器失败');
+            }
+        }
+
+        // 新增：更新状态的辅助函数
+        async function updateAppointmentStatus(id, status) {
+            const token = localStorage.getItem('token');
+            try {
+                // 使用管理员的更新接口（通常医生也有权限修改自己接诊的单子）
+                // 如果后端有专门的 doctor/appointment/complete 接口更好
+                await fetch(`http://localhost:8081/admin/appointment/${id}/status?status=${encodeURIComponent(status)}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': token }
+                });
+            } catch (e) {
+                console.error("更新状态失败", e);
             }
         }
 

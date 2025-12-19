@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>患者诊疗档案 - 医生端</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        :root { --primary-color: #4e73df; }
+        body { background-color: #f8f9fc; font-family: "Microsoft YaHei", sans-serif; }
+        .header-section { background: white; padding: 1.5rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .card { border: none; border-radius: 10px; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1); margin-bottom: 1.5rem; }
+        .card-header { background-color: #f8f9fc; border-bottom: 1px solid #e3e6f0; font-weight: bold; color: var(--primary-color); }
+        .record-date { font-size: 0.85rem; color: #858796; }
+        .diagnosis-tag { background: #eaf0ff; color: #4e73df; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; }
+        .back-btn { transition: all 0.2s; color: #4e73df; font-weight: bold; }
+        .back-btn:hover { transform: translateX(-5px); color: #224abe; }
+        .record-detail section { border-left: 3px solid #4e73df; padding-left: 15px; margin-bottom: 20px; }
+        #recordDetailContent {
+            font-family: "Microsoft YaHei", sans-serif;
+            line-height: 1.6;
+        }
+
+        #recordDetailContent h6 {
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+
+        /* 打印时的样式优化 */
+        @media print {
+            .modal-footer, .btn-close { display: none; }
+            .modal-content { border: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-section">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link text-decoration-none back-btn me-3" onclick="history.back()">
+                <i class="bi bi-chevron-left"></i> 返回首页
+            </button>
+            <h4 class="mb-0 fw-bold text-dark">患者诊疗档案</h4>
+        </div>
+        <div id="patientBasicInfo" class="text-muted small">
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div id="recordsList">
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted">正在检索病历档案...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="recordDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-medical me-2"></i>完整病历详情</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4" id="recordDetailContent">
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary px-4" onclick="window.print()"><i class="bi bi-printer me-1"></i> 打印</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const patientId = urlParams.get('patientId');
+    const token = localStorage.getItem('token');
+    let detailModal;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!patientId) {
+            alert('参数错误：缺少患者ID');
+            location.href = 'dashboard.html';
+            return;
+        }
+
+        // 初始化模态框
+        detailModal = new bootstrap.Modal(document.getElementById('recordDetailModal'));
+
+        loadData();
+    });
+
+    // 加载患者信息和历史列表
+    async function loadData() {
+        try {
+            // 1. 获取患者基础资料
+            const pRes = await fetch(`http://localhost:8081/patient/${patientId}`, {
+                headers: { 'Authorization': token }
+            });
+            const pData = await pRes.json();
+            if (pData.code === 200) {
+                const p = pData.data;
+                document.getElementById('patientBasicInfo').innerHTML = `
+                    <span class="me-3 fw-bold text-dark"><i class="bi bi-person"></i> ${p.patientName}</span>
+                    <span class="me-3">${p.gender}</span>
+                    <span><i class="bi bi-telephone"></i> ${p.phoneNumber}</span>
+                `;
+            }
+
+            // 2. 获取就诊历史 (筛选状态为已就诊)
+            const hRes = await fetch(`http://localhost:8081/admin/appointment?patientId=${patientId}&status=已就诊&pageSize=100`, {
+                headers: { 'Authorization': token }
+            });
+            const hData = await hRes.json();
+
+            const container = document.getElementById('recordsList');
+            if (hData.code === 200 && hData.data.records.length > 0) {
+                container.innerHTML = hData.data.records.map(r => `
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-journal-text me-2"></i>预约单号：${r.appointmentId}</span>
+                            <span class="record-date"><i class="bi bi-clock me-1"></i>${r.scheduleDate} ${r.timeSlot}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="mb-2">
+                                        <span class="text-muted small">科室：</span>
+                                        <span class="fw-bold text-dark">${r.deptName}</span>
+                                        <span class="text-muted small ms-3">接诊医生：</span>
+                                        <span class="fw-bold text-dark">${r.staffName}</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="diagnosis-tag"><i class="bi bi-check-circle-fill me-1"></i>诊疗已完成</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="showRecordDetail('${r.appointmentId}')">
+                                        查看详细病历内容
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = `
+                    <div class="text-center p-5 bg-white rounded shadow-sm">
+                        <i class="bi bi-inbox text-light" style="font-size: 5rem;"></i>
+                        <p class="text-muted mt-3">暂无已完成的诊疗记录</p>
+                    </div>`;
+            }
+        } catch (e) {
+            console.error(e);
+            document.getElementById('recordsList').innerHTML = '<div class="alert alert-danger">获取档案列表失败，请检查后端接口。</div>';
+        }
+    }
+
+    // 弹出模态框并加载详细内容
+    // 假设这是医生点击“查看”按钮调用的函数
+    // 弹出模态框并加载详细内容
+    async function showRecordDetail(appointmentId) {
+        const content = document.getElementById('recordDetailContent');
+
+        // 1. 先显示加载动画
+        content.innerHTML = `
+        <div class="text-center p-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted">正在调取原始档案...</p>
+        </div>`;
+
+        // 确保模态框实例已初始化并显示
+        if (!detailModal) {
+            detailModal = new bootstrap.Modal(document.getElementById('recordDetailModal'));
+        }
+        detailModal.show();
+
+        try {
+            // 2. 并行请求病历和处方数据
+            const [recordRes, prescRes] = await Promise.all([
+                fetch(`http://localhost:8081/medical-record/appointment/${appointmentId}`, { headers: { 'Authorization': token } }),
+                fetch(`http://localhost:8081/prescription/appointment/${appointmentId}`, { headers: { 'Authorization': token } })
+            ]);
+
+            const recordResult = await recordRes.json();
+            const prescResult = await prescRes.json();
+
+            if (recordResult.code === 200 && recordResult.data) {
+                const r = recordResult.data;
+                const p = prescResult.data;
+
+                // 3. 渲染精美的卡片式病历详情
+                content.innerHTML = `
+            <div class="record-detail">
+                <section class="mb-4">
+                    <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                        <i class="bi bi- clipboard2-pulse me-2"></i>诊断信息
+                    </h6>
+                    <div class="bg-light p-3 rounded shadow-sm">
+                        <div class="mb-2">
+                            <span class="text-muted small">主诉症状：</span>
+                            <div class="fw-bold mt-1">${r.symptoms || '未填写'}</div>
+                        </div>
+                        <hr class="my-2 opacity-25">
+                        <div class="mb-2">
+                            <span class="text-muted small">初步诊断：</span>
+                            <div class="text-danger fw-bold mt-1">${r.diagnosis || '未填写'}</div>
+                        </div>
+                        <hr class="my-2 opacity-25">
+                        <div>
+                            <span class="text-muted small">治疗建议：</span>
+                            <div class="mt-1">${r.treatmentPlan || '无建议'}</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h6 class="fw-bold text-success border-bottom pb-2 mb-3">
+                        <i class="bi bi-capsule-pill me-2"></i>处方明细
+                    </h6>
+                    ${(p && p.details && p.details.length > 0) ? `
+                        <div class="table-responsive">
+                            <table class="table table-hover border align-middle">
+                                <thead class="table-light small">
+                                    <tr>
+                                        <th>药品名称</th>
+                                        <th>规格</th>
+                                        <th>用法用量</th>
+                                        <th class="text-center">数量</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${p.details.map(d => `
+                                        <tr>
+                                            <td class="fw-bold text-dark">${d.medicineName}</td>
+                                            <td><small class="text-muted">${d.specification}</small></td>
+                                            <td><span class="badge bg-primary bg-opacity-10 text-primary fw-normal border border-primary border-opacity-25">${d.usageInstructions}</span></td>
+                                            <td class="text-center fw-bold">x${d.quantity} ${d.unit}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-end small text-muted mt-2">
+                            <span>处方编号：${p.prescriptionId}</span> | <span>备注：${p.notes || '无'}</span>
+                        </div>
+                    ` : `
+                        <div class="text-center py-4 bg-light rounded text-muted">
+                            <i class="bi bi-info-circle me-1"></i> 该次就诊未开具处方药物
+                        </div>
+                    `}
+                </section>
+            </div>
+            `;
+            } else {
+                content.innerHTML = `
+                <div class="alert alert-warning border-0 shadow-sm m-3">
+                    <i class="bi bi-exclamation-triangle me-2"></i>暂未查询到该预约单的详细病历内容。
+                </div>`;
+            }
+        } catch (e) {
+            console.error('Fetch Error:', e);
+            content.innerHTML = `
+            <div class="alert alert-danger border-0 shadow-sm m-3">
+                <i class="bi bi-x-circle me-2"></i>调取档案失败，请确认后端服务已启动。
+            </div>`;
+        }
+    }
+</script>
+</body>
+</html>

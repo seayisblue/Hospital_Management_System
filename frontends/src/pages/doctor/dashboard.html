@@ -40,6 +40,14 @@
             font-size: 0.85rem;
             margin-bottom: 12px;
         }
+        .back-link:hover {
+            display: inline-flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 1);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
 
         .big-time {
             font-size: 5rem;
@@ -195,7 +203,7 @@
 
 <div class="header-section">
     <div class="container">
-        <a href="../index.html" class="back-link">
+        <a href="../../../index.html" class="back-link">
             <i class="material-icons-outlined">arrow_back</i> 返回门户
         </a>
         <div class="row align-items-end">
@@ -353,7 +361,7 @@
     // 医生信息加载
     function loadDoctorInfo() {
         const info = JSON.parse(localStorage.getItem('doctorInfo') || '{}');
-        document.getElementById('welcome-msg').textContent = `${info.staffName || '医生'}，您好`;
+        document.getElementById('welcome-msg').textContent = `${info.staffName || '医生'}医生，您好`;
         document.getElementById('doctor-details').textContent = `${info.deptName || '未定科室'} · ${info.title || '医师'}`;
         if (info.isDeptManager) document.getElementById('dept-schedule-manager').style.display = 'block';
     }
@@ -403,28 +411,44 @@
     }
 
     // 药物搜索逻辑
-    function searchDrugs(query) {
+    async function searchDrugs(query) {
         const container = document.getElementById('drugList');
         if (!query) {
             container.innerHTML = '<div class="p-5 text-center text-muted small">输入关键词搜索院内药品库</div>';
             return;
         }
-        const filtered = mockDrugs.filter(d => d.name.includes(query));
-        if (filtered.length === 0) {
-            container.innerHTML = '<div class="p-5 text-center text-muted small">未找到匹配药物</div>';
-            return;
+
+        try {
+            // 后端 MedicineQueryRequest 接收 medicineName 参数
+            const response = await fetch(`http://localhost:8081/medicine?medicineName=${encodeURIComponent(query)}&pageSize=50`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            const result = await response.json();
+
+            if (result.code === 200) {
+                const list = result.data.records;
+                if (list.length === 0) {
+                    container.innerHTML = '<div class="p-5 text-center text-muted small">未找到匹配药物</div>';
+                } else {
+                    container.innerHTML = list.map(d => `
+                    <div class="drug-item">
+                        <div class="drug-info">
+                            <div class="drug-name">${d.medicineName}</div>
+                            <div class="drug-spec">规格：${d.specification || '常规'} | 厂家：${d.manufacturer || '-'}</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold text-primary">¥${d.unitPrice}</div>
+                            <span class="badge ${d.stockLevel > 10 ? 'bg-success' : 'bg-warning'}">
+                                ${d.stockLevel > 0 ? '库存:' + d.stockLevel : '缺货'}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+                }
+            }
+        } catch (e) {
+            console.error('获取药品失败:', e);
         }
-        container.innerHTML = filtered.map(d => `
-            <div class="drug-item">
-                <div class="drug-info">
-                    <div class="drug-name">${d.name}</div>
-                    <div class="drug-spec">规格：${d.spec} | 用法：${d.usage}</div>
-                </div>
-                <div class="text-end">
-                    <span class="badge ${d.stock==='充足'?'bg-success':'bg-warning'}">${d.stock==='充足'?'有货':('库存:'+d.stock)}</span>
-                </div>
-            </div>
-        `).join('');
     }
 
     // 患者列表加载
@@ -453,8 +477,81 @@
         window.location.href = `medical-record.html?appointmentId=${id}`;
     }
 
-    function fetchHistoryPatients() { /* 后端接口待定 */ }
-    function searchPatients(v) { /* 搜索逻辑待定 */ }
+    async function fetchHistoryPatients() {
+        const container = document.getElementById('historyList');
+        const date = document.getElementById('historyDate').value;
+        const info = JSON.parse(localStorage.getItem('doctorInfo') || '{}');
+
+        container.innerHTML = '<div class="p-4 text-center text-muted">正在加载历史...</div>';
+
+        try {
+            // 使用管理员挂号查询接口(需要医生有对应权限)或自定义一个历史接口
+            // 这里假设医生可以访问 /admin/appointment 且通过 status 和 staffId 筛选
+            let url = `http://localhost:8081/admin/appointment?status=已就诊`;
+            if (date) url += `&startDate=${date}&endDate=${date}`;
+
+            const response = await fetch(url, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            const result = await response.json();
+
+            if (result.code === 200) {
+                // 过滤出属于当前医生的记录
+                const myHistory = result.data.records.filter(r => r.staffId === info.staffId);
+
+                if (myHistory.length === 0) {
+                    container.innerHTML = '<div class="p-5 text-center text-muted">暂无历史诊治记录</div>';
+                } else {
+                    container.innerHTML = myHistory.map(h => `
+                    <div class="patient-item">
+                        <div style="flex:1">
+                            <div class="fw-bold">${h.patientName}</div>
+                            <div class="small text-muted">${h.scheduleDate} ${h.timeSlot} · 已就诊</div>
+                        </div>
+                        <button class="btn btn-sm btn-link" onclick="location.href='medical-record.html?appointmentId=${h.appointmentId}'">查看病历</button>
+                    </div>
+                `).join('')
+                }
+            }
+        } catch (e) {
+            container.innerHTML = '<div class="p-4 text-center text-danger">加载失败</div>';
+        }
+    }
+    async function searchPatients(keyword) {
+        const container = document.getElementById('searchResult');
+        if (!keyword || keyword.length < 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8081/patient/search?keyword=${encodeURIComponent(keyword)}`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            const result = await response.json();
+
+            if (result.code === 200) {
+                if (result.data.length === 0) {
+                    container.innerHTML = '<div class="p-4 text-center text-muted">未找到匹配患者</div>';
+                } else {
+                    container.innerHTML = result.data.map(p => `
+                    <div class="patient-item">
+        <div style="flex:1">
+            <div class="fw-bold">${p.patientName}</div>
+            <div class="small text-muted">${p.gender} · ${p.phoneNumber}</div>
+        </div>
+        <button class="btn btn-sm btn-outline-primary"
+                onclick="location.href='patient-detail.html?patientId=${p.patientId}'">
+            查看档案
+        </button>
+    </div>
+                `).join('');
+                }
+            }
+        } catch (e) {
+            console.error('搜索失败:', e);
+        }
+    }
 </script>
 </body>
 </html>

@@ -197,6 +197,82 @@
             font-family: 'Material Icons Outlined';
             font-size: 18px;
         }
+
+        .history-modal-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .history-modal-title i {
+            color: var(--theme-start);
+        }
+
+        .history-info-bar {
+            border: 1px solid var(--border-light);
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .history-section {
+            border: 1px solid var(--border-light);
+            padding: 14px 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+
+        .history-section-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .history-section-title i {
+            color: var(--theme-start);
+            font-size: 18px;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 20px;
+            font-size: 0.9rem;
+        }
+
+        .history-grid .label {
+            color: var(--text-muted);
+            margin-right: 6px;
+        }
+
+        .history-text {
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #1f2937;
+        }
+
+        .history-table th {
+            font-size: 0.85rem;
+            color: #64748b;
+            background: #f8fafc;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 18px 0;
+            background: #f8fafc;
+            border: 1px dashed var(--border-light);
+            border-radius: 6px;
+        }
     </style>
 </head>
 <body>
@@ -329,6 +405,23 @@
                         <div class="extra-small text-muted mt-1">今晚 23:00 进行例行维护。</div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="historyRecordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-bold history-modal-title">
+                    <i class="material-icons-outlined">description</i>
+                    诊疗记录详情
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div id="historyRecordContent"></div>
             </div>
         </div>
     </div>
@@ -508,13 +601,133 @@
                             <div class="fw-bold">${h.patientName}</div>
                             <div class="small text-muted">${h.scheduleDate} ${h.timeSlot} · 已就诊</div>
                         </div>
-                        <button class="btn btn-sm btn-link" onclick="location.href='medical-record.html?appointmentId=${h.appointmentId}'">查看病历</button>
+                        <button class="btn btn-sm btn-link" onclick='openHistoryRecord(${JSON.stringify(h.appointmentId)}, ${JSON.stringify(h.patientName)}, ${JSON.stringify(h.scheduleDate)}, ${JSON.stringify(h.timeSlot)})'>查看病历</button>
                     </div>
                 `).join('')
                 }
             }
         } catch (e) {
             container.innerHTML = '<div class="p-4 text-center text-danger">加载失败</div>';
+        }
+    }
+
+    async function openHistoryRecord(appointmentId, patientName, scheduleDate, timeSlot) {
+        const content = document.getElementById('historyRecordContent');
+        content.innerHTML = `
+            <div class="history-info-bar mb-3">
+                <div class="d-flex flex-wrap gap-3">
+                    <div><span class="text-muted">患者：</span>${patientName}</div>
+                    <div><span class="text-muted">日期：</span>${scheduleDate} ${timeSlot}</div>
+                    <div><span class="text-muted">预约号：</span>${appointmentId}</div>
+                </div>
+            </div>
+            <div class="p-4 text-center text-muted">正在加载病历详情...</div>
+        `;
+
+        const modal = new bootstrap.Modal(document.getElementById('historyRecordModal'));
+        modal.show();
+
+        try {
+            const token = localStorage.getItem('token');
+            const [recordRes, prescriptionRes] = await Promise.all([
+                fetch(`http://localhost:8081/medical-record/appointment/${appointmentId}`, { headers: { 'Authorization': token } }),
+                fetch(`http://localhost:8081/prescription/appointment/${appointmentId}`, { headers: { 'Authorization': token } })
+            ]);
+
+            const recordResult = await recordRes.json();
+            const prescriptionResult = await prescriptionRes.json();
+            const record = recordResult.code === 200 ? recordResult.data : null;
+            const prescription = prescriptionResult.code === 200 ? prescriptionResult.data : null;
+
+            if (!record) {
+                content.innerHTML = `
+                    <div class="history-info-bar mb-3">
+                        <div class="d-flex flex-wrap gap-3">
+                            <div><span class="text-muted">患者：</span>${patientName}</div>
+                            <div><span class="text-muted">日期：</span>${scheduleDate} ${timeSlot}</div>
+                            <div><span class="text-muted">预约号：</span>${appointmentId}</div>
+                        </div>
+                    </div>
+                    <div class="history-empty">暂无该次就诊的病历记录。</div>
+                `;
+                return;
+            }
+
+            const prescriptionDetails = prescription && prescription.details ? prescription.details : [];
+
+            content.innerHTML = `
+                <div class="history-info-bar mb-3">
+                    <div class="d-flex flex-wrap gap-3">
+                        <div><span class="text-muted">患者：</span>${patientName}</div>
+                        <div><span class="text-muted">日期：</span>${scheduleDate} ${timeSlot}</div>
+                        <div><span class="text-muted">预约号：</span>${appointmentId}</div>
+                    </div>
+                </div>
+                <div class="history-section">
+                    <div class="history-section-title">
+                        <i class="material-icons-outlined">clinical_notes</i>
+                        诊疗结论
+                    </div>
+                    <div class="history-grid mb-3">
+                        <div><span class="label">主诉：</span>${record.subjective || '未填写'}</div>
+                        <div><span class="label">诊断：</span>${record.assessment || '未填写'}</div>
+                        <div><span class="label">查体：</span>${record.objective || '未填写'}</div>
+                    </div>
+                    <div>
+                        <div class="label mb-2">治疗方案</div>
+                        <div class="history-text">${record.plan || '未填写'}</div>
+                    </div>
+                </div>
+                <div class="history-section">
+                    <div class="history-section-title">
+                        <i class="material-icons-outlined">medication</i>
+                        处方明细
+                    </div>
+                    ${prescriptionDetails.length > 0 ? `
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle history-table">
+                                <thead>
+                                    <tr>
+                                        <th>药品名称</th>
+                                        <th>规格</th>
+                                        <th class="text-end">单价</th>
+                                        <th class="text-center">数量</th>
+                                        <th class="text-end">小计</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${prescriptionDetails.map(d => `
+                                        <tr>
+                                            <td class="fw-bold">${d.medicineName}</td>
+                                            <td>${d.specification || '-'}</td>
+                                            <td class="text-end">¥${d.unitPrice ?? '-'}</td>
+                                            <td class="text-center">${d.quantity || 0}</td>
+                                            <td class="text-end">¥${d.subtotal ?? '-'}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="small text-muted text-end">
+                            处方编号：${prescription.prescriptionId || '-'}
+                        </div>
+                    ` : `
+                        <div class="history-empty">该次就诊未开具处方。</div>
+                    `}
+                </div>
+            `;
+        } catch (e) {
+            content.innerHTML = `
+                <div class="history-info-bar mb-3">
+                    <div class="d-flex flex-wrap gap-3">
+                        <div><span class="text-muted">患者：</span>${patientName}</div>
+                        <div><span class="text-muted">日期：</span>${scheduleDate} ${timeSlot}</div>
+                        <div><span class="text-muted">预约号：</span>${appointmentId}</div>
+                    </div>
+                </div>
+                <div class="history-empty">加载失败，请稍后重试。</div>
+            `;
+            console.error('加载病历详情失败:', e);
         }
     }
     async function searchPatients(keyword) {

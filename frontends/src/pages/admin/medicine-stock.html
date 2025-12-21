@@ -5,45 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>库存监控 - 医院门诊管理系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../styles/common.css">
+    <style>
+        :root {
+            --sidebar-bg: #2c3e50;
+            --main-bg: #f0f4f7;
+            --primary-color: #4CA1AF;
+            --accent-color: #C4E0E5;
+            --text-main: #2c3e50;
+            --white: #ffffff;
+        }
+
+        body {
+            background-color: var(--main-bg);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: var(--sidebar-bg);
+            color: rgba(255,255,255,0.8);
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 25px 20px;
+            font-weight: 700;
+            color: var(--white);
+            background: rgba(0,0,0,0.15);
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-link {
+            padding: 14px 22px;
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .nav-link i { width: 28px; font-size: 1.1rem; }
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 220px;
+            padding: 25px 35px;
+        }
+    </style>
 </head>
 <body>
-<div id="navbar-container"></div>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-brand">HOSPITAL ADMIN</div>
+        <nav class="mt-3">
+            <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i> 工作台概览</a>
+            <a href="staff-management.html" class="nav-link"><i class="fa-solid fa-user-doctor"></i> 职工管理</a>
+            <a href="department-management.html" class="nav-link"><i class="fa-solid fa-hospital-user"></i> 科室配置</a>
+            <a href="medicine-management.html" class="nav-link"><i class="fa-solid fa-pills"></i> 药品管理</a>
+            <a href="medicine-stock.html" class="nav-link active"><i class="fa-solid fa-box-open"></i> 药品入库</a>
+            <a href="finance-center.html" class="nav-link"><i class="fa-solid fa-file-invoice-dollar"></i> 财务结算</a>
+            <a href="on-site-registration.html" class="nav-link"><i class="fa-solid fa-id-card"></i> 现场挂号</a>
+        </nav>
+    </aside>
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <a href="dashboard.html" class="btn btn-outline-secondary me-2">🏠 首页</a>
-        <h2>📊 药品库存监控</h2>
-    </div>
+    <main class="main-content">
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <a href="dashboard.html" class="btn btn-outline-secondary me-2">🏠 首页</a>
+                <h2>📊 药品库存监控</h2>
+            </div>
 
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">全院库存总览</h5>
-            <div class="input-group" style="width: 300px;">
-                <input type="text" class="form-control" id="searchMedicine" placeholder="搜索药品名称...">
-                <button class="btn btn-outline-secondary">🔍</button>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">全院库存总览</h5>
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control" id="searchMedicine" placeholder="搜索药品名称...">
+                        <button class="btn btn-outline-secondary">🔍</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>药品名称</th>
+                                <th>规格</th>
+                                <th>厂家</th>
+                                <th>当前库存</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="stockTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>药品名称</th>
-                        <th>规格</th>
-                        <th>厂家</th>
-                        <th>当前库存</th>
-                        <th>状态</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody id="stockTable">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    </main>
 </div>
 
 <div class="modal fade" id="logModal" tabindex="-1">
@@ -78,7 +156,6 @@
     let medicineList = [];
 
     document.addEventListener('DOMContentLoaded', function() {
-        loadNavbar();
         fetchStockList();
         setupSearch();
     });

@@ -402,6 +402,14 @@
         document.getElementById('confirmTime').textContent = `${appointmentData.schedule.date} ${appointmentData.schedule.time}`;
     }
 
+    function getTodayStr() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
     async function fetchSchedules(deptId) {
         try {
             const response = await fetch(`http://localhost:8081/appointment/schedules?deptId=${deptId}`, {
@@ -410,7 +418,8 @@
             });
             const result = await response.json();
             if (result.code === 200) {
-                availableSchedules = result.data;
+                const todayStr = getTodayStr();
+                availableSchedules = result.data.filter(sch => sch.scheduleDate >= todayStr);
             }
         } catch (e) {
             showMessage('获取排班失败', 'error');

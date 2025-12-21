@@ -83,7 +83,6 @@
         .header-card {
             background: linear-gradient(135deg, var(--theme-start), var(--theme-end));
             color: #fff;
-            border-radius: 12px;
             padding: 20px 24px;
             display: flex;
             justify-content: space-between;
@@ -98,7 +97,6 @@
         .section-card {
             background: #ffffff;
             border: 1px solid var(--border-light);
-            border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.04);
             overflow: hidden;
         }
@@ -143,7 +141,6 @@
             right: 0;
             background: #fff;
             border: 1px solid var(--border-light);
-            border-radius: 6px;
             box-shadow: 0 6px 14px rgba(0,0,0,0.08);
             max-height: 220px;
             overflow: auto;
@@ -185,7 +182,7 @@
         .patient-item .avatar {
             width: 36px;
             height: 36px;
-            border-radius: 50%;
+
             background: #e2e8f0;
             display: flex;
             align-items: center;
@@ -218,7 +215,7 @@
             background: #f8fafc;
             color: #475569;
             padding: 6px 14px;
-            border-radius: 999px;
+
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
@@ -240,7 +237,7 @@
             text-align: center;
             color: var(--text-muted);
             border: 1px dashed var(--border-light);
-            border-radius: 8px;
+
             background: #f8fafc;
         }
 
@@ -251,7 +248,7 @@
             background: #f8fafc;
             border: 1px solid var(--border-light);
             padding: 12px 14px;
-            border-radius: 8px;
+
             margin-bottom: 16px;
             font-size: 0.9rem;
         }
@@ -260,7 +257,7 @@
 
         .record-section {
             border: 1px solid var(--border-light);
-            border-radius: 10px;
+
             padding: 14px 16px;
             margin-bottom: 16px;
         }
@@ -278,7 +275,7 @@
 
         .history-item {
             border: 1px solid var(--border-light);
-            border-radius: 8px;
+
             padding: 12px 14px;
             margin-bottom: 12px;
         }
@@ -303,7 +300,7 @@
             padding: 18px 0;
             background: #f8fafc;
             border: 1px dashed var(--border-light);
-            border-radius: 6px;
+
         }
 
         .prescription-list {
@@ -318,7 +315,7 @@
             gap: 10px;
             background: #f8fafc;
             border: 1px solid var(--border-light);
-            border-radius: 6px;
+
             padding: 8px 10px;
             font-size: 0.85rem;
         }
@@ -765,7 +762,7 @@
 <body>
 <div class="app-container">
     <aside class="sidebar">
-        <div class="sidebar-brand">工作栏</div>
+        <div class="sidebar-brand">HOSPITAL DOCTOR</div>
         <nav class="mt-3">
             <a href="#" class="nav-link active" data-section="outpatient">
                 <i class="material-icons-outlined">assignment_ind</i>门诊治疗
@@ -1108,9 +1105,11 @@
             const allRecords = scheduleByDate[dateStr] || [];
             const hasOwnSchedule = allRecords.some(item => String(item.staffId) === String(currentDoctorId));
             let classList = "cal-date";
-            if (dateObj < today) classList += " cal-past";
+            const isSelectable = dateObj >= today;
+            if (!isSelectable) classList += " cal-past";
             else if (hasOwnSchedule) classList += " cal-scheduled";
-            grid.innerHTML += `<div class="${classList}" onclick="handleDateClick('${dateStr}', ${dateObj >= today}, this)">${d}</div>`;
+            const clickAttr = isSelectable ? `onclick="handleDateClick('${dateStr}', true, this)"` : 'aria-disabled="true"';
+            grid.innerHTML += `<div class="${classList}" ${clickAttr}>${d}</div>`;
         }
     }
 
@@ -1326,13 +1325,18 @@
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
+        const today = new Date();
+        today.setHours(0,0,0,0);
         for (let d = 1; d <= daysInMonth; d++) {
+            const dateObj = new Date(year, month, d);
             const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             const selected = selectedManagerDates.has(dateStr) ? 'selected' : '';
+            const disabled = dateObj < today ? 'disabled' : '';
             const morningItems = getAssignedItemsBySlot(dateStr, 'morning');
             const afternoonItems = getAssignedItemsBySlot(dateStr, 'afternoon');
+            const clickAttr = dateObj < today ? 'aria-disabled="true"' : `onclick="toggleManagerDate('${dateStr}')"`;
             grid.innerHTML += `
-                <div class="manager-day ${selected}" onclick="toggleManagerDate('${dateStr}')">
+                <div class="manager-day ${selected} ${disabled}" ${clickAttr}>
                     <div class="date-num">${d}</div>
                     <div class="manager-day-slots">
                         <div class="manager-slot">
@@ -1399,6 +1403,8 @@
     }
 
     function toggleManagerDate(dateStr) {
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (dateStr < todayStr) return;
         if (selectedManagerDates.has(dateStr)) selectedManagerDates.delete(dateStr);
         else selectedManagerDates.add(dateStr);
         renderManagerCalendar();

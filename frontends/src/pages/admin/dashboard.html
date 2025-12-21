@@ -7,6 +7,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles/common.css">
     <style>
         :root {
             --sidebar-bg: #2c3e50;
@@ -24,13 +25,11 @@
             margin: 0;
         }
 
-        /* 布局控制 */
         .app-container {
             display: flex;
             min-height: 100vh;
         }
 
-        /* 侧边栏保持专业感 */
         .sidebar {
             width: 220px;
             background: var(--sidebar-bg);
@@ -65,7 +64,6 @@
             color: white;
         }
 
-        /* 内容区 */
         .main-content {
             flex: 1;
             margin-left: 220px;
@@ -79,7 +77,6 @@
             margin-bottom: 25px;
         }
 
-        /* 数据块 - 无边框扁平化 */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -96,7 +93,6 @@
         .stat-tile .title { font-size: 0.8rem; color: #64748b; font-weight: 600; }
         .stat-tile .value { font-size: 1.75rem; font-weight: 700; margin-top: 5px; }
 
-        /* 可视化与公告布局 */
         .content-row {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -120,20 +116,45 @@
 
         .panel-title i { color: var(--primary-color); }
 
-        /* 图表占位 */
-        .chart-placeholder {
+        .chart-container {
             width: 100%;
             height: 280px;
             background: linear-gradient(to bottom, #f9fafb 0%, #f1f5f9 100%);
             border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
+            padding: 16px 18px;
             position: relative;
         }
 
-        /* 公告列表样式 */
+        .chart-legend {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .chart-labels {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 210px;
+        }
+
         .notice-list { list-style: none; padding: 0; margin: 0; }
         .notice-item {
             padding: 12px 0;
@@ -148,11 +169,11 @@
         }
         .tag-doc { background: #e0f2fe; color: #0369a1; }
         .tag-pat { background: #f0fdf4; color: #15803d; }
+        .tag-sys { background: #fef9c3; color: #a16207; }
 
         .notice-content { font-size: 0.85rem; color: var(--text-main); cursor: pointer; }
         .notice-date { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
 
-        /* 动作按钮 */
         .btn-post {
             background: var(--primary-color);
             color: white;
@@ -161,7 +182,6 @@
             font-size: 0.8rem;
             border-radius: 4px;
         }
-
     </style>
 </head>
 <body>
@@ -170,7 +190,7 @@
     <aside class="sidebar">
         <div class="sidebar-brand">HOSPITAL ADMIN</div>
         <nav class="mt-3">
-            <a href="#" class="nav-link active"><i class="fa-solid fa-chart-pie"></i> 工作台概览</a>
+            <a href="dashboard.html" class="nav-link active"><i class="fa-solid fa-chart-pie"></i> 工作台概览</a>
             <a href="staff-management.html" class="nav-link"><i class="fa-solid fa-user-doctor"></i> 职工管理</a>
             <a href="department-management.html" class="nav-link"><i class="fa-solid fa-hospital-user"></i> 科室配置</a>
             <a href="medicine-management.html" class="nav-link"><i class="fa-solid fa-pills"></i> 药品管理</a>
@@ -216,16 +236,21 @@
             <div class="panel">
                 <div class="panel-title">
                     <span><i class="fa-solid fa-chart-line me-2"></i> 门诊流量与营收趋势</span>
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-light text-dark border-secondary">周</button>
-                        <button class="btn btn-outline-light text-dark border-secondary active">月</button>
+                    <div class="btn-group btn-group-sm" id="trendSwitcher">
+                        <button class="btn btn-outline-light text-dark border-secondary" data-trend="week">周</button>
+                        <button class="btn btn-outline-light text-dark border-secondary active" data-trend="month">月</button>
                     </div>
                 </div>
-                <div class="chart-placeholder">
-                    <div class="text-center">
-                        <i class="fa-solid fa-chart-area fa-3x mb-3 opacity-25"></i>
-                        <p class="mb-0 small">业务趋势分析图表加载中...</p>
+                <div class="chart-container">
+                    <div class="chart-legend">
+                        <span><span class="legend-dot" style="background:#4CA1AF;"></span>门诊流量</span>
+                        <span><span class="legend-dot" style="background:#f59e0b;"></span>营收</span>
                     </div>
+                    <svg class="chart-svg" id="trendChart" viewBox="0 0 520 210" preserveAspectRatio="none">
+                        <polyline id="trendVisits" fill="none" stroke="#4CA1AF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                        <polyline id="trendRevenue" fill="none" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                    </svg>
+                    <div class="chart-labels" id="trendLabels"></div>
                 </div>
             </div>
 
@@ -236,19 +261,19 @@
                 </div>
                 <div class="notice-list">
                     <div class="notice-item">
-                        <span class="notice-tag tag-doc">全体医生</span>
-                        <div class="notice-content">关于更新电子处方书写规范的通知</div>
-                        <div class="notice-date">10分钟前</div>
+                        <span class="notice-tag tag-sys">系统维护</span>
+                        <div class="notice-content">系统维护通知：今晚 23:00 - 01:00 进行维护，请提前保存病历。</div>
+                        <div class="notice-date">发布时间：2025-01-15 18:30</div>
                     </div>
                     <div class="notice-item">
-                        <span class="notice-tag tag-pat">患者端</span>
-                        <div class="notice-content">春节期间门诊开诊时间安排公告</div>
-                        <div class="notice-date">2小时前</div>
+                        <span class="notice-tag tag-doc">门诊流程</span>
+                        <div class="notice-content">门诊流程更新：本周起叫号规则更新，请注意接诊顺序。</div>
+                        <div class="notice-date">发布时间：2025-01-10 09:00</div>
                     </div>
                     <div class="notice-item">
-                        <span class="notice-tag tag-doc">全体职工</span>
-                        <div class="notice-content">由于系统升级，今晚22:00将短暂停机</div>
-                        <div class="notice-date">昨天 18:30</div>
+                        <span class="notice-tag tag-pat">用药审核</span>
+                        <div class="notice-content">抗菌药物审核：抗菌药需填写使用指征，请补充病历说明。</div>
+                        <div class="notice-date">发布时间：2025-01-05 14:20</div>
                     </div>
                 </div>
             </div>
@@ -269,22 +294,7 @@
                         <th>操作</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td><span class="badge bg-warning text-dark">财务审核</span></td>
-                        <td>门诊收费处有 3 笔大额退费申请待确认</td>
-                        <td>2025-12-19 14:20</td>
-                        <td><span class="text-warning">待处理</span></td>
-                        <td><a href="finance-center.html" class="btn btn-sm btn-link">去处理</a></td>
-                    </tr>
-                    <tr>
-                        <td><span class="badge bg-info text-dark">库存预警</span></td>
-                        <td>[阿莫西林胶囊] 当前库存低于警戒线 (20盒)</td>
-                        <td>2025-12-19 09:15</td>
-                        <td><span class="text-danger">紧急</span></td>
-                        <td><a href="medicine-stock.html" class="btn btn-sm btn-link">立即补货</a></td>
-                    </tr>
-                    </tbody>
+                    <tbody id="pendingTaskBody"></tbody>
                 </table>
             </div>
         </section>
@@ -292,15 +302,71 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../utils/helpers.js"></script>
 <script>
+    const trendData = {
+        week: {
+            labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+            visits: [120, 138, 165, 150, 182, 210, 190],
+            revenue: [8, 9, 11, 10, 12, 13, 11]
+        },
+        month: {
+            labels: ['第1周', '第2周', '第3周', '第4周'],
+            visits: [620, 710, 680, 760],
+            revenue: [38, 44, 41, 49]
+        }
+    };
+
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('current-date').textContent = new Date().toLocaleDateString('zh-CN', {
             year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
         });
         fetchDashboardStats();
+        fetchPendingTasks();
+        initTrendSwitcher();
+        renderTrendChart('month');
     });
 
-    // 保持后端连接逻辑
+    function initTrendSwitcher() {
+        const switcher = document.getElementById('trendSwitcher');
+        if (!switcher) return;
+        switcher.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.trend;
+                if (!mode) return;
+                switcher.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderTrendChart(mode);
+            });
+        });
+    }
+
+    function renderTrendChart(mode) {
+        const data = trendData[mode];
+        if (!data) return;
+        const labels = data.labels;
+        const visits = data.visits;
+        const revenue = data.revenue;
+        const maxVal = Math.max(...visits, ...revenue, 1);
+        const width = 520;
+        const height = 200;
+        const top = 8;
+        const usableHeight = height - top;
+
+        const buildPoints = (series) => series.map((value, index) => {
+            const x = series.length === 1 ? width / 2 : (index / (series.length - 1)) * width;
+            const y = height - (value / maxVal) * usableHeight;
+            return `${x.toFixed(1)},${y.toFixed(1)}`;
+        }).join(' ');
+
+        document.getElementById('trendVisits').setAttribute('points', buildPoints(visits));
+        document.getElementById('trendRevenue').setAttribute('points', buildPoints(revenue));
+
+        const labelContainer = document.getElementById('trendLabels');
+        labelContainer.style.gridTemplateColumns = `repeat(${labels.length}, 1fr)`;
+        labelContainer.innerHTML = labels.map(label => `<span>${label}</span>`).join('');
+    }
+
     async function fetchDashboardStats() {
         const token = localStorage.getItem('token');
         if (!token) return window.location.href = 'login.html';
@@ -316,11 +382,71 @@
                 document.getElementById('stat-patient').textContent = stats.patientCount;
                 document.getElementById('stat-doctor').textContent = stats.doctorCount;
                 document.getElementById('stat-appointment').textContent = stats.todayAppointment;
-                document.getElementById('stat-revenue').textContent = '¥' + stats.todayRevenue;
-            } else if (result.code === 401) window.location.href = 'login.html';
+                document.getElementById('stat-revenue').textContent = `¥${stats.todayRevenue}`;
+            } else if (result.code === 401) {
+                window.location.href = 'login.html';
+            }
         } catch (error) {
             console.error('获取统计失败:', error);
         }
+    }
+
+    async function fetchPendingTasks() {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'login.html';
+
+        try {
+            const response = await fetch('http://localhost:8081/admin/dashboard/tasks', {
+                method: 'GET',
+                headers: { 'Authorization': token }
+            });
+            const result = await response.json();
+            if (result.code === 200) {
+                renderPendingTasks(result.data || []);
+            } else if (result.code === 401) {
+                window.location.href = 'login.html';
+            } else {
+                renderPendingTasks([]);
+            }
+        } catch (error) {
+            console.error('获取任务失败:', error);
+            renderPendingTasks([]);
+        }
+    }
+
+    function renderPendingTasks(list) {
+        const tbody = document.getElementById('pendingTaskBody');
+        if (!list || list.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted p-3">暂无待处理任务</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = list.map(task => {
+            const typeBadge = task.type && task.type.includes('财务') ? 'bg-warning text-dark' : 'bg-info text-dark';
+            const statusClass = task.status === '紧急' ? 'text-danger' : 'text-warning';
+            const timeStr = formatDateTime(task.submitTime);
+            const actionUrl = task.actionUrl || '#';
+           
+            return `
+                <tr>
+                    <td><span class="badge ${typeBadge}">${task.type || '-'}</span></td>
+                    <td>${task.description || '-'}</td>
+                    <td>${timeStr}</td>
+                    <td><span class="${statusClass}">${task.status || '-'}</span></td>
+                    <td><a href="${actionUrl}" class="btn btn-sm btn-link">${actionLabel}</a></td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function formatDateTime(value) {
+        if (!value) return '-';
+        if (typeof value === 'string') {
+            return value.replace('T', ' ').substring(0, 16);
+        }
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value);
+        return date.toLocaleString('zh-CN', { hour12: false });
     }
 </script>
 </body>

@@ -137,7 +137,6 @@
             <a href="#" class="nav-link active"><i class="fa-solid fa-desktop"></i> 发药台</a>
             <a href="inventory.html" class="nav-link"><i class="fa-solid fa-boxes-stacked"></i> 库存管理</a>
             <a href="#" class="nav-link"><i class="fa-solid fa-history"></i> 发药记录</a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-file-medical"></i> 药品目录</a>
         </nav>
     </aside>
 
@@ -156,19 +155,19 @@
         <div class="stat-row">
             <div class="stat-item">
                 <div class="label">待发药处方</div>
-                <div class="value text-warning" id="stat-pending-count">5</div>
+                <div class="value text-warning" id="stat-pending-count">0</div>
             </div>
             <div class="stat-item">
                 <div class="label">今日已处理</div>
-                <div class="value" id="stat-processed-count">15</div>
+                <div class="value" id="stat-processed-count">0</div>
             </div>
             <div class="stat-item">
                 <div class="label">库存预警品种</div>
-                <div class="value text-danger">2</div>
+                <div class="value text-danger" id="stat-inventory-warning">0</div>
             </div>
             <div class="stat-item">
                 <div class="label">今日发放药品</div>
-                <div class="value">128</div>
+                <div class="value" id="stat-dispensed-total">0</div>
             </div>
         </div>
 
@@ -204,7 +203,7 @@
                     <div class="panel-header bg-light">
                         <span class="text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>库存监控</span>
                     </div>
-                    <div class="alert-list">
+                    <div class="alert-list" id="inventoryAlertList">
                         <div class="alert-list-item">
                             <span class="small fw-bold">阿莫西林胶囊</span>
                             <span class="badge-pill bg-danger text-white">缺货</span>
@@ -220,12 +219,6 @@
                     </div>
                 </div>
 
-                <div class="work-panel p-3 text-center">
-                    <i class="fa-solid fa-boxes-packing fa-2x text-primary mb-3"></i>
-                    <h6 class="fw-bold">药品入库管理</h6>
-                    <p class="small text-muted">快速录入新采购药品及调整现有库存</p>
-                    <a href="inventory.html" class="btn btn-sm btn-outline-primary w-100 mt-2">进入管理</a>
-                </div>
             </div>
         </div>
     </main>
@@ -300,6 +293,8 @@
         loadNavbar();
         loadPharmacistInfo();
         fetchPendingPrescriptions();
+        fetchInventorySummary();
+        fetchDispenseSummary();
 
         setInterval(() => {
             const now = new Date();
@@ -333,6 +328,102 @@
                 document.getElementById('stat-pending-count').textContent = result.data.length;
             } else if(result.code === 401) window.location.href = 'login.html';
         } catch (error) { console.error(error); }
+    }
+
+    function getTodayDateString() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    async function fetchInventorySummary() {
+        const token = localStorage.getItem('token');
+        const container = document.getElementById('inventoryAlertList');
+        const statWarning = document.getElementById('stat-inventory-warning');
+        if (!token || !container || !statWarning) return;
+
+        try {
+            const response = await fetch('http://localhost:8081/medicine?page=1&pageSize=200', {
+                headers: { 'Authorization': token }
+            });
+            const result = await response.json();
+            if (result.code !== 200) return;
+
+            const list = result.data.records || [];
+            const warningList = list.filter(item => {
+                const min = item.minStock || 20;
+                return item.stockLevel <= 0 || item.stockLevel < min;
+            });
+
+            statWarning.textContent = warningList.length;
+
+            if (warningList.length === 0) {
+                container.innerHTML = '<div class="alert-list-item"><span class="small text-muted">no alerts</span></div>';
+                return;
+            }
+
+            const sorted = warningList.slice().sort((a, b) => {
+                const aCritical = a.stockLevel <= 0;
+                const bCritical = b.stockLevel <= 0;
+                if (aCritical !== bCritical) return aCritical ? -1 : 1;
+                return (a.stockLevel || 0) - (b.stockLevel || 0);
+            });
+
+            const items = sorted.slice(0, 6).map(item => {
+                const isCritical = item.stockLevel <= 0;
+                const badgeClass = isCritical ? 'bg-danger text-white' : 'bg-warning text-dark';
+                const badgeText = isCritical ? 'OUT' : 'LOW';
+                return `
+                    <div class="alert-list-item">
+                        <span class="small fw-bold">${item.medicineName}</span>
+                        <span class="badge-pill ${badgeClass}">${badgeText}</span>
+                    </div>
+                `;
+            }).join('');
+
+            const more = warningList.length > 6
+                ? '<div class="alert-list-item"><span class="small text-muted">more...</span></div>'
+                : '';
+
+            container.innerHTML = items + more;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function fetchDispenseSummary() {
+        const token = localStorage.getItem('token');
+        const statProcessed = document.getElementById('stat-processed-count');
+        const statDispensed = document.getElementById('stat-dispensed-total');
+        if (!token || !statProcessed || !statDispensed) return;
+
+        const today = getTodayDateString();
+        const reason = '%E5%A4%84%E6%96%B9%E6%B6%88%E8%80%97';
+        const url = `http://localhost:8081/inventory/logs?reason=${reason}&startDate=${today}&endDate=${today}&page=1&pageSize=500`;
+
+        try {
+            const response = await fetch(url, {
+                headers: { 'Authorization': token }
+            });
+            const result = await response.json();
+            if (result.code !== 200) return;
+
+            const logs = result.data.records || [];
+            const prescriptionIds = new Set();
+            let dispensedTotal = 0;
+
+            logs.forEach(log => {
+                if (log.relatedId) prescriptionIds.add(log.relatedId);
+                dispensedTotal += Math.abs(Number(log.changeQuantity || 0));
+            });
+
+            statProcessed.textContent = prescriptionIds.size;
+            statDispensed.textContent = dispensedTotal;
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     function renderTable(list) {
@@ -421,6 +512,8 @@
             if (result.code === 200) {
                 showMessage('✅ 发药成功', 'success');
                 fetchPendingPrescriptions();
+                fetchInventorySummary();
+                fetchDispenseSummary();
             } else {
                 showMessage('失败: ' + result.message, 'error');
             }

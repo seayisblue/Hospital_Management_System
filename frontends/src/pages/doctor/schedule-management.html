@@ -199,10 +199,23 @@
 
     document.addEventListener('DOMContentLoaded', () => initEnv());
 
+    function getTodayStr() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
     async function initEnv() {
         const user = JSON.parse(localStorage.getItem('doctorInfo') || '{}');
         currentDeptId = user.deptId;
         if (user.isDeptManager) document.getElementById('btnAddSchedule').style.display = 'flex';
+        const todayStr = getTodayStr();
+        const searchDate = document.getElementById('searchDate');
+        const startDate = document.getElementById('startDate');
+        if (searchDate) searchDate.setAttribute('min', todayStr);
+        if (startDate) startDate.setAttribute('min', todayStr);
         await loadDoctorsData(currentDeptId);
         fetchSchedules();
     }
@@ -272,6 +285,9 @@
 
         if (!selectedDocs.length) return showMessage('请选择医生', 'warning');
         if (!selectedWeeks.length && !startDateStr) return showMessage('请设置日期或周期', 'warning');
+        if (startDateStr && startDateStr < getTodayStr()) {
+            return showMessage('不能选择今天之前的日期', 'warning');
+        }
 
         // 生成目标日期数组
         let targetDates = [];

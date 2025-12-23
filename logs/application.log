@@ -1060,3 +1060,878 @@
 2025-12-23 14:43:49.613 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
 2025-12-23 14:48:10.363 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariCP - Shutdown initiated...
 2025-12-23 14:48:10.540 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariCP - Shutdown completed.
+2025-12-23 14:50:22.209 [main] INFO  com.template.TemplateApplication - Starting TemplateApplication using Java 1.8.0_472 on SeayandKuanping with PID 9876 (D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes started by LENOVO in D:\桌面\database\hospital\Hospital_Management_System)
+2025-12-23 14:50:22.212 [main] DEBUG com.template.TemplateApplication - Running with Spring Boot v2.6.13, Spring v5.3.23
+2025-12-23 14:50:22.213 [main] INFO  com.template.TemplateApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-23 14:50:23.202 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\AppointmentMapper.class]
+2025-12-23 14:50:23.202 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\BillItemMapper.class]
+2025-12-23 14:50:23.202 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\BillMapper.class]
+2025-12-23 14:50:23.202 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\DepartmentMapper.class]
+2025-12-23 14:50:23.202 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\DoctorScheduleMapper.class]
+2025-12-23 14:50:23.202 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\InventoryLogMapper.class]
+2025-12-23 14:50:23.202 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\MedicalRecordMapper.class]
+2025-12-23 14:50:23.202 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\MedicineMapper.class]
+2025-12-23 14:50:23.203 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\PatientMapper.class]
+2025-12-23 14:50:23.203 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\PrescriptionDetailMapper.class]
+2025-12-23 14:50:23.203 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\PrescriptionMapper.class]
+2025-12-23 14:50:23.203 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\StaffMapper.class]
+2025-12-23 14:50:23.203 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'appointmentMapper' and 'com.template.mapper.AppointmentMapper' mapperInterface
+2025-12-23 14:50:23.205 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'appointmentMapper'.
+2025-12-23 14:50:23.206 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'billItemMapper' and 'com.template.mapper.BillItemMapper' mapperInterface
+2025-12-23 14:50:23.206 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'billItemMapper'.
+2025-12-23 14:50:23.206 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'billMapper' and 'com.template.mapper.BillMapper' mapperInterface
+2025-12-23 14:50:23.206 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'billMapper'.
+2025-12-23 14:50:23.206 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'departmentMapper' and 'com.template.mapper.DepartmentMapper' mapperInterface
+2025-12-23 14:50:23.207 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'departmentMapper'.
+2025-12-23 14:50:23.207 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'doctorScheduleMapper' and 'com.template.mapper.DoctorScheduleMapper' mapperInterface
+2025-12-23 14:50:23.208 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'doctorScheduleMapper'.
+2025-12-23 14:50:23.208 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'inventoryLogMapper' and 'com.template.mapper.InventoryLogMapper' mapperInterface
+2025-12-23 14:50:23.208 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'inventoryLogMapper'.
+2025-12-23 14:50:23.209 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'medicalRecordMapper' and 'com.template.mapper.MedicalRecordMapper' mapperInterface
+2025-12-23 14:50:23.209 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'medicalRecordMapper'.
+2025-12-23 14:50:23.209 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'medicineMapper' and 'com.template.mapper.MedicineMapper' mapperInterface
+2025-12-23 14:50:23.209 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'medicineMapper'.
+2025-12-23 14:50:23.210 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'patientMapper' and 'com.template.mapper.PatientMapper' mapperInterface
+2025-12-23 14:50:23.210 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'patientMapper'.
+2025-12-23 14:50:23.210 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'prescriptionDetailMapper' and 'com.template.mapper.PrescriptionDetailMapper' mapperInterface
+2025-12-23 14:50:23.210 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'prescriptionDetailMapper'.
+2025-12-23 14:50:23.211 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'prescriptionMapper' and 'com.template.mapper.PrescriptionMapper' mapperInterface
+2025-12-23 14:50:23.211 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'prescriptionMapper'.
+2025-12-23 14:50:23.211 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'staffMapper' and 'com.template.mapper.StaffMapper' mapperInterface
+2025-12-23 14:50:23.211 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'staffMapper'.
+2025-12-23 14:50:23.582 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2025-12-23 14:50:23.583 [main] INFO  org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.3.1] using APR version [1.7.4].
+2025-12-23 14:50:23.583 [main] INFO  org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true], UDS [true].
+2025-12-23 14:50:23.583 [main] INFO  org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2025-12-23 14:50:23.587 [main] INFO  org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.14 4 Jun 2024]
+2025-12-23 14:50:23.594 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-23 14:50:23.594 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-23 14:50:23.713 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-23 14:50:23.713 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1457 ms
+2025-12-23 14:50:23.752 [main] DEBUG org.springframework.web.filter.CorsFilter - Filter 'corsFilter' configured for use
+2025-12-23 14:50:25.666 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 63 mappings in 'requestMappingHandlerMapping'
+2025-12-23 14:50:25.849 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-12-23 14:50:25.893 [main] DEBUG o.s.web.servlet.handler.SimpleUrlHandlerMapping - Patterns [/swagger-ui/] in 'viewControllerHandlerMapping'
+2025-12-23 14:50:25.909 [main] DEBUG o.s.web.servlet.handler.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**, /doc.html, /static/**, /upload/**, /swagger-ui/**] in 'resourceHandlerMapping'
+2025-12-23 14:50:25.917 [main] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-12-23 14:50:26.017 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path ''
+2025-12-23 14:50:26.556 [main] INFO  com.template.TemplateApplication - Started TemplateApplication in 4.773 seconds (JVM running for 6.392)
+2025-12-23 14:51:08.481 [http-nio-8081-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-23 14:51:08.482 [http-nio-8081-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-23 14:51:08.482 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected StandardServletMultipartResolver
+2025-12-23 14:51:08.483 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected AcceptHeaderLocaleResolver
+2025-12-23 14:51:08.483 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected FixedThemeResolver
+2025-12-23 14:51:08.487 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@2012d8a4
+2025-12-23 14:51:08.488 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@6a76634c
+2025-12-23 14:51:08.488 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-12-23 14:51:08.490 [http-nio-8081-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 7 ms
+2025-12-23 14:51:08.581 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/patient/login", parameters={}
+2025-12-23 14:51:08.586 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.PatientController#login(PatientLoginRequest)
+2025-12-23 14:51:08.703 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [PatientLoginRequest(account=18048684829, password=123456)]
+2025-12-23 14:51:09.051 [http-nio-8081-exec-6] INFO  com.zaxxer.hikari.HikariDataSource - HikariCP - Starting...
+2025-12-23 14:51:09.478 [http-nio-8081-exec-6] INFO  com.zaxxer.hikari.HikariDataSource - HikariCP - Start completed.
+2025-12-23 14:51:10.138 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:51:10.142 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='登录成功', data=PatientLoginVO(patientId=7, patientName=孙戴言, token=eyJhbGciOiJ (truncated)...]
+2025-12-23 14:51:10.164 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:51:11.446 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/my", parameters={}
+2025-12-23 14:51:11.447 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyAppointments(HttpServletRequest)
+2025-12-23 14:51:11.574 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:51:11.576 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AppointmentVO(appointmentId=19, scheduleId=56, patientId=7, p (truncated)...]
+2025-12-23 14:51:11.597 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:51:30.622 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/department", parameters={}
+2025-12-23 14:51:30.624 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.DepartmentController#getAllDepartments()
+2025-12-23 14:51:30.727 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:51:30.727 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[DepartmentVO(deptId=1, deptName=心血管内科, description=国家级重点学科，主要 (truncated)...]
+2025-12-23 14:51:30.731 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:51:33.535 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/schedules?deptId=5", parameters={masked}
+2025-12-23 14:51:33.536 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getAvailableSchedules(ScheduleQueryRequest)
+2025-12-23 14:51:33.575 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:51:33.576 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[DoctorScheduleVO(scheduleId=16, staffId=13, staffName=郑强, dep (truncated)...]
+2025-12-23 14:51:33.583 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:51:38.206 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/schedules?deptId=6", parameters={masked}
+2025-12-23 14:51:38.207 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getAvailableSchedules(ScheduleQueryRequest)
+2025-12-23 14:51:38.218 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:51:38.219 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[DoctorScheduleVO(scheduleId=3, staffId=16, staffName=卫红, dept (truncated)...]
+2025-12-23 14:51:38.222 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:51:39.326 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/schedules?deptId=2", parameters={masked}
+2025-12-23 14:51:39.327 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getAvailableSchedules(ScheduleQueryRequest)
+2025-12-23 14:51:39.342 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:51:39.343 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[DoctorScheduleVO(scheduleId=10, staffId=7, staffName=王建国, dep (truncated)...]
+2025-12-23 14:51:39.345 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:51:39.971 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/schedules?deptId=3", parameters={masked}
+2025-12-23 14:51:39.973 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getAvailableSchedules(ScheduleQueryRequest)
+2025-12-23 14:51:40.005 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:51:40.007 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[DoctorScheduleVO(scheduleId=201, staffId=9, staffName=刘波, dep (truncated)...]
+2025-12-23 14:51:40.013 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:04.718 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/appointment", parameters={}
+2025-12-23 14:52:04.719 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#createAppointment(AppointmentCreateRequest, HttpServletRequest)
+2025-12-23 14:52:04.745 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [AppointmentCreateRequest(scheduleId=209, patientId=null)]
+2025-12-23 14:52:04.957 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:04.958 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='挂号成功', data=29, timestamp=1766472724957}]
+2025-12-23 14:52:04.960 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:06.675 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/my", parameters={}
+2025-12-23 14:52:06.676 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyAppointments(HttpServletRequest)
+2025-12-23 14:52:06.697 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:06.697 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AppointmentVO(appointmentId=29, scheduleId=209, patientId=7,  (truncated)...]
+2025-12-23 14:52:06.699 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:09.175 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions", parameters={}
+2025-12-23 14:52:09.176 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyPrescriptions(HttpServletRequest)
+2025-12-23 14:52:09.203 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:09.204 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[PrescriptionVO(prescriptionId=13, recordId=9, staffId=4, staf (truncated)...]
+2025-12-23 14:52:09.208 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:10.466 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/7", parameters={}
+2025-12-23 14:52:10.470 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:52:10.508 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:10.509 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=7, recordId=5, patientId (truncated)...]
+2025-12-23 14:52:10.515 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:27.501 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/9", parameters={}
+2025-12-23 14:52:27.505 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:52:27.581 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:27.582 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=9, recordId=5, patientId (truncated)...]
+2025-12-23 14:52:27.598 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:30.925 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/12", parameters={}
+2025-12-23 14:52:30.926 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:52:30.973 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:30.974 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=12, recordId=8, patientI (truncated)...]
+2025-12-23 14:52:30.981 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:40.449 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/13", parameters={}
+2025-12-23 14:52:40.451 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:52:40.500 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:40.500 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=13, recordId=9, patientI (truncated)...]
+2025-12-23 14:52:40.502 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:43.091 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/5", parameters={}
+2025-12-23 14:52:43.093 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:52:43.128 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:43.129 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=5, recordId=5, patientId (truncated)...]
+2025-12-23 14:52:43.130 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:44.377 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/6", parameters={}
+2025-12-23 14:52:44.379 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:52:44.411 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:44.412 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=6, recordId=5, patientId (truncated)...]
+2025-12-23 14:52:44.416 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:45.494 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/7", parameters={}
+2025-12-23 14:52:45.495 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:52:45.530 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:45.531 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=7, recordId=5, patientId (truncated)...]
+2025-12-23 14:52:45.533 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:46.479 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/11", parameters={}
+2025-12-23 14:52:46.480 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:52:46.519 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:46.520 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=11, recordId=7, patientI (truncated)...]
+2025-12-23 14:52:46.522 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:47.901 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/11", parameters={}
+2025-12-23 14:52:47.903 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:52:47.936 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:47.937 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=11, recordId=7, patientI (truncated)...]
+2025-12-23 14:52:47.938 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:52:50.235 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/12", parameters={}
+2025-12-23 14:52:50.236 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:52:50.274 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:52:50.274 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=12, recordId=8, patientI (truncated)...]
+2025-12-23 14:52:50.276 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:53:00.748 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/my", parameters={}
+2025-12-23 14:53:00.749 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyAppointments(HttpServletRequest)
+2025-12-23 14:53:00.770 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:53:00.770 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AppointmentVO(appointmentId=29, scheduleId=209, patientId=7,  (truncated)...]
+2025-12-23 14:53:00.776 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:53:03.430 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/patient/info", parameters={}
+2025-12-23 14:53:03.431 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.PatientController#getInfo(HttpServletRequest)
+2025-12-23 14:53:03.464 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:53:03.466 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PatientVO(patientId=7, patientName=孙戴言, gender=女, dateOfBirth= (truncated)...]
+2025-12-23 14:53:03.468 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:53:26.059 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/patient/login", parameters={}
+2025-12-23 14:53:26.060 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.PatientController#login(PatientLoginRequest)
+2025-12-23 14:53:26.060 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [PatientLoginRequest(account=13800138001, password=123456)]
+2025-12-23 14:53:26.336 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:53:26.337 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='登录成功', data=PatientLoginVO(patientId=1, patientName=张伟, token=eyJhbGciOiJI (truncated)...]
+2025-12-23 14:53:26.338 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:53:27.499 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/my", parameters={}
+2025-12-23 14:53:27.501 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyAppointments(HttpServletRequest)
+2025-12-23 14:53:27.526 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:53:27.527 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AppointmentVO(appointmentId=26, scheduleId=43, patientId=1, p (truncated)...]
+2025-12-23 14:53:27.529 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:53:28.761 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/medical-records", parameters={}
+2025-12-23 14:53:28.762 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyMedicalRecords(HttpServletRequest)
+2025-12-23 14:53:28.786 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:53:28.787 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[MedicalRecordVO(recordId=14, appointmentId=26, patientId=1, p (truncated)...]
+2025-12-23 14:53:28.791 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:53:48.755 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions", parameters={}
+2025-12-23 14:53:48.755 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyPrescriptions(HttpServletRequest)
+2025-12-23 14:53:48.780 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:53:48.780 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[PrescriptionVO(prescriptionId=18, recordId=14, staffId=9, sta (truncated)...]
+2025-12-23 14:53:48.782 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:53:49.750 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/1", parameters={}
+2025-12-23 14:53:49.752 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:53:49.784 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:53:49.784 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=1, recordId=1, patientId (truncated)...]
+2025-12-23 14:53:49.786 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:53:51.170 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/14", parameters={}
+2025-12-23 14:53:51.171 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:53:51.205 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:53:51.206 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=14, recordId=10, patient (truncated)...]
+2025-12-23 14:53:51.207 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:53:52.829 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/16", parameters={}
+2025-12-23 14:53:52.830 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:53:52.864 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:53:52.865 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=16, recordId=12, patient (truncated)...]
+2025-12-23 14:53:52.866 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:53:54.625 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/18", parameters={}
+2025-12-23 14:53:54.626 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:53:54.660 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:53:54.661 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=18, recordId=14, patient (truncated)...]
+2025-12-23 14:53:54.662 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:55:06.589 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/18", parameters={}
+2025-12-23 14:55:06.590 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:55:06.631 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:55:06.632 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=18, recordId=14, patient (truncated)...]
+2025-12-23 14:55:06.633 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:55:09.262 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/16", parameters={}
+2025-12-23 14:55:09.262 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:55:09.298 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:55:09.298 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=16, recordId=12, patient (truncated)...]
+2025-12-23 14:55:09.304 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:55:10.532 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/14", parameters={}
+2025-12-23 14:55:10.533 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:55:10.562 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:55:10.562 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=14, recordId=10, patient (truncated)...]
+2025-12-23 14:55:10.566 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:55:11.636 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/1", parameters={}
+2025-12-23 14:55:11.637 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:55:11.672 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:55:11.672 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=1, recordId=1, patientId (truncated)...]
+2025-12-23 14:55:11.676 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:55:18.764 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/medical-records", parameters={}
+2025-12-23 14:55:18.764 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyMedicalRecords(HttpServletRequest)
+2025-12-23 14:55:18.781 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:55:18.781 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[MedicalRecordVO(recordId=14, appointmentId=26, patientId=1, p (truncated)...]
+2025-12-23 14:55:18.783 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:55:21.691 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions", parameters={}
+2025-12-23 14:55:21.692 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyPrescriptions(HttpServletRequest)
+2025-12-23 14:55:21.712 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:55:21.713 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[PrescriptionVO(prescriptionId=18, recordId=14, staffId=9, sta (truncated)...]
+2025-12-23 14:55:21.717 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:55:22.506 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/1", parameters={}
+2025-12-23 14:55:22.508 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:55:22.538 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:55:22.538 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=1, recordId=1, patientId (truncated)...]
+2025-12-23 14:55:22.540 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:55:27.628 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/16", parameters={}
+2025-12-23 14:55:27.630 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:55:27.666 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:55:27.666 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=16, recordId=12, patient (truncated)...]
+2025-12-23 14:55:27.668 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:55:30.341 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/16", parameters={}
+2025-12-23 14:55:30.342 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:55:30.371 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:55:30.372 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=16, recordId=12, patient (truncated)...]
+2025-12-23 14:55:30.373 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:56:16.114 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariCP - Shutdown initiated...
+2025-12-23 14:56:16.117 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariCP - Shutdown completed.
+2025-12-23 14:56:24.553 [main] INFO  com.template.TemplateApplication - Starting TemplateApplication using Java 1.8.0_472 on SeayandKuanping with PID 10968 (D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes started by LENOVO in D:\桌面\database\hospital\Hospital_Management_System)
+2025-12-23 14:56:24.556 [main] DEBUG com.template.TemplateApplication - Running with Spring Boot v2.6.13, Spring v5.3.23
+2025-12-23 14:56:24.557 [main] INFO  com.template.TemplateApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-23 14:56:25.400 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\AppointmentMapper.class]
+2025-12-23 14:56:25.400 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\BillItemMapper.class]
+2025-12-23 14:56:25.400 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\BillMapper.class]
+2025-12-23 14:56:25.400 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\DepartmentMapper.class]
+2025-12-23 14:56:25.401 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\DoctorScheduleMapper.class]
+2025-12-23 14:56:25.401 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\InventoryLogMapper.class]
+2025-12-23 14:56:25.401 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\MedicalRecordMapper.class]
+2025-12-23 14:56:25.401 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\MedicineMapper.class]
+2025-12-23 14:56:25.401 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\PatientMapper.class]
+2025-12-23 14:56:25.401 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\PrescriptionDetailMapper.class]
+2025-12-23 14:56:25.401 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\PrescriptionMapper.class]
+2025-12-23 14:56:25.401 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [D:\桌面\database\hospital\Hospital_Management_System\backends\target\classes\com\template\mapper\StaffMapper.class]
+2025-12-23 14:56:25.401 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'appointmentMapper' and 'com.template.mapper.AppointmentMapper' mapperInterface
+2025-12-23 14:56:25.403 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'appointmentMapper'.
+2025-12-23 14:56:25.404 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'billItemMapper' and 'com.template.mapper.BillItemMapper' mapperInterface
+2025-12-23 14:56:25.404 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'billItemMapper'.
+2025-12-23 14:56:25.404 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'billMapper' and 'com.template.mapper.BillMapper' mapperInterface
+2025-12-23 14:56:25.405 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'billMapper'.
+2025-12-23 14:56:25.405 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'departmentMapper' and 'com.template.mapper.DepartmentMapper' mapperInterface
+2025-12-23 14:56:25.405 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'departmentMapper'.
+2025-12-23 14:56:25.405 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'doctorScheduleMapper' and 'com.template.mapper.DoctorScheduleMapper' mapperInterface
+2025-12-23 14:56:25.406 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'doctorScheduleMapper'.
+2025-12-23 14:56:25.406 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'inventoryLogMapper' and 'com.template.mapper.InventoryLogMapper' mapperInterface
+2025-12-23 14:56:25.407 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'inventoryLogMapper'.
+2025-12-23 14:56:25.407 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'medicalRecordMapper' and 'com.template.mapper.MedicalRecordMapper' mapperInterface
+2025-12-23 14:56:25.407 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'medicalRecordMapper'.
+2025-12-23 14:56:25.407 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'medicineMapper' and 'com.template.mapper.MedicineMapper' mapperInterface
+2025-12-23 14:56:25.408 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'medicineMapper'.
+2025-12-23 14:56:25.408 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'patientMapper' and 'com.template.mapper.PatientMapper' mapperInterface
+2025-12-23 14:56:25.408 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'patientMapper'.
+2025-12-23 14:56:25.409 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'prescriptionDetailMapper' and 'com.template.mapper.PrescriptionDetailMapper' mapperInterface
+2025-12-23 14:56:25.409 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'prescriptionDetailMapper'.
+2025-12-23 14:56:25.409 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'prescriptionMapper' and 'com.template.mapper.PrescriptionMapper' mapperInterface
+2025-12-23 14:56:25.409 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'prescriptionMapper'.
+2025-12-23 14:56:25.410 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'staffMapper' and 'com.template.mapper.StaffMapper' mapperInterface
+2025-12-23 14:56:25.410 [main] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'staffMapper'.
+2025-12-23 14:56:25.783 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2025-12-23 14:56:25.784 [main] INFO  org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.3.1] using APR version [1.7.4].
+2025-12-23 14:56:25.784 [main] INFO  org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true], UDS [true].
+2025-12-23 14:56:25.786 [main] INFO  org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2025-12-23 14:56:25.791 [main] INFO  org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.14 4 Jun 2024]
+2025-12-23 14:56:25.799 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-23 14:56:25.799 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-23 14:56:25.934 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-23 14:56:25.934 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1336 ms
+2025-12-23 14:56:25.971 [main] DEBUG org.springframework.web.filter.CorsFilter - Filter 'corsFilter' configured for use
+2025-12-23 14:56:28.012 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 63 mappings in 'requestMappingHandlerMapping'
+2025-12-23 14:56:28.158 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-12-23 14:56:28.186 [main] DEBUG o.s.web.servlet.handler.SimpleUrlHandlerMapping - Patterns [/swagger-ui/] in 'viewControllerHandlerMapping'
+2025-12-23 14:56:28.198 [main] DEBUG o.s.web.servlet.handler.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**, /doc.html, /static/**, /upload/**, /swagger-ui/**] in 'resourceHandlerMapping'
+2025-12-23 14:56:28.204 [main] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-12-23 14:56:28.308 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path ''
+2025-12-23 14:56:28.892 [main] INFO  com.template.TemplateApplication - Started TemplateApplication in 4.73 seconds (JVM running for 6.145)
+2025-12-23 14:56:48.178 [http-nio-8081-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-23 14:56:48.179 [http-nio-8081-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-23 14:56:48.180 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected StandardServletMultipartResolver
+2025-12-23 14:56:48.180 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected AcceptHeaderLocaleResolver
+2025-12-23 14:56:48.180 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected FixedThemeResolver
+2025-12-23 14:56:48.184 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@5e00c1db
+2025-12-23 14:56:48.185 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@ebc8c41
+2025-12-23 14:56:48.186 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-12-23 14:56:48.186 [http-nio-8081-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 6 ms
+2025-12-23 14:56:48.262 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/patient/login", parameters={}
+2025-12-23 14:56:48.267 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.PatientController#login(PatientLoginRequest)
+2025-12-23 14:56:48.407 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [PatientLoginRequest(account=13800138001, password=123456)]
+2025-12-23 14:56:48.725 [http-nio-8081-exec-3] INFO  com.zaxxer.hikari.HikariDataSource - HikariCP - Starting...
+2025-12-23 14:56:49.119 [http-nio-8081-exec-3] INFO  com.zaxxer.hikari.HikariDataSource - HikariCP - Start completed.
+2025-12-23 14:56:49.692 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:56:49.694 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='登录成功', data=PatientLoginVO(patientId=1, patientName=张伟, token=eyJhbGciOiJI (truncated)...]
+2025-12-23 14:56:49.711 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:56:49.765 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/patient/login", parameters={}
+2025-12-23 14:56:49.766 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.PatientController#login(PatientLoginRequest)
+2025-12-23 14:56:49.768 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [PatientLoginRequest(account=13800138001, password=123456)]
+2025-12-23 14:56:50.074 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:56:50.076 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='登录成功', data=PatientLoginVO(patientId=1, patientName=张伟, token=eyJhbGciOiJI (truncated)...]
+2025-12-23 14:56:50.079 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:56:50.958 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/my", parameters={}
+2025-12-23 14:56:50.958 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyAppointments(HttpServletRequest)
+2025-12-23 14:56:51.102 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:56:51.103 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AppointmentVO(appointmentId=26, scheduleId=43, patientId=1, p (truncated)...]
+2025-12-23 14:56:51.130 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:56:52.121 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions", parameters={}
+2025-12-23 14:56:52.122 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyPrescriptions(HttpServletRequest)
+2025-12-23 14:56:52.157 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:56:52.158 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[PrescriptionVO(prescriptionId=18, recordId=14, staffId=9, sta (truncated)...]
+2025-12-23 14:56:52.165 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:56:54.132 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/18", parameters={}
+2025-12-23 14:56:54.135 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:56:54.204 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:56:54.205 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=18, recordId=14, patient (truncated)...]
+2025-12-23 14:56:54.212 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:56:55.596 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/16", parameters={}
+2025-12-23 14:56:55.598 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:56:55.641 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:56:55.641 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=16, recordId=12, patient (truncated)...]
+2025-12-23 14:56:55.643 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:56:57.657 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/14", parameters={}
+2025-12-23 14:56:57.659 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:56:57.707 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:56:57.707 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=14, recordId=10, patient (truncated)...]
+2025-12-23 14:56:57.709 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:56:59.618 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/1", parameters={}
+2025-12-23 14:56:59.621 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:56:59.663 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:56:59.664 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=1, recordId=1, patientId (truncated)...]
+2025-12-23 14:56:59.666 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:57:01.793 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/14", parameters={}
+2025-12-23 14:57:01.795 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:57:01.833 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:57:01.833 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=14, recordId=10, patient (truncated)...]
+2025-12-23 14:57:01.835 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:57:03.257 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/prescriptions/16", parameters={}
+2025-12-23 14:57:03.258 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getPrescriptionDetail(Integer)
+2025-12-23 14:57:03.294 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:57:03.295 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=16, recordId=12, patient (truncated)...]
+2025-12-23 14:57:03.296 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:57:30.431 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/patient/login", parameters={}
+2025-12-23 14:57:30.431 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.PatientController#login(PatientLoginRequest)
+2025-12-23 14:57:30.433 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [PatientLoginRequest(account=18048684829, password=123456)]
+2025-12-23 14:57:30.696 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:57:30.697 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='登录成功', data=PatientLoginVO(patientId=7, patientName=孙戴言, token=eyJhbGciOiJ (truncated)...]
+2025-12-23 14:57:30.699 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:57:31.878 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/my", parameters={}
+2025-12-23 14:57:31.879 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyAppointments(HttpServletRequest)
+2025-12-23 14:57:31.911 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:57:31.912 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AppointmentVO(appointmentId=29, scheduleId=209, patientId=7,  (truncated)...]
+2025-12-23 14:57:31.916 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:57:33.410 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/medical-records", parameters={}
+2025-12-23 14:57:33.411 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getMyMedicalRecords(HttpServletRequest)
+2025-12-23 14:57:33.437 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:57:33.448 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[MedicalRecordVO(recordId=9, appointmentId=19, patientId=7, pa (truncated)...]
+2025-12-23 14:57:33.454 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:58:19.728 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/staff/login", parameters={}
+2025-12-23 14:58:19.728 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#login(StaffLoginRequest)
+2025-12-23 14:58:19.731 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [StaffLoginRequest(loginName=doc101, password=123456)]
+2025-12-23 14:58:20.038 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:58:20.039 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='登录成功', data=StaffLoginResponse(token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQs (truncated)...]
+2025-12-23 14:58:20.044 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:58:21.208 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/doctor/appointments/pending", parameters={}
+2025-12-23 14:58:21.209 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.DoctorController#getPendingAppointments(HttpServletRequest)
+2025-12-23 14:58:21.228 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/staff?deptId=1&pageSize=100", parameters={masked}
+2025-12-23 14:58:21.228 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/schedule/page?current=1&pageSize=500&deptId=1&startDate=2025-12-01&endDate=2025-12-31", parameters={masked}
+2025-12-23 14:58:21.229 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#getStaffPage(StaffQueryRequest)
+2025-12-23 14:58:21.229 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.ScheduleController#getSchedulePage(ScheduleQueryRequest)
+2025-12-23 14:58:21.309 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:58:21.310 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[DoctorAppointmentVO(appointmentId=27, patientId=2, patientNam (truncated)...]
+2025-12-23 14:58:21.314 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:58:21.442 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:58:21.443 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@2ca (truncated)...]
+2025-12-23 14:58:21.452 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:58:21.953 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:58:21.953 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@539 (truncated)...]
+2025-12-23 14:58:21.967 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:58:24.673 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/appointment?status=%E5%B7%B2%E5%B0%B1%E8%AF%8A", parameters={masked}
+2025-12-23 14:58:24.674 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminAppointmentController#getAppointmentPage(AppointmentQueryRequest)
+2025-12-23 14:58:24.866 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:58:24.866 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@604 (truncated)...]
+2025-12-23 14:58:24.876 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:58:38.262 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/appointment?status=%E5%B7%B2%E5%B0%B1%E8%AF%8A", parameters={masked}
+2025-12-23 14:58:38.263 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminAppointmentController#getAppointmentPage(AppointmentQueryRequest)
+2025-12-23 14:58:38.455 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:58:38.456 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@17e (truncated)...]
+2025-12-23 14:58:38.462 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:58:40.341 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/prescription/appointment/21", parameters={}
+2025-12-23 14:58:40.341 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medical-record/appointment/21", parameters={}
+2025-12-23 14:58:40.342 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.PrescriptionController#getByAppointment(Integer, HttpServletRequest)
+2025-12-23 14:58:40.342 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicalRecordController#getByAppointment(Integer, HttpServletRequest)
+2025-12-23 14:58:40.373 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:58:40.375 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=MedicalRecordDetailVO(recordId=11, appointmentId=21, patientId (truncated)...]
+2025-12-23 14:58:40.378 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:58:40.390 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:58:40.391 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=PharmacyPrescriptionVO(prescriptionId=15, recordId=11, patient (truncated)...]
+2025-12-23 14:58:40.392 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:58:52.485 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=%E5%B8%83%E6%B4%9B%E8%8A%AC&pageSize=20", parameters={masked}
+2025-12-23 14:58:52.487 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 14:58:52.557 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:58:52.558 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@3e5 (truncated)...]
+2025-12-23 14:58:52.560 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:59:36.067 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/schedule", parameters={}
+2025-12-23 14:59:36.068 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.ScheduleController#createSchedule(ScheduleCreateRequest, HttpServletRequest)
+2025-12-23 14:59:36.091 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [ScheduleCreateRequest(staffId=5, scheduleDate=2025-12-24, timeSlot=上午, totalSlots=30)]
+2025-12-23 14:59:36.144 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Using @ExceptionHandler com.template.exception.GlobalExceptionHandler#handleBusinessException(BusinessException, HttpServletRequest)
+2025-12-23 14:59:36.145 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:59:36.145 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=40001, message='该医生在此时间段已有排班', data=null, timestamp=1766473176145}]
+2025-12-23 14:59:36.147 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.template.common.BusinessException: 该医生在此时间段已有排班]
+2025-12-23 14:59:36.148 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:59:36.174 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/schedule", parameters={}
+2025-12-23 14:59:36.174 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.ScheduleController#createSchedule(ScheduleCreateRequest, HttpServletRequest)
+2025-12-23 14:59:36.191 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [ScheduleCreateRequest(staffId=5, scheduleDate=2025-12-27, timeSlot=上午, totalSlots=30)]
+2025-12-23 14:59:36.237 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:59:36.239 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=210, timestamp=1766473176236}]
+2025-12-23 14:59:36.240 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 14:59:36.273 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/schedule/page?current=1&pageSize=500&deptId=1&startDate=2025-12-01&endDate=2025-12-31", parameters={masked}
+2025-12-23 14:59:36.273 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.ScheduleController#getSchedulePage(ScheduleQueryRequest)
+2025-12-23 14:59:36.714 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 14:59:36.714 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@fd3 (truncated)...]
+2025-12-23 14:59:36.718 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:00:21.629 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/staff/login", parameters={}
+2025-12-23 15:00:21.629 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#login(StaffLoginRequest)
+2025-12-23 15:00:21.630 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [StaffLoginRequest(loginName=pharm1, password=123456)]
+2025-12-23 15:00:21.899 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:00:21.900 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='登录成功', data=StaffLoginResponse(token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIs (truncated)...]
+2025-12-23 15:00:21.901 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:00:23.193 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/pharmacy/prescriptions/pending", parameters={}
+2025-12-23 15:00:23.193 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=200", parameters={masked}
+2025-12-23 15:00:23.194 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.PharmacyController#getPendingPrescriptions()
+2025-12-23 15:00:23.194 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:00:23.194 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/inventory/logs?reason=%E5%A4%84%E6%96%B9%E6%B6%88%E8%80%97&startDate=2025-12-23&endDate=2025-12-23&page=1&pageSize=500", parameters={masked}
+2025-12-23 15:00:23.195 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.InventoryController#getInventoryLogPage(InventoryLogQueryRequest)
+2025-12-23 15:00:23.241 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:00:23.242 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@274 (truncated)...]
+2025-12-23 15:00:23.246 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:00:23.278 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:00:23.279 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[PharmacyPrescriptionVO(prescriptionId=17, recordId=13, patien (truncated)...]
+2025-12-23 15:00:23.280 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:00:23.280 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@892 (truncated)...]
+2025-12-23 15:00:23.282 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:00:23.283 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:00:45.485 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:00:45.486 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:00:45.514 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:00:45.515 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@40b (truncated)...]
+2025-12-23 15:00:45.516 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:01:17.970 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/inventory/logs?medicineId=1", parameters={masked}
+2025-12-23 15:01:17.970 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.InventoryController#getInventoryLogPage(InventoryLogQueryRequest)
+2025-12-23 15:01:18.029 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:01:18.029 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@1ca (truncated)...]
+2025-12-23 15:01:18.031 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:01:26.882 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/pharmacy/prescriptions/pending", parameters={}
+2025-12-23 15:01:26.883 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/inventory/logs?reason=%E5%A4%84%E6%96%B9%E6%B6%88%E8%80%97&startDate=2025-12-23&endDate=2025-12-23&page=1&pageSize=500", parameters={masked}
+2025-12-23 15:01:26.883 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.PharmacyController#getPendingPrescriptions()
+2025-12-23 15:01:26.883 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.InventoryController#getInventoryLogPage(InventoryLogQueryRequest)
+2025-12-23 15:01:26.883 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=200", parameters={masked}
+2025-12-23 15:01:26.884 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:01:26.923 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:01:26.923 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@3d6 (truncated)...]
+2025-12-23 15:01:26.925 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:01:26.927 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:01:26.928 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@613 (truncated)...]
+2025-12-23 15:01:26.933 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:01:26.951 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:01:26.951 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[PharmacyPrescriptionVO(prescriptionId=17, recordId=13, patien (truncated)...]
+2025-12-23 15:01:26.953 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:01:46.094 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/staff/login", parameters={}
+2025-12-23 15:01:46.094 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#login(StaffLoginRequest)
+2025-12-23 15:01:46.095 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [StaffLoginRequest(loginName=admin, password=123456)]
+2025-12-23 15:01:46.359 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:01:46.360 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='登录成功', data=StaffLoginResponse(token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEs (truncated)...]
+2025-12-23 15:01:46.361 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:01:47.623 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/stats", parameters={}
+2025-12-23 15:01:47.624 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getDashboardStats()
+2025-12-23 15:01:47.625 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/tasks", parameters={}
+2025-12-23 15:01:47.625 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getPendingTasks()
+2025-12-23 15:01:47.652 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:01:47.653 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AdminTaskVO(type=财务审核, description=未支付账单共 2 笔待处理, submitTime= (truncated)...]
+2025-12-23 15:01:47.656 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:01:47.691 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:01:47.692 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=AdminStatsVO(patientCount=10, doctorCount=18, todayAppointment (truncated)...]
+2025-12-23 15:01:47.694 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:02:01.727 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/staff?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:02:01.728 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#getStaffPage(StaffQueryRequest)
+2025-12-23 15:02:01.808 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:02:01.808 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@11d (truncated)...]
+2025-12-23 15:02:01.812 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:02:11.757 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/appointment?status=%E5%B7%B2%E5%B0%B1%E8%AF%8A", parameters={masked}
+2025-12-23 15:02:11.757 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminAppointmentController#getAppointmentPage(AppointmentQueryRequest)
+2025-12-23 15:02:11.904 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:02:11.904 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@51f (truncated)...]
+2025-12-23 15:02:11.907 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:18.167 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=%E5%B8%83%E6%B4%9B&pageSize=20", parameters={masked}
+2025-12-23 15:03:18.167 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:18.188 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:18.189 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@3a8 (truncated)...]
+2025-12-23 15:03:18.190 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:18.261 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=%E5%B8%83&pageSize=20", parameters={masked}
+2025-12-23 15:03:18.264 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:18.286 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:18.286 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@684 (truncated)...]
+2025-12-23 15:03:18.290 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:18.486 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=%E5%B8%83w&pageSize=20", parameters={masked}
+2025-12-23 15:03:18.487 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:18.505 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:18.505 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@5b8 (truncated)...]
+2025-12-23 15:03:18.506 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:18.788 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=%E5%B8%83&pageSize=20", parameters={masked}
+2025-12-23 15:03:18.789 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:18.813 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:18.813 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@6dd (truncated)...]
+2025-12-23 15:03:18.815 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:19.492 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=w&pageSize=20", parameters={masked}
+2025-12-23 15:03:19.492 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:19.510 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:19.511 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@45e (truncated)...]
+2025-12-23 15:03:19.512 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:19.659 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=we&pageSize=20", parameters={masked}
+2025-12-23 15:03:19.659 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:19.680 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:19.680 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@45c (truncated)...]
+2025-12-23 15:03:19.681 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:19.711 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=wei&pageSize=20", parameters={masked}
+2025-12-23 15:03:19.713 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:19.732 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:19.733 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@57a (truncated)...]
+2025-12-23 15:03:19.735 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:19.860 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=wei%27s&pageSize=20", parameters={masked}
+2025-12-23 15:03:19.862 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:19.882 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:19.882 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@221 (truncated)...]
+2025-12-23 15:03:19.883 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:19.955 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=wei%27sh&pageSize=20", parameters={masked}
+2025-12-23 15:03:19.956 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:19.972 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:19.973 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@175 (truncated)...]
+2025-12-23 15:03:19.974 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:20.069 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=wei%27she&pageSize=20", parameters={masked}
+2025-12-23 15:03:20.070 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:20.095 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:20.095 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@66e (truncated)...]
+2025-12-23 15:03:20.097 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:20.134 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=wei%27shen&pageSize=20", parameters={masked}
+2025-12-23 15:03:20.134 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:20.144 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:20.145 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@588 (truncated)...]
+2025-12-23 15:03:20.146 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:20.248 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=wei%27sheng&pageSize=20", parameters={masked}
+2025-12-23 15:03:20.248 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:20.262 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:20.262 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@3df (truncated)...]
+2025-12-23 15:03:20.264 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:20.338 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=wei%27sheng%27s&pageSize=20", parameters={masked}
+2025-12-23 15:03:20.338 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:20.356 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:20.356 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@4f4 (truncated)...]
+2025-12-23 15:03:20.358 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:20.433 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=wei%27sheng%27su&pageSize=20", parameters={masked}
+2025-12-23 15:03:20.433 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:20.456 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:20.456 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@5aa (truncated)...]
+2025-12-23 15:03:20.457 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:20.634 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=%E7%BB%B4%E7%94%9F%E7%B4%A0&pageSize=20", parameters={masked}
+2025-12-23 15:03:20.634 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:03:20.651 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:20.651 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@3b6 (truncated)...]
+2025-12-23 15:03:20.652 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:50.370 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/doctor/medical-record", parameters={}
+2025-12-23 15:03:50.370 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.DoctorController#createMedicalRecord(MedicalRecordCreateRequest, HttpServletRequest)
+2025-12-23 15:03:50.388 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [MedicalRecordCreateRequest(appointmentId=27, subjective=胸口沉闷, objective=正常, assessment=情绪压力导致胸口沉闷, p (truncated)...]
+2025-12-23 15:03:50.406 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Using @ExceptionHandler com.template.exception.GlobalExceptionHandler#handleBusinessException(BusinessException, HttpServletRequest)
+2025-12-23 15:03:50.407 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:50.407 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=40001, message='无权为该患者开具病历', data=null, timestamp=1766473430406}]
+2025-12-23 15:03:50.408 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.template.common.BusinessException: 无权为该患者开具病历]
+2025-12-23 15:03:50.409 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:52.134 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/doctor/medical-record", parameters={}
+2025-12-23 15:03:52.135 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.DoctorController#createMedicalRecord(MedicalRecordCreateRequest, HttpServletRequest)
+2025-12-23 15:03:52.141 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [MedicalRecordCreateRequest(appointmentId=27, subjective=胸口沉闷, objective=正常, assessment=情绪压力导致胸口沉闷, p (truncated)...]
+2025-12-23 15:03:52.148 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Using @ExceptionHandler com.template.exception.GlobalExceptionHandler#handleBusinessException(BusinessException, HttpServletRequest)
+2025-12-23 15:03:52.149 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:52.149 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=40001, message='无权为该患者开具病历', data=null, timestamp=1766473432149}]
+2025-12-23 15:03:52.150 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.template.common.BusinessException: 无权为该患者开具病历]
+2025-12-23 15:03:52.150 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:03:55.523 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/doctor/appointments/pending", parameters={}
+2025-12-23 15:03:55.523 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.DoctorController#getPendingAppointments(HttpServletRequest)
+2025-12-23 15:03:55.540 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:03:55.540 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[], timestamp=1766473435540}]
+2025-12-23 15:03:55.542 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:01.678 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/staff/login", parameters={}
+2025-12-23 15:04:01.678 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#login(StaffLoginRequest)
+2025-12-23 15:04:01.680 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [StaffLoginRequest(loginName=doc101, password=123456)]
+2025-12-23 15:04:01.934 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:01.935 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='登录成功', data=StaffLoginResponse(token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQs (truncated)...]
+2025-12-23 15:04:01.936 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:03.121 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/doctor/appointments/pending", parameters={}
+2025-12-23 15:04:03.124 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.DoctorController#getPendingAppointments(HttpServletRequest)
+2025-12-23 15:04:03.125 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/schedule/page?current=1&pageSize=500&deptId=1&startDate=2025-12-01&endDate=2025-12-31", parameters={masked}
+2025-12-23 15:04:03.126 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/staff?deptId=1&pageSize=100", parameters={masked}
+2025-12-23 15:04:03.126 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#getStaffPage(StaffQueryRequest)
+2025-12-23 15:04:03.126 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.ScheduleController#getSchedulePage(ScheduleQueryRequest)
+2025-12-23 15:04:03.154 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:03.154 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@395 (truncated)...]
+2025-12-23 15:04:03.156 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:03.162 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:03.163 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[DoctorAppointmentVO(appointmentId=27, patientId=2, patientNam (truncated)...]
+2025-12-23 15:04:03.164 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:03.472 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:03.473 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@4b7 (truncated)...]
+2025-12-23 15:04:03.475 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:04.014 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/appointment?status=%E5%B7%B2%E5%B0%B1%E8%AF%8A", parameters={masked}
+2025-12-23 15:04:04.015 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminAppointmentController#getAppointmentPage(AppointmentQueryRequest)
+2025-12-23 15:04:04.135 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:04.135 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@7a8 (truncated)...]
+2025-12-23 15:04:04.137 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:14.297 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?medicineName=%E7%BB%B4%E7%94%9F%E7%B4%A0&pageSize=20", parameters={masked}
+2025-12-23 15:04:14.297 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:04:14.317 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:14.317 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@5c0 (truncated)...]
+2025-12-23 15:04:14.318 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:18.742 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/doctor/medical-record", parameters={}
+2025-12-23 15:04:18.742 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.DoctorController#createMedicalRecord(MedicalRecordCreateRequest, HttpServletRequest)
+2025-12-23 15:04:18.749 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [MedicalRecordCreateRequest(appointmentId=27, subjective=123, objective=123, assessment=123, plan=123 (truncated)...]
+2025-12-23 15:04:18.809 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:18.809 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='病历创建成功', data=15, timestamp=1766473458808}]
+2025-12-23 15:04:18.811 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:22.282 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/doctor/prescription", parameters={}
+2025-12-23 15:04:22.283 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.DoctorController#createPrescription(PrescriptionCreateRequest, HttpServletRequest)
+2025-12-23 15:04:22.302 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [PrescriptionCreateRequest(recordId=15, items=[PrescriptionCreateRequest.PrescriptionItemRequest(medi (truncated)...]
+2025-12-23 15:04:22.368 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:22.368 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='处方创建成功', data=19, timestamp=1766473462367}]
+2025-12-23 15:04:22.371 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:28.131 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/stats", parameters={}
+2025-12-23 15:04:28.132 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/tasks", parameters={}
+2025-12-23 15:04:28.132 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getDashboardStats()
+2025-12-23 15:04:28.132 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getPendingTasks()
+2025-12-23 15:04:28.159 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:28.159 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AdminTaskVO(type=财务审核, description=未支付账单共 3 笔待处理, submitTime= (truncated)...]
+2025-12-23 15:04:28.160 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:28.186 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:28.186 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=AdminStatsVO(patientCount=10, doctorCount=18, todayAppointment (truncated)...]
+2025-12-23 15:04:28.188 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:33.298 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/stats", parameters={}
+2025-12-23 15:04:33.298 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/tasks", parameters={}
+2025-12-23 15:04:33.298 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getDashboardStats()
+2025-12-23 15:04:33.298 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getPendingTasks()
+2025-12-23 15:04:33.321 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:33.322 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AdminTaskVO(type=财务审核, description=未支付账单共 3 笔待处理, submitTime= (truncated)...]
+2025-12-23 15:04:33.323 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:33.346 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:33.347 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=AdminStatsVO(patientCount=10, doctorCount=18, todayAppointment (truncated)...]
+2025-12-23 15:04:33.348 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:34.294 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/tasks", parameters={}
+2025-12-23 15:04:34.294 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/stats", parameters={}
+2025-12-23 15:04:34.295 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getPendingTasks()
+2025-12-23 15:04:34.295 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getDashboardStats()
+2025-12-23 15:04:34.319 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:34.320 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AdminTaskVO(type=财务审核, description=未支付账单共 3 笔待处理, submitTime= (truncated)...]
+2025-12-23 15:04:34.321 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:34.350 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:34.351 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=AdminStatsVO(patientCount=10, doctorCount=18, todayAppointment (truncated)...]
+2025-12-23 15:04:34.352 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:35.130 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/stats", parameters={}
+2025-12-23 15:04:35.131 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getDashboardStats()
+2025-12-23 15:04:35.139 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/tasks", parameters={}
+2025-12-23 15:04:35.140 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getPendingTasks()
+2025-12-23 15:04:35.157 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:35.158 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AdminTaskVO(type=财务审核, description=未支付账单共 3 笔待处理, submitTime= (truncated)...]
+2025-12-23 15:04:35.161 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:35.170 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:35.170 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=AdminStatsVO(patientCount=10, doctorCount=18, todayAppointment (truncated)...]
+2025-12-23 15:04:35.171 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:35.984 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/staff?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:04:35.984 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#getStaffPage(StaffQueryRequest)
+2025-12-23 15:04:36.049 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:36.049 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@512 (truncated)...]
+2025-12-23 15:04:36.050 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:37.414 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/tasks", parameters={}
+2025-12-23 15:04:37.413 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/stats", parameters={}
+2025-12-23 15:04:37.414 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getPendingTasks()
+2025-12-23 15:04:37.414 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getDashboardStats()
+2025-12-23 15:04:37.434 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:37.436 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AdminTaskVO(type=财务审核, description=未支付账单共 3 笔待处理, submitTime= (truncated)...]
+2025-12-23 15:04:37.437 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:37.459 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:37.460 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=AdminStatsVO(patientCount=10, doctorCount=18, todayAppointment (truncated)...]
+2025-12-23 15:04:37.461 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:38.497 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/staff?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:04:38.497 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#getStaffPage(StaffQueryRequest)
+2025-12-23 15:04:38.567 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:38.567 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@4be (truncated)...]
+2025-12-23 15:04:38.568 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:39.622 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/stats", parameters={}
+2025-12-23 15:04:39.623 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/admin/dashboard/tasks", parameters={}
+2025-12-23 15:04:39.623 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getDashboardStats()
+2025-12-23 15:04:39.623 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AdminDashboardController#getPendingTasks()
+2025-12-23 15:04:39.646 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:39.647 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[AdminTaskVO(type=财务审核, description=未支付账单共 3 笔待处理, submitTime= (truncated)...]
+2025-12-23 15:04:39.648 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:39.668 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:39.668 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=AdminStatsVO(patientCount=10, doctorCount=18, todayAppointment (truncated)...]
+2025-12-23 15:04:39.669 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:40.154 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/staff?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:04:40.154 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#getStaffPage(StaffQueryRequest)
+2025-12-23 15:04:40.209 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:40.209 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@300 (truncated)...]
+2025-12-23 15:04:40.210 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:45.475 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/department", parameters={}
+2025-12-23 15:04:45.475 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/staff?page=1&pageSize=200", parameters={masked}
+2025-12-23 15:04:45.475 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.DepartmentController#getAllDepartments()
+2025-12-23 15:04:45.476 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#getStaffPage(StaffQueryRequest)
+2025-12-23 15:04:45.476 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/staff?role=%E5%8C%BB%E7%94%9F&page=1&pageSize=1", parameters={masked}
+2025-12-23 15:04:45.477 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.StaffController#getStaffPage(StaffQueryRequest)
+2025-12-23 15:04:45.504 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:45.504 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@430 (truncated)...]
+2025-12-23 15:04:45.505 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:45.535 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:45.536 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[DepartmentVO(deptId=1, deptName=心血管内科, description=国家级重点学科，主要 (truncated)...]
+2025-12-23 15:04:45.538 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:45.541 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:45.542 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@3e2 (truncated)...]
+2025-12-23 15:04:45.543 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:50.584 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:04:50.585 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:04:50.645 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:50.646 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@48f (truncated)...]
+2025-12-23 15:04:50.647 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:56.193 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:04:56.193 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:04:56.228 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:56.228 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@891 (truncated)...]
+2025-12-23 15:04:56.229 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:04:56.387 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:04:56.387 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:04:56.410 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:04:56.410 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@76f (truncated)...]
+2025-12-23 15:04:56.413 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:01.479 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/bill/statistics/revenue", parameters={}
+2025-12-23 15:05:01.479 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/bill?page=1&pageSize=100&status=%E6%9C%AA%E6%94%AF%E4%BB%98", parameters={masked}
+2025-12-23 15:05:01.480 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.BillController#getBillPage(BillQueryRequest)
+2025-12-23 15:05:01.480 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.BillController#getRevenueStatistics()
+2025-12-23 15:05:01.508 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:01.508 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=RevenueStatisticsVO(todayRevenue=0.00, weekRevenue=0.00, month (truncated)...]
+2025-12-23 15:05:01.511 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:01.521 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:01.521 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@7c9 (truncated)...]
+2025-12-23 15:05:01.524 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:02.230 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:05:02.231 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:05:02.253 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:02.254 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@65d (truncated)...]
+2025-12-23 15:05:02.257 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:05.843 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/bill/statistics/revenue", parameters={}
+2025-12-23 15:05:05.843 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/bill?page=1&pageSize=100&status=%E6%9C%AA%E6%94%AF%E4%BB%98", parameters={masked}
+2025-12-23 15:05:05.843 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.BillController#getRevenueStatistics()
+2025-12-23 15:05:05.843 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.BillController#getBillPage(BillQueryRequest)
+2025-12-23 15:05:05.871 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:05.871 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:05.871 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=RevenueStatisticsVO(todayRevenue=0.00, weekRevenue=0.00, month (truncated)...]
+2025-12-23 15:05:05.871 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@567 (truncated)...]
+2025-12-23 15:05:05.872 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:05.872 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:06.612 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:05:06.612 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:05:06.636 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:06.636 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@4dc (truncated)...]
+2025-12-23 15:05:06.638 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:06.915 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:05:06.915 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:05:06.937 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:06.937 [http-nio-8081-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@771 (truncated)...]
+2025-12-23 15:05:06.938 [http-nio-8081-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:07.248 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/bill/statistics/revenue", parameters={}
+2025-12-23 15:05:07.248 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/bill?page=1&pageSize=100&status=%E6%9C%AA%E6%94%AF%E4%BB%98", parameters={masked}
+2025-12-23 15:05:07.248 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.BillController#getRevenueStatistics()
+2025-12-23 15:05:07.248 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.BillController#getBillPage(BillQueryRequest)
+2025-12-23 15:05:07.274 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:07.274 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@1a7 (truncated)...]
+2025-12-23 15:05:07.276 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:07.276 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:07.277 [http-nio-8081-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=RevenueStatisticsVO(todayRevenue=0.00, weekRevenue=0.00, month (truncated)...]
+2025-12-23 15:05:07.278 [http-nio-8081-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:07.567 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:05:07.567 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:05:07.592 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:07.592 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@7ea (truncated)...]
+2025-12-23 15:05:07.594 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:07.837 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:05:07.838 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:05:07.862 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:07.862 [http-nio-8081-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@5d7 (truncated)...]
+2025-12-23 15:05:07.864 [http-nio-8081-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:10.060 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:05:10.061 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:05:10.086 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:10.087 [http-nio-8081-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@511 (truncated)...]
+2025-12-23 15:05:10.088 [http-nio-8081-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:12.531 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/bill?page=1&pageSize=100&status=%E6%9C%AA%E6%94%AF%E4%BB%98", parameters={masked}
+2025-12-23 15:05:12.531 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.BillController#getBillPage(BillQueryRequest)
+2025-12-23 15:05:12.548 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/bill/statistics/revenue", parameters={}
+2025-12-23 15:05:12.548 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.BillController#getRevenueStatistics()
+2025-12-23 15:05:12.562 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:12.562 [http-nio-8081-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@3a0 (truncated)...]
+2025-12-23 15:05:12.564 [http-nio-8081-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:12.575 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:12.576 [http-nio-8081-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=RevenueStatisticsVO(todayRevenue=0.00, weekRevenue=0.00, month (truncated)...]
+2025-12-23 15:05:12.577 [http-nio-8081-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:25.826 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/medicine?page=1&pageSize=100", parameters={masked}
+2025-12-23 15:05:25.827 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.MedicineController#getMedicinePage(MedicineQueryRequest)
+2025-12-23 15:05:25.850 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:25.850 [http-nio-8081-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@6c0 (truncated)...]
+2025-12-23 15:05:25.851 [http-nio-8081-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:34.781 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/department", parameters={}
+2025-12-23 15:05:34.782 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.DepartmentController#getAllDepartments()
+2025-12-23 15:05:34.834 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:34.835 [http-nio-8081-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[DepartmentVO(deptId=1, deptName=心血管内科, description=国家级重点学科，主要 (truncated)...]
+2025-12-23 15:05:34.837 [http-nio-8081-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:34.851 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/appointment/schedules?startDate=2025-12-23", parameters={masked}
+2025-12-23 15:05:34.852 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.AppointmentController#getAvailableSchedules(ScheduleQueryRequest)
+2025-12-23 15:05:34.859 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:34.860 [http-nio-8081-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[DoctorScheduleVO(scheduleId=182, staffId=20, staffName=杨仁和, d (truncated)...]
+2025-12-23 15:05:34.863 [http-nio-8081-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:05:43.812 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/patient/search?keyword=%E5%AD%99", parameters={masked}
+2025-12-23 15:05:43.812 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.template.controller.PatientController#searchPatients(String, Integer, Integer)
+2025-12-23 15:05:43.849 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-12-23 15:05:43.850 [http-nio-8081-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result{code=200, message='操作成功', data=[PatientVO(patientId=7, patientName=孙戴言, gender=女, dateOfBirth (truncated)...]
+2025-12-23 15:05:43.852 [http-nio-8081-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-12-23 15:18:52.103 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariCP - Shutdown initiated...
+2025-12-23 15:18:52.111 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariCP - Shutdown completed.

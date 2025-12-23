@@ -5,546 +5,455 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>开具处方 - 医院门诊管理系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="../../styles/common.css">
     <style>
+        :root {
+            --theme-start: #4CA1AF;
+            --theme-end: #C4E0E5;
+            --border-light: #edf2f7;
+            --text-main: #334155;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden; /* 整体不滚动，内容区滚动 */
+        }
+
+        /* 沉浸式顶栏 */
+        .header-section {
+            background: linear-gradient(135deg, var(--theme-start), var(--theme-end));
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 左右布局容器 */
+        .workbench-container {
+            display: flex;
+            height: calc(100vh - 72px);
+        }
+
+        /* 左侧目录 */
+        .sidebar-catalog {
+            width: 400px;
+            background: #fff;
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-box {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .medicine-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
         .medicine-item {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #f8f9fa;
-        }
-        .medicine-item:hover {
-            background: #e9ecef;
+            padding: 12px 15px;
+            border-bottom: 1px solid #f8fafc;
+            border-radius: 6px;
             cursor: pointer;
+            transition: all 0.2s;
         }
+
+        .medicine-item:hover { background: #f1f5f9; }
         .medicine-item.selected {
-            border-color: #667eea;
-            background: #f0f4ff;
+            background: rgba(76, 161, 175, 0.1);
+            border: 1px solid var(--theme-start);
         }
-        .quantity-control {
-            width: 80px;
+
+        /* 右侧处方单 */
+        .prescription-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .prescription-paper {
+            background: #fff;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            min-height: 100%;
+            padding: 40px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* 患者信息条 */
+        .patient-banner {
+            display: flex;
+            gap: 40px;
+            padding: 15px 25px;
+            background: #fcfdfe;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        /* 表格重塑 */
+        .prescription-table {
+            width: 100%;
+            margin-bottom: 30px;
         }
         .prescription-table th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #64748b;
+            padding: 12px;
+            border-bottom: 2px solid var(--border-light);
         }
-        .usage-template {
-            font-size: 0.875rem;
-            padding: 4px 8px;
-            margin: 2px;
+        .prescription-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
+        }
+
+        /* 快捷用法标签 */
+        .usage-chip {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #f1f5f9;
+            color: #475569;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            margin: 4px;
             cursor: pointer;
+            transition: 0.2s;
         }
-        .total-amount {
+        .usage-chip:hover { background: var(--theme-start); color: #fff; }
+
+        .total-display {
+            text-align: right;
+            padding: 20px;
             font-size: 1.5rem;
-            font-weight: bold;
-            color: #28a745;
+            font-weight: 800;
+            color: var(--theme-start);
         }
+
+        .btn-submit {
+            background: #334155;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .btn-submit:hover { background: #1e293b; }
     </style>
 </head>
 <body>
-    <div id="navbar-container"></div>
 
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>💊 开具处方</h2>
-            <div>
-                <button class="btn btn-outline-secondary" onclick="saveDraft()">保存草稿</button>
-                <button class="btn btn-success" onclick="submitPrescription()">开具处方</button>
-            </div>
-        </div>
-
-        <!-- 患者信息 -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="card-title mb-0">👤 患者信息</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3"><strong>姓名:</strong> <span id="pName">-</span></div>
-                    <div class="col-md-3"><strong>性别:</strong> <span id="pGender">-</span></div>
-                    <div class="col-md-3"><strong>年龄:</strong> <span id="pAge">-</span></div>
-                    <div class="col-md-3"><strong>电话:</strong> <span id="pPhone">-</span></div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-12">
-                        <strong>诊断:</strong> 急性上呼吸道感染
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <!-- 药品选择区域 -->
-            <div class="col-md-5">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">药品目录</h5>
-                        <div class="input-group" style="width: 200px;">
-                            <input type="text" class="form-control form-control-sm" placeholder="搜索药品..." id="medicineSearch">
-                            <button class="btn btn-outline-secondary btn-sm" type="button">🔍</button>
-                        </div>
-                    </div>
-                    <div class="card-body" style="max-height: 500px; overflow-y: auto;">
-                        <div class="list-group" id="medicineList">
-                            <!-- 药品列表将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 常用用法模板 -->
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h6 class="card-title mb-0">💡 常用用法模板</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap">
-                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('一日三次')">一日三次</span>
-                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('一日两次')">一日两次</span>
-                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('一日一次')">一日一次</span>
-                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('饭后服用')">饭后服用</span>
-                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('饭前服用')">饭前服用</span>
-                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('早晚各一次')">早晚各一次</span>
-                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('必要时服用')">必要时服用</span>
-                            <span class="usage-template badge bg-light text-dark" onclick="applyUsageTemplate('外用')">外用</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 处方详情区域 -->
-            <div class="col-md-7">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">📝 处方内容</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered prescription-table">
-                                <thead>
-                                    <tr>
-                                        <th width="25%">药品名称</th>
-                                        <th width="15%">规格</th>
-                                        <th width="10%">数量</th>
-                                        <th width="25%">用法用量</th>
-                                        <th width="15%">单价</th>
-                                        <th width="10%">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="prescriptionItems">
-                                    <!-- 动态添加的药品行 -->
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="4" class="text-end"><strong>总计金额:</strong></td>
-                                        <td colspan="2" class="total-amount">¥0.00</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-
-                        <!-- 医嘱输入 -->
-                        <div class="mt-4">
-                            <label for="doctorAdvice" class="form-label fw-bold">医嘱说明</label>
-                            <textarea class="form-control" id="doctorAdvice" rows="3" placeholder="请输入用药注意事项、饮食建议等..."></textarea>
-                        </div>
-
-                        <!-- 处方天数 -->
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label for="prescriptionDays" class="form-label">处方天数</label>
-                                <select class="form-select" id="prescriptionDays">
-                                    <option value="3">3天</option>
-                                    <option value="5" selected>5天</option>
-                                    <option value="7">7天</option>
-                                    <option value="10">10天</option>
-                                    <option value="14">14天</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">预计总金额</label>
-                                <div class="total-amount" id="estimatedTotal">¥0.00</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 处方预览 -->
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">👁️ 处方预览</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="prescription-preview" id="prescriptionPreview">
-                            <p class="text-muted">添加药品后显示处方预览...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<header class="header-section">
+    <div class="d-flex align-items-center">
+        <i class="material-icons-outlined me-2">history_edu</i>
+        <h4 class="mb-0 fw-bold">开具电子处方</h4>
     </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-light" onclick="saveDraft()">保存草稿</button>
+        <button class="btn btn-sm btn-submit" onclick="submitPrescription()">签署并开具</button>
+    </div>
+</header>
 
-    <!-- 用法用量编辑模态框 -->
-    <div class="modal fade" id="usageModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">编辑用法用量</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="usageForm">
-                        <input type="hidden" id="editingMedicineId">
-                        <div class="mb-3">
-                            <label class="form-label">用法用量</label>
-                            <textarea class="form-control" id="usageText" rows="3" placeholder="例如：一次2粒，一日三次，饭后服用"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">用药天数</label>
-                            <input type="number" class="form-control" id="usageDays" value="5" min="1" max="30">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="saveUsage()">保存</button>
+<div class="workbench-container">
+    <aside class="sidebar-catalog">
+        <div class="search-box">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="material-icons-outlined" style="font-size: 18px;">search</i></span>
+                <input type="text" class="form-control border-start-0" placeholder="搜索药物名称/拼音码..." id="medicineSearch">
+            </div>
+            <div class="mt-3">
+                <label class="text-muted extra-small d-block mb-2">快捷用法</label>
+                <div class="d-flex flex-wrap">
+                    <span class="usage-chip" onclick="applyUsageTemplate('一日三次')">一日三次</span>
+                    <span class="usage-chip" onclick="applyUsageTemplate('一日一次')">一日一次</span>
+                    <span class="usage-chip" onclick="applyUsageTemplate('饭后服用')">饭后服用</span>
+                    <span class="usage-chip" onclick="applyUsageTemplate('外用')">外用</span>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="medicine-list" id="medicineList">
+        </div>
+    </aside>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../utils/helpers.js"></script>
-
-    <script>
-        // 全局变量
-        let allMedicines = []; // 所有药品列表
-        let prescriptionItems = []; // 购物车里的药品
-        let selectedMedicineId = null;
-
-        // 获取 URL 中的病历 ID
-        const urlParams = new URLSearchParams(window.location.search);
-        const recordId = urlParams.get('recordId') || localStorage.getItem('currentRecordId');
-
-        document.addEventListener('DOMContentLoaded', function() {
-            loadNavbar();
-
-            const patientInfoStr = localStorage.getItem('currentPatientInfo');
-            if (patientInfoStr) {
-                const info = JSON.parse(patientInfoStr);
-                document.getElementById('pName').textContent = info.name;
-                document.getElementById('pGender').textContent = info.gender;
-                document.getElementById('pAge').textContent = info.age + '岁';
-                document.getElementById('pPhone').textContent = info.phone;
-            }
-
-            if (!recordId) {
-                alert('未找到关联病历，请先填写病历');
-                window.location.href = 'dashboard.html';
-                return;
-            }
-
-            fetchMedicines(); // 获取药品列表
-            setupEventListeners();
-        });
-
-        // 1. 获取药品列表
-        async function fetchMedicines() {
-            const token = localStorage.getItem('token');
-            try {
-                const response = await fetch('http://localhost:8081/medicine?page=1&pageSize=100', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    }
-                });
-                const result = await response.json();
-                if (result.code === 200) {
-                    allMedicines = result.data.records;
-                    renderMedicineList(allMedicines);
-                } else {
-                    showMessage('药品加载失败: ' + result.message, 'error');
-                }
-            } catch (error) {
-                console.error(error);
-                showMessage('连接服务器失败', 'error');
-            }
-        }
-
-        // 2. 渲染药品列表
-        function renderMedicineList(medicines) {
-            const container = document.getElementById('medicineList');
-            if (medicines.length === 0) {
-                container.innerHTML = '<div class="p-3 text-center text-muted">暂无药品</div>';
-                return;
-            }
-
-            container.innerHTML = medicines.map(m => `
-            <div class="medicine-item" onclick="selectMedicineItem(this, ${m.medicineId})">
-                <div class="row align-items-center">
-                    <div class="col-8">
-                        <h6 class="mb-1">${m.medicineName}</h6>
-                        <small class="text-muted">${m.specification || '常规'}</small>
-                        <div>
-                            <span class="badge ${m.stockLevel < 20 ? 'bg-warning' : 'bg-info'}">
-                                库存: ${m.stockLevel}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-4 text-end">
-                        <div class="text-primary fw-bold">¥${m.unitPrice}</div>
-                        <button class="btn btn-sm btn-primary mt-1"
-                                onclick="event.stopPropagation(); addToPrescription(${m.medicineId})">
-                            添加
-                        </button>
-                    </div>
-                </div>
+    <main class="prescription-area">
+        <div class="prescription-paper">
+            <div class="text-center mb-5">
+                <h3 class="fw-bold">临床电子处方单</h3>
+                <div class="text-muted small">PRESCRIPTION ORDER</div>
             </div>
-        `).join('');
-        }
 
-        // 选中药品效果
-        function selectMedicineItem(element, id) {
-            document.querySelectorAll('.medicine-item').forEach(el => el.classList.remove('selected'));
-            element.classList.add('selected');
-            selectedMedicineId = id;
-        }
-
-        // 3. 添加到处方 (购物车)
-        function addToPrescription(id) {
-            const medicine = allMedicines.find(m => m.medicineId === id);
-            if (!medicine) return;
-
-            // 检查库存
-            if (medicine.stockLevel <= 0) {
-                showMessage('该药品库存不足！', 'warning');
-                return;
-            }
-
-            // 检查是否已添加
-            const existing = prescriptionItems.find(item => item.medicineId === id);
-            if (existing) {
-                existing.quantity += 1;
-            } else {
-                prescriptionItems.push({
-                    medicineId: medicine.medicineId,
-                    medicineName: medicine.medicineName,
-                    specification: medicine.specification,
-                    unitPrice: medicine.unitPrice,
-                    quantity: 1,
-                    usage: '', // 初始为空
-                    days: 0    // 初始为0
-                });
-            }
-            selectedMedicineId = id;
-            renderPrescriptionItems();
-            updateTotalAmount();
-            updatePrescriptionPreview();
-            document.querySelectorAll('.medicine-item').forEach(el => el.classList.remove('selected'));
-            const leftItem = document.querySelector(`.medicine-item[onclick*="${id}"]`);
-            if (leftItem) leftItem.classList.add('selected');
-        }
-
-        // 4. 渲染处方表格
-        function renderPrescriptionItems() {
-            const tbody = document.getElementById('prescriptionItems');
-            tbody.innerHTML = prescriptionItems.map(item => `
-            <tr onclick="selectPrescriptionItem(${item.medicineId})"
-                class="${selectedMedicineId === item.medicineId ? 'table-active' : ''}"
-                style="cursor: pointer;">
-
-                <td>${item.medicineName}</td>
-                <td>${item.specification || '-'}</td>
-                <td>
-                    <div class="input-group input-group-sm" style="width: 100px;">
-                        <button class="btn btn-outline-secondary" type="button"
-                                onclick="event.stopPropagation(); updateQuantity(${item.medicineId}, -1)">-</button>
-                        <input type="text" class="form-control text-center" value="${item.quantity}" readonly>
-                        <button class="btn btn-outline-secondary" type="button"
-                                onclick="event.stopPropagation(); updateQuantity(${item.medicineId}, 1)">+</button>
-                    </div>
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm mb-1"
-                           placeholder="用法 (如: 一日三次)"
-                           value="${item.usage}"
-                           onclick="event.stopPropagation(); selectPrescriptionItem(${item.medicineId})"
-                           onchange="updateItemField(${item.medicineId}, 'usage', this.value)">
-                    <input type="number" class="form-control form-control-sm"
-                           placeholder="天数"
-                           value="${item.days || ''}"
-                           onclick="event.stopPropagation(); selectPrescriptionItem(${item.medicineId})"
-                           onchange="updateItemField(${item.medicineId}, 'days', this.value)">
-                </td>
-                <td>¥${item.unitPrice}</td>
-                <td>
-                    <button class="btn btn-sm btn-outline-danger"
-                            onclick="event.stopPropagation(); removeItem(${item.medicineId})">删除</button>
-                </td>
-            </tr>
-        `).join('');
-        }
-
-        // 右侧列表点击选中
-        function selectPrescriptionItem(id) {
-            selectedMedicineId = id;
-
-            // 重新渲染左右两侧列表，以更新选中状态的高亮
-            renderPrescriptionItems();
-
-            // 如果左侧列表也在视野内，最好也高亮左侧（可选）
-            document.querySelectorAll('.medicine-item').forEach(el => el.classList.remove('selected'));
-            const leftItem = document.querySelector(`.medicine-item[onclick*="${id}"]`);
-            if (leftItem) leftItem.classList.add('selected');
-        }
-        // 更新数量
-        function updateQuantity(id, delta) {
-            const item = prescriptionItems.find(i => i.medicineId === id);
-            if (item) {
-                const newQty = item.quantity + delta;
-                if (newQty > 0) {
-                    item.quantity = newQty;
-                    renderPrescriptionItems(); // 重新渲染以更新显示
-                    updateTotalAmount();
-                    updatePrescriptionPreview();
-                }
-            }
-        }
-
-        // 更新用法/天数
-        function updateItemField(id, field, value) {
-            const item = prescriptionItems.find(i => i.medicineId === id);
-            if (item) {
-                item[field] = value;
-                updatePrescriptionPreview();
-            }
-        }
-
-        // 删除项目
-        function removeItem(id) {
-            prescriptionItems = prescriptionItems.filter(i => i.medicineId !== id);
-            renderPrescriptionItems();
-            updateTotalAmount();
-            updatePrescriptionPreview();
-        }
-
-        // 计算总金额
-        function updateTotalAmount() {
-            const total = prescriptionItems.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
-            document.querySelectorAll('.total-amount').forEach(el => el.innerText = '¥' + total.toFixed(2));
-        }
-
-        // 预览更新
-        function updatePrescriptionPreview() {
-            const container = document.getElementById('prescriptionPreview');
-            if (prescriptionItems.length === 0) {
-                container.innerHTML = '<p class="text-muted">暂无药品</p>';
-                return;
-            }
-            const advice = document.getElementById('doctorAdvice').value;
-
-            let html = prescriptionItems.map(item => `
-            <div class="mb-2">
-                <strong>${item.medicineName}</strong> x ${item.quantity} <br>
-                <small class="text-muted">用法：${item.usage || '未填写'} | 天数：${item.days || 0}天</small>
+            <div class="patient-banner">
+                <div><span class="text-muted">患者姓名:</span> <span id="pName" class="fw-bold">加载中...</span></div>
+                <div><span class="text-muted">性别:</span> <span id="pGender">-</span></div>
+                <div><span class="text-muted">年龄:</span> <span id="pAge">-</span></div>
+                <div><span class="text-muted">初步诊断:</span> <span class="fw-bold">急性上呼吸道感染</span></div>
             </div>
-        `).join('');
 
-            if (advice) {
-                html += `<div class="mt-3 pt-2 border-top"><small class="text-muted">医嘱：${advice}</small></div>`;
-            }
-            container.innerHTML = html;
+            <table class="prescription-table">
+                <thead>
+                <tr>
+                    <th width="30%">药品名称/规格</th>
+                    <th width="15%">单价</th>
+                    <th width="15%">总量</th>
+                    <th width="30%">用法用量/天数</th>
+                    <th width="10%"></th>
+                </tr>
+                </thead>
+                <tbody id="prescriptionItems">
+                </tbody>
+            </table>
+
+            <div class="total-display" id="estimatedTotal">
+                <span class="fs-6 text-muted fw-normal">预计金额:</span> ¥0.00
+            </div>
+
+            <div class="mt-4">
+                <label class="text-muted small d-block mb-2">医嘱说明 (Advice)</label>
+                <textarea class="form-control border-0 bg-light" id="doctorAdvice" rows="3" placeholder="填写用药禁忌、饮食建议等..."></textarea>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../utils/helpers.js"></script>
+
+<script>
+    let allMedicines = [];
+    let prescriptionItems = [];
+    let selectedMedicineId = null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const recordId = urlParams.get('recordId') || localStorage.getItem('currentRecordId');
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const patientInfoStr = localStorage.getItem('currentPatientInfo');
+        if (patientInfoStr) {
+            const info = JSON.parse(patientInfoStr);
+            document.getElementById('pName').textContent = info.name;
+            document.getElementById('pGender').textContent = info.gender;
+            document.getElementById('pAge').textContent = info.age + '岁';
         }
+        fetchMedicines();
+        setupEventListeners();
+    });
 
-        // 搜索和模板功能
-        function setupEventListeners() {
-            document.getElementById('medicineSearch').addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const filtered = allMedicines.filter(m => m.medicineName.toLowerCase().includes(term));
-                renderMedicineList(filtered);
+    async function fetchMedicines() {
+        const token = localStorage.getItem('token');
+        try {
+            const r = await fetch('http://localhost:8081/medicine?page=1&pageSize=100', {
+                headers: { 'Authorization': token }
             });
+            const res = await r.json();
+            if (res.code === 200) {
+                allMedicines = res.data.records;
+                renderMedicineList(allMedicines);
+            }
+        } catch (e) { console.error(e); }
+    }
 
-            document.getElementById('doctorAdvice').addEventListener('input', updatePrescriptionPreview);
+    function renderMedicineList(medicines) {
+        const container = document.getElementById('medicineList');
+        container.innerHTML = medicines.map(m => `
+                <div class="medicine-item" onclick="selectMedicineItem(this, ${m.medicineId})">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="fw-bold">${m.medicineName}</div>
+                            <small class="text-muted">${m.specification || '常规'}</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-primary small fw-bold">¥${m.unitPrice}</div>
+                            <button class="btn btn-sm btn-link p-0 text-decoration-none"
+                                    onclick="event.stopPropagation(); addToPrescription(${m.medicineId})">添加</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    function selectMedicineItem(element, id) {
+        document.querySelectorAll('.medicine-item').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+        selectedMedicineId = id;
+    }
+
+    function addToPrescription(id) {
+        const medicine = allMedicines.find(m => m.medicineId === id);
+        if (!medicine || medicine.stockLevel <= 0) return showMessage('库存不足', 'warning');
+
+        const existing = prescriptionItems.find(item => item.medicineId === id);
+        if (existing) {
+            existing.quantity += 1;
+        } else {
+            prescriptionItems.push({
+                medicineId: medicine.medicineId,
+                medicineName: medicine.medicineName,
+                specification: medicine.specification,
+                unitPrice: medicine.unitPrice,
+                quantity: 1, usage: '', days: 5
+            });
+        }
+        selectedMedicineId = id;
+        renderPrescriptionItems();
+        updateTotal();
+
+        document.querySelectorAll('.medicine-item').forEach(el => el.classList.remove('selected'));
+        const leftItem = document.querySelector(`.medicine-item[onclick*="${id}"]`);
+        if (leftItem) leftItem.classList.add('selected');
+    }
+
+    function renderPrescriptionItems() {
+        const tbody = document.getElementById('prescriptionItems');
+        tbody.innerHTML = prescriptionItems.map(item => `
+                <tr>
+                    <td>
+                        <div class="fw-bold">${item.medicineName}</div>
+                        <div class="small text-muted">${item.specification}</div>
+                    </td>
+                    <td>¥${item.unitPrice}</td>
+                    <td>
+                        <div class="input-group input-group-sm w-75">
+                            <button class="btn btn-outline-secondary border-0" onclick="updateQty(${item.medicineId}, -1)">-</button>
+                            <input type="text" class="form-control text-center border-0 bg-transparent" value="${item.quantity}" readonly>
+                            <button class="btn btn-outline-secondary border-0" onclick="updateQty(${item.medicineId}, 1)">+</button>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm border-0 bg-light mb-1"
+                               placeholder="用法" value="${item.usage}"
+                               onchange="updateItem(${item.medicineId}, 'usage', this.value)">
+                        <input type="number" class="form-control form-control-sm border-0 bg-light"
+                               placeholder="天数" value="${item.days}"
+                               onchange="updateItem(${item.medicineId}, 'days', this.value)">
+                    </td>
+                    <td class="text-end">
+                        <i class="material-icons-outlined text-danger cursor-pointer"
+                           style="font-size: 20px;" onclick="removeItem(${item.medicineId})">delete_outline</i>
+                    </td>
+                </tr>
+            `).join('');
+    }
+
+    function updateQty(id, delta) {
+        const item = prescriptionItems.find(i => i.medicineId === id);
+        if (item && item.quantity + delta > 0) {
+            item.quantity += delta;
+            renderPrescriptionItems();
+            updateTotal();
+        }
+    }
+
+    function updateItem(id, field, value) {
+        const item = prescriptionItems.find(i => i.medicineId === id);
+        if (item) item[field] = value;
+    }
+
+    function removeItem(id) {
+        prescriptionItems = prescriptionItems.filter(i => i.medicineId !== id);
+        renderPrescriptionItems();
+        updateTotal();
+    }
+
+    function updateTotal() {
+        const total = prescriptionItems.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+        document.getElementById('estimatedTotal').innerHTML = `<span class="fs-6 text-muted fw-normal">预计金额:</span> ¥${total.toFixed(2)}`;
+    }
+
+    function setupEventListeners() {
+        document.getElementById('medicineSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            renderMedicineList(allMedicines.filter(m => m.medicineName.toLowerCase().includes(term)));
+        });
+    }
+
+    function applyUsageTemplate(text) {
+        if (!selectedMedicineId) {
+            return showMessage('请先在列表或处方中选择一种药品', 'warning');
         }
 
-        // 快捷模板应用
-        function applyUsageTemplate(text) {
-            if (!selectedMedicineId) {
-                showMessage('请先点击左侧列表选中一种药品', 'warning');
-                return;
-            }
-            // 如果该药品已在处方中，更新它的用法
-            const item = prescriptionItems.find(i => i.medicineId === selectedMedicineId);
-            if (item) {
-                item.usage = text;
+        // 在已添加的处方项中查找
+        const item = prescriptionItems.find(i => i.medicineId === selectedMedicineId);
+        if (item) {
+            item.usage = text;
+            // 核心修改：必须重新渲染界面，否则用户看不见变化
+            renderPrescriptionItems();
+        } else {
+            // 如果该药品还没在处方里，先把它添加进去
+            addToPrescription(selectedMedicineId);
+            // 添加后再次尝试应用
+            const newItem = prescriptionItems.find(i => i.medicineId === selectedMedicineId);
+            if(newItem) {
+                newItem.usage = text;
                 renderPrescriptionItems();
-                updatePrescriptionPreview();
+            }
+        }
+    }
+
+    async function submitPrescription() {
+        if (prescriptionItems.length === 0) return showMessage('请添加药品', 'warning');
+
+        // 从 localStorage 获取当前挂号 ID (你在 medical-record.html 应该存过)
+        const appointmentId = localStorage.getItem('currentAppointmentId');
+        const token = localStorage.getItem('token');
+
+        const requestData = {
+            recordId: parseInt(recordId),
+            items: prescriptionItems.map(item => ({
+                medicineId: item.medicineId,
+                quantity: item.quantity,
+                usage: item.usage,
+                frequency: "每日",
+                days: parseInt(item.days)
+            }))
+        };
+
+        try {
+            // 1. 提交处方
+            const response = await fetch('http://localhost:8081/doctor/prescription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': token },
+                body: JSON.stringify(requestData)
+            });
+            const result = await response.json();
+
+            if (result.code === 200) {
+                // ★★★ 关键：提交处方成功后，立即更新挂号单状态 ★★★
+                if (appointmentId) {
+                    await fetch(`http://localhost:8081/admin/appointment/${appointmentId}/status?status=${encodeURIComponent('已就诊')}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': token }
+                    });
+                }
+
+                showMessage('处方签署成功，就诊已完成', 'success');
+
+                // 清理缓存并跳转
+                localStorage.removeItem('currentAppointmentId');
+                localStorage.removeItem('currentRecordId');
+                localStorage.removeItem('currentPatientInfo');
+
+                setTimeout(() => window.location.href = 'dashboard.html', 1500);
             } else {
-                // 如果没在处方里，先添加
-                addToPrescription(selectedMedicineId);
-                // 添加后再找一次更新用法
-                const newItem = prescriptionItems.find(i => i.medicineId === selectedMedicineId);
-                if(newItem) newItem.usage = text;
-                renderPrescriptionItems();
-                updatePrescriptionPreview();
+                showMessage('提交失败: ' + result.message, 'error');
             }
+        } catch (e) {
+            console.error(e);
+            showMessage('提交失败，请检查网络', 'error');
         }
+    }
 
-        // 5. ★★★ 提交处方 ★★★
-        async function submitPrescription() {
-            if (prescriptionItems.length === 0) {
-                showMessage('请至少添加一种药品', 'warning');
-                return;
-            }
-
-            // 校验
-            for (let item of prescriptionItems) {
-                if (!item.usage || !item.days) {
-                    showMessage(`【${item.medicineName}】的用法或天数未填写完整`, 'warning');
-                    return;
-                }
-            }
-
-            const requestData = {
-                recordId: parseInt(recordId),
-                items: prescriptionItems.map(item => ({
-                    medicineId: item.medicineId,
-                    quantity: item.quantity,
-                    usage: item.usage,
-                    frequency: "每日", // 简化处理
-                    days: parseInt(item.days)
-                }))
-            };
-
-            try {
-                const response = await fetch('http://localhost:8081/doctor/prescription', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': localStorage.getItem('token')
-                    },
-                    body: JSON.stringify(requestData)
-                });
-
-                const result = await response.json();
-
-                if (result.code === 200) {
-                    showMessage('处方开具成功！', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                } else {
-                    showMessage('提交失败: ' + result.message, 'error');
-                }
-            } catch (error) {
-                console.error(error);
-                showMessage('连接服务器失败', 'error');
-            }
-        }
-
-        // 保留 saveDraft 占位
-        function saveDraft() { showMessage('功能开发中...', 'info'); }
-    </script>
+    function saveDraft() { showMessage('草稿已保存', 'info'); }
+</script>
 </body>
 </html>

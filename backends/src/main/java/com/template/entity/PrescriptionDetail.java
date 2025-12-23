@@ -51,5 +51,23 @@ public class PrescriptionDetail implements Serializable {
      */
     @TableField("Subtotal")
     private java.math.BigDecimal subtotal;
+
+    /**
+     * 用法
+     */
+    @TableField("UsageMethod")
+    private String usageMethod;
+
+    /**
+     * 频次
+     */
+    @TableField("Frequency")
+    private String frequency;
+
+    /**
+     * 天数
+     */
+    @TableField("Days")
+    private Integer days;
 }
 

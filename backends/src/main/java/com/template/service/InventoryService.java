@@ -21,5 +21,7 @@ public interface InventoryService {
      * 查询库存流水
      */
     Page<InventoryLogVO> getInventoryLogPage(InventoryLogQueryRequest request);
+
+    void adjustStock(com.template.dto.InventoryAdjustRequest request);
 }
 

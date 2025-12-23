@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.template.common.ResultCode;
 import com.template.dto.InventoryInboundRequest;
+import com.template.dto.InventoryAdjustRequest; // 确保引入了这个
 import com.template.dto.InventoryLogQueryRequest;
 import com.template.entity.InventoryLog;
 import com.template.entity.Medicine;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
+
 /**
  * 库存服务实现类
  *
@@ -26,11 +29,13 @@ import org.springframework.util.StringUtils;
 @Service
 public class InventoryServiceImpl implements InventoryService {
 
+    // ================== 变量声明区域 (只声明一次) ==================
     @Autowired
     private InventoryLogMapper inventoryLogMapper;
 
     @Autowired
     private MedicineMapper medicineMapper;
+    // ===========================================================
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -46,6 +51,7 @@ public class InventoryServiceImpl implements InventoryService {
         log.setMedicineId(request.getMedicineId());
         log.setChangeQuantity(request.getQuantity());
         log.setReason(request.getReason());
+        log.setCreateTime(LocalDateTime.now()); // 补全时间
         inventoryLogMapper.insert(log);
 
         // 更新药品库存
@@ -53,6 +59,42 @@ public class InventoryServiceImpl implements InventoryService {
         medicineMapper.updateById(medicine);
 
         return log.getLogId();
+    }
+
+    /**
+     * 新增：库存调整 (盘点/报损/修正)
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void adjustStock(InventoryAdjustRequest request) {
+        // 1. 查询药品
+        Medicine medicine = medicineMapper.selectById(request.getMedicineId());
+        if (medicine == null) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR, "药品不存在");
+        }
+
+        // 2. 计算新库存
+        int oldStock = medicine.getStockLevel();
+        int changeQty = request.getQuantity(); // 这个值可能是负数
+        int newStock = oldStock + changeQty;
+
+        // 3. 校验库存是否足够 (如果是减少库存)
+        if (newStock < 0) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR, "库存不足，无法减少 " + Math.abs(changeQty) + " (当前库存: " + oldStock + ")");
+        }
+
+        // 4. 更新药品库存
+        medicine.setStockLevel(newStock);
+        medicineMapper.updateById(medicine);
+
+        // 5. 记录流水
+        InventoryLog log = new InventoryLog();
+        log.setMedicineId(medicine.getMedicineId());
+        log.setChangeQuantity(changeQty);
+        log.setReason(request.getReason());
+        log.setCreateTime(LocalDateTime.now());
+
+        inventoryLogMapper.insert(log);
     }
 
     @Override
@@ -87,23 +129,22 @@ public class InventoryServiceImpl implements InventoryService {
         // 转换为VO
         Page<InventoryLogVO> voPage = new Page<>(logPage.getCurrent(), logPage.getSize(), logPage.getTotal());
         voPage.setRecords(
-            logPage.getRecords().stream()
-                .map(log -> {
-                    InventoryLogVO vo = new InventoryLogVO();
-                    BeanUtils.copyProperties(log, vo);
+                logPage.getRecords().stream()
+                        .map(log -> {
+                            InventoryLogVO vo = new InventoryLogVO();
+                            BeanUtils.copyProperties(log, vo);
 
-                    // 获取药品名称
-                    Medicine medicine = medicineMapper.selectById(log.getMedicineId());
-                    if (medicine != null) {
-                        vo.setMedicineName(medicine.getMedicineName());
-                    }
+                            // 获取药品名称
+                            Medicine medicine = medicineMapper.selectById(log.getMedicineId());
+                            if (medicine != null) {
+                                vo.setMedicineName(medicine.getMedicineName());
+                            }
 
-                    return vo;
-                })
-                .collect(java.util.stream.Collectors.toList())
+                            return vo;
+                        })
+                        .collect(java.util.stream.Collectors.toList())
         );
 
         return voPage;
     }
 }
-

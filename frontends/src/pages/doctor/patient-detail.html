@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>患者诊疗档案 - 医生端</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles/common.css">
+    <style>
+        :root {
+            --theme-start: #4CA1AF;
+            --theme-end: #C4E0E5;
+            --border-light: #edf2f7;
+            --text-main: #334155;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text-main);
+            margin: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .header-section {
+                background: linear-gradient(135deg, var(--theme-start), var(--theme-end));
+                padding: 30px 0 60px 0;
+                color: white;
+            }
+
+            .back-link {
+                display: inline-flex;
+                align-items: center;
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+
+            .stats-area {
+                margin-top: -40px;
+                background: #fff;
+                border: 1px solid var(--border-light);
+                border-radius: 8px;
+                padding: 20px;
+                display: flex;
+                justify-content: space-between;
+                gap: 24px;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            }
+
+            .stat-item {
+                flex: 1;
+                text-align: center;
+                border-right: 1px solid var(--border-light);
+            }
+
+            .stat-item:last-child { border-right: none; }
+
+            .stat-value {
+                font-size: 1.8rem;
+                font-weight: 800;
+                color: var(--theme-start);
+                line-height: 1;
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                margin-top: 8px;
+                font-weight: 600;
+            }
+
+            .patient-info {
+                font-size: 0.9rem;
+                color: rgba(255, 255, 255, 0.9);
+                display: flex;
+                flex-wrap: wrap;
+                gap: 18px;
+            }
+
+            .timeline-container {
+                margin-top: 40px;
+                position: relative;
+                padding-left: 30px;
+            }
+
+            .timeline-container::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: var(--border-light);
+            }
+
+            .record-entry {
+                position: relative;
+                margin-bottom: 30px;
+                padding-left: 20px;
+            }
+
+            .record-entry::before {
+                content: '';
+                position: absolute;
+                left: -35px;
+                top: 5px;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: #fff;
+                border: 3px solid var(--theme-start);
+                z-index: 2;
+            }
+
+            .record-card-flat {
+                background: #fff;
+                border: 1px solid var(--border-light);
+                border-radius: 6px;
+                padding: 24px;
+                transition: all 0.2s;
+            }
+
+            .record-card-flat:hover {
+                border-color: var(--theme-start);
+            }
+
+            .record-date {
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                font-weight: 600;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .dept-tag {
+                background: #f1f5f9;
+                color: #475569;
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                font-weight: 700;
+            }
+
+            .info-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .info-label { color: var(--text-muted); margin-right: 6px; }
+
+            .btn-detail {
+                background: transparent;
+                border: 1px solid var(--theme-start);
+                color: var(--theme-start);
+                font-size: 0.85rem;
+                font-weight: 600;
+                padding: 6px 16px;
+                border-radius: 4px;
+            }
+
+            .btn-detail:hover {
+                background: var(--theme-start);
+                color: white;
+            }
+
+            .modal-header .material-icons-outlined {
+                color: var(--theme-start);
+            }
+
+            .detail-section {
+                border: 1px solid var(--border-light);
+                border-radius: 6px;
+                padding: 14px 16px;
+                margin-bottom: 16px;
+            }
+
+            .detail-title {
+                font-weight: 700;
+                font-size: 0.95rem;
+                color: #1f2937;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+
+            .detail-title i {
+                color: var(--theme-start);
+                font-size: 18px;
+            }
+
+            .detail-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .detail-text {
+                background: #f8fafc;
+                border: 1px solid var(--border-light);
+                padding: 10px 12px;
+                border-radius: 4px;
+            }
+
+            .detail-table th {
+                font-size: 0.85rem;
+                color: #64748b;
+                background: #f8fafc;
+            }
+
+            .empty-block {
+                text-align: center;
+                color: var(--text-muted);
+                padding: 18px 0;
+                background: #f8fafc;
+                border: 1px dashed var(--border-light);
+                border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-section">
+    <div class="container">
+        <a href="dashboard.html" class="back-link">
+            <i class="material-icons-outlined" style="font-size: 18px; vertical-align: middle;">arrow_back</i> 返回首页
+        </a>
+        <div class="d-flex justify-content-between align-items-end">
+            <div>
+                <h2 class="fw-bold mb-1">患者诊疗档案</h2>
+                <p class="opacity-75 mb-0 small">PATIENT MEDICAL HISTORY</p>
+            </div>
+            <div id="patientBasicInfo" class="patient-info"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="stats-area">
+        <div class="stat-item">
+            <div class="stat-value" id="totalRecords">0</div>
+            <div class="stat-label">累计就诊</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="latestVisit">--</div>
+            <div class="stat-label">最近就诊</div>
+        </div>
+    </div>
+
+    <div class="timeline-container" id="recordsList">
+        <div class="p-5 text-center text-muted">正在检索病历档案...</div>
+    </div>
+</div>
+
+<div class="modal fade" id="recordDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
+                    <i class="material-icons-outlined">description</i>
+                    病历详情
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4" id="recordDetailContent">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const patientId = urlParams.get('patientId');
+    const token = localStorage.getItem('token');
+    let detailModal;
+    let appointmentHistory = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!patientId) {
+            alert('参数错误：缺少患者ID');
+            location.href = 'dashboard.html';
+            return;
+        }
+
+        // 初始化模态框
+        detailModal = new bootstrap.Modal(document.getElementById('recordDetailModal'));
+
+        loadData();
+    });
+
+    // 加载患者信息和历史列表
+    async function loadData() {
+        try {
+            // 1. 获取患者基础资料
+            const pRes = await fetch(`http://localhost:8081/patient/${patientId}`, {
+                headers: { 'Authorization': token }
+            });
+            const pData = await pRes.json();
+            if (pData.code === 200) {
+                const p = pData.data;
+                document.getElementById('patientBasicInfo').innerHTML = `
+                    <span class="me-3 fw-bold text-white"><i class="material-icons-outlined" style="font-size:16px; vertical-align: middle;">person</i> ${p.patientName}</span>
+                    <span class="me-3">${p.gender}</span>
+                   <span><i class="material-icons-outlined" style="font-size:16px; vertical-align: middle;">call</i> ${p.phoneNumber}</span>
+                `;
+            }
+
+            // 2. 获取就诊历史 (筛选状态为已就诊)
+            const hRes = await fetch(`http://localhost:8081/admin/appointment?patientId=${patientId}&status=已就诊&pageSize=100`, {
+                headers: { 'Authorization': token }
+            });
+            const hData = await hRes.json();
+
+            const container = document.getElementById('recordsList');
+            if (hData.code === 200 && hData.data.records.length > 0) {
+                appointmentHistory = hData.data.records;
+                updateStats();
+                renderRecords();
+            } else {
+                appointmentHistory = [];
+                updateStats();
+                container.innerHTML = `<div class="p-5 text-center text-muted">暂无已完成的诊疗记录</div>`;
+            }
+        } catch (e) {
+            console.error(e);
+            document.getElementById('recordsList').innerHTML = '<div class="alert alert-danger">获取档案列表失败，请检查后端接口。</div>';
+        }
+    }
+
+    function updateStats() {
+        document.getElementById('totalRecords').textContent = appointmentHistory.length;
+
+        if (appointmentHistory.length === 0) {
+            document.getElementById('latestVisit').textContent = '--';
+            return;
+        }
+
+        const sorted = [...appointmentHistory].sort((a, b) => {
+            const dateA = new Date(`${a.scheduleDate} ${a.timeSlot || '00:00'}`);
+            const dateB = new Date(`${b.scheduleDate} ${b.timeSlot || '00:00'}`);
+            return dateB - dateA;
+        });
+        const latest = sorted[0];
+        document.getElementById('latestVisit').textContent = `${latest.scheduleDate}`;
+    }
+
+    function renderRecords() {
+        const container = document.getElementById('recordsList');
+        if (appointmentHistory.length === 0) {
+            container.innerHTML = `<div class="p-5 text-center text-muted">暂无已完成的诊疗记录</div>`;
+            return;
+        }
+
+        appointmentHistory.sort((a, b) => new Date(b.scheduleDate) - new Date(a.scheduleDate));
+        container.innerHTML = appointmentHistory.map(r => `
+            <div class="record-entry">
+                <div class="record-card-flat">
+                    <div class="record-date">
+                        <span class="dept-tag">${r.deptName}</span>
+                        <i class="material-icons-outlined" style="font-size:16px;">calendar_today</i>
+                        ${r.scheduleDate} ${r.timeSlot}
+                    </div>
+                    <div class="info-grid">
+                        <div><span class="info-label">预约号:</span>${r.appointmentId}</div>
+                        <div><span class="info-label">接诊医生:</span>${r.staffName}</div>
+                        <div><span class="info-label">状态:</span>已结诊</div>
+                    </div>
+                    <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                        <div class="small text-muted">患者档案</div>
+                        <button class="btn-detail" onclick='showRecordDetail(${JSON.stringify(r.appointmentId)})'>查看病历详情</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+
+    async function showRecordDetail(appointmentId) {
+        const content = document.getElementById('recordDetailContent');
+
+        // 1. 先显示加载动画
+        content.innerHTML = `
+        <div class="text-center p-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted">正在调取原始档案...</p>
+        </div>`;
+
+        // 确保模态框实例已初始化并显示
+        if (!detailModal) {
+            detailModal = new bootstrap.Modal(document.getElementById('recordDetailModal'));
+        }
+        detailModal.show();
+
+        try {
+            // 2. 并行请求病历和处方数据
+            const [recordRes, prescRes] = await Promise.all([
+                fetch(`http://localhost:8081/medical-record/appointment/${appointmentId}`, { headers: { 'Authorization': token } }),
+                fetch(`http://localhost:8081/prescription/appointment/${appointmentId}`, { headers: { 'Authorization': token } })
+            ]);
+
+            const recordResult = await recordRes.json();
+            const prescResult = await prescRes.json();
+
+            if (recordResult.code === 200 && recordResult.data) {
+                const r = recordResult.data;
+                const p = prescResult.data;
+
+                content.innerHTML = `
+            <div class="detail-section">
+                    <div class="detail-title">
+                        <i class="material-icons-outlined">clinical_notes</i>
+                        诊疗记录
+                    </div>
+                    <div class="detail-grid mb-3">
+                        <div><span class="info-label">主诉：</span>${r.subjective || '未填写'}</div>
+                        <div><span class="info-label">诊断：</span>${r.assessment || '未填写'}</div>
+                        <div><span class="info-label">查体：</span>${r.objective || '未填写'}</div>
+                    </div>
+                    <div>
+                        <div class="info-label mb-2">治疗方案</div>
+                        <div class="detail-text">${r.plan || '未填写'}</div>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-title">
+                        <i class="material-icons-outlined">medication</i>
+                        处方明细
+                    </div>
+
+                    ${(p && p.details && p.details.length > 0) ? `
+                        <div class="table-responsive">
+                              <table class="table table-sm align-middle detail-table">
+                                <thead>
+                                    <tr>
+                                        <th>药品名称</th>
+                                        <th>规格</th>
+                                         <th class="text-end">单价</th>
+                                        <th class="text-center">数量</th>
+                                        <th class="text-end">小计</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${p.details.map(d => `
+                                        <tr>
+                                            <td class="fw-bold">${d.medicineName}</td>
+                                            <td>${d.specification || '-'}</td>
+                                            <td class="text-end">¥${d.unitPrice ?? '-'}</td>
+                                            <td class="text-center">${d.quantity || 0}</td>
+                                            <td class="text-end">¥${d.subtotal ?? '-'}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-end small text-muted mt-2">处方编号：${p.prescriptionId}</div>
+                    ` : `
+                         <div class="empty-block">该次就诊未开具处方。</div>
+                    `}
+            </div>
+            `;
+            } else {
+                content.innerHTML = `
+                 <div class="empty-block">暂未查询到该预约单的详细病历内容。</div>`;
+            }
+        } catch (e) {
+            console.error('Fetch Error:', e);
+            content.innerHTML = `
+            <div class="empty-block">调取档案失败，请确认后端服务已启动。</div>`;
+        }
+    }
+</script>
+</body>
+</html>

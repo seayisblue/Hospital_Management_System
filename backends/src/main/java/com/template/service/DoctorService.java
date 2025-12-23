@@ -4,6 +4,7 @@ import com.template.dto.MedicalRecordCreateRequest;
 import com.template.dto.PrescriptionCreateRequest;
 import com.template.vo.DoctorAppointmentVO;
 import com.template.vo.MedicalRecordDetailVO;
+import com.template.vo.PharmacyPrescriptionVO;
 
 import java.util.List;
 
@@ -39,6 +40,8 @@ public interface DoctorService {
      */
     MedicalRecordDetailVO getMedicalRecordDetail(Integer recordId);
 
+    MedicalRecordDetailVO getMedicalRecordDetailByAppointment(Integer staffId, Integer appointmentId);
+
     /**
      * 创建处方
      *
@@ -47,5 +50,6 @@ public interface DoctorService {
      * @return 处方ID
      */
     Integer createPrescription(Integer staffId, PrescriptionCreateRequest request);
-}
 
+PharmacyPrescriptionVO getPrescriptionByAppointment(Integer staffId, Integer appointmentId);
+}

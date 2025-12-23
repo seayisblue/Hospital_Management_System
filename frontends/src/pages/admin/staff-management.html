@@ -4,57 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>职工管理 - 医院门诊管理系统</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../styles/common.css">
+    <style>
+        :root {
+            --sidebar-bg: #2c3e50;
+            --main-bg: #f0f4f7;
+            --primary-color: #4CA1AF;
+            --accent-color: #C4E0E5;
+            --text-main: #2c3e50;
+            --white: #ffffff;
+        }
+
+        body {
+            background-color: var(--main-bg);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: var(--sidebar-bg);
+            color: rgba(255,255,255,0.8);
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 25px 20px;
+            font-weight: 700;
+            color: var(--white);
+            background: rgba(0,0,0,0.15);
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-link {
+            padding: 14px 22px;
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .nav-link i { width: 28px; font-size: 1.1rem; }
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 220px;
+            padding: 25px 35px;
+        }
+    </style>
 </head>
 <body>
-    <div id="navbar-container"></div>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-brand">系统管理</div>
+        <nav class="mt-3">
+            <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i> 工作台概览</a>
+            <a href="staff-management.html" class="nav-link active"><i class="fa-solid fa-user-doctor"></i> 职工管理</a>
+            <a href="department-management.html" class="nav-link"><i class="fa-solid fa-hospital-user"></i> 科室配置</a>
+            <a href="medicine-management.html" class="nav-link"><i class="fa-solid fa-pills"></i> 药品管理</a>
+            <a href="medicine-stock.html" class="nav-link"><i class="fa-solid fa-box-open"></i> 药品入库</a>
+            <a href="finance-center.html" class="nav-link"><i class="fa-solid fa-file-invoice-dollar"></i> 财务结算</a>
+            <a href="on-site-registration.html" class="nav-link"><i class="fa-solid fa-id-card"></i> 现场挂号</a>
+        </nav>
+    </aside>
 
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>👨‍💼 职工管理</h2>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
-                ➕ 添加职工
-            </button>
-        </div>
+    <main class="main-content">
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <a href="dashboard.html" class="btn btn-outline-secondary me-2">🏠 首页</a>
+                <h2>👨‍💼 职工管理</h2>
 
-        <!-- 搜索和筛选 -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" placeholder="搜索职工姓名..." id="searchInput">
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-select" id="roleFilter">
-                            <option value="">所有角色</option>
-                            <option value="医生">医生</option>
-                            <option value="药剂师">药剂师</option>
-                            <option value="管理员">管理员</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-select" id="deptFilter">
-                            <option value="">所有科室</option>
-                            <option value="1">内科</option> <option value="2">外科</option> <option value="3">儿科</option> </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-outline-primary w-100" id="searchBtn">搜索</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                    ➕ 添加职工
+                </button>
+            </div>
+
+            <!-- 搜索和筛选 -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" placeholder="搜索职工姓名..." id="searchInput">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="roleFilter">
+                                <option value="">所有角色</option>
+                                <option value="医生">医生</option>
+                                <option value="药剂师">药剂师</option>
+                                <option value="管理员">管理员</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="deptFilter">
+                                <option value="">所有科室</option>
+                                <option value="1">内科</option> <option value="2">外科</option> <option value="3">儿科</option> </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-primary w-100" id="searchBtn">搜索</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 职工列表 -->
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">职工列表</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
+            <!-- 职工列表 -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">职工列表</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
                             <tr>
                                 <th>工号</th>
                                 <th>姓名</th>
@@ -64,8 +142,8 @@
                                 <th>登录账号</th>
                                 <th>操作</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <tr>
                                 <td>1001</td>
                                 <td>张医生</td>
@@ -102,143 +180,144 @@
                                     <button class="btn btn-sm btn-outline-danger">删除</button>
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- 分页 -->
-                <nav>
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">下一页</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
+                            </tbody>
+                        </table>
+                    </div>
 
-    <!-- 添加职工模态框 -->
-    <div class="modal fade" id="addStaffModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">添加新职工</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addStaffForm">
-                        <div class="mb-3">
-                            <label class="form-label">姓名</label>
-                            <input type="text" class="form-control" name="staffName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">角色</label>
-                            <select class="form-select" name="role" required>
-                                <option value="">请选择角色</option>
-                                <option value="医生">医生</option>
-                                <option value="药剂师">药剂师</option>
-                                <option value="管理员">管理员</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">科室</label>
-                            <select class="form-select" name="deptId" required>
-                                <option value="">请选择科室</option>
-                                <option value="1">内科</option>
-                                <option value="2">外科</option>
-                                <option value="3">儿科</option>
-                                <option value="4">妇产科</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">职称</label>
-                            <input type="text" class="form-control" name="title">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">登录账号</label>
-                            <input type="text" class="form-control" name="loginName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">初始密码</label>
-                            <input type="password" class="form-control" name="password" value="123456" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="addStaff()">添加职工</button>
+                    <!-- 分页 -->
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">下一页</a></li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
+    </main>
+</div>
+
+<!-- 添加职工模态框 -->
+<div class="modal fade" id="addStaffModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">添加新职工</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addStaffForm">
+                    <div class="mb-3">
+                        <label class="form-label">姓名</label>
+                        <input type="text" class="form-control" name="staffName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">角色</label>
+                        <select class="form-select" name="role" required>
+                            <option value="">请选择角色</option>
+                            <option value="医生">医生</option>
+                            <option value="药剂师">药剂师</option>
+                            <option value="管理员">管理员</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">科室</label>
+                        <select class="form-select" name="deptId" required>
+                            <option value="">请选择科室</option>
+                            <option value="1">内科</option>
+                            <option value="2">外科</option>
+                            <option value="3">儿科</option>
+                            <option value="4">妇产科</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">职称</label>
+                        <input type="text" class="form-control" name="title">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">登录账号</label>
+                        <input type="text" class="form-control" name="loginName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">初始密码</label>
+                        <input type="password" class="form-control" name="password" value="123456" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="addStaff()">添加职工</button>
+            </div>
+        </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../utils/helpers.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../utils/helpers.js"></script>
 
-    <script>
-        // 全局变量
-        let staffList = [];
+<script>
+    // 全局变量
+    let staffList = [];
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadNavbar();
-            fetchStaffList(); // 进页面先加载数据
-            setupEventListeners();
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchStaffList(); // 进页面先加载数据
+        setupEventListeners();
+    });
 
-        // 1. ★★★ 获取职工列表 (带搜索功能) ★★★
-        async function fetchStaffList() {
-            const token = localStorage.getItem('token');
-            if (!token) return window.location.href = 'login.html';
+    // 1. ★★★ 获取职工列表 (带搜索功能) ★★★
+    async function fetchStaffList() {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'login.html';
 
-            // 获取搜索框的值
-            const name = document.getElementById('searchInput').value;
-            const role = document.getElementById('roleFilter').value;
-            const deptId = document.getElementById('deptFilter').value;
+        // 获取搜索框的值
+        const name = document.getElementById('searchInput').value;
+        const role = document.getElementById('roleFilter').value;
+        const deptId = document.getElementById('deptFilter').value;
 
-            // 拼接 URL 参数
-            // 接口地址: http://localhost:8081/staff
-            let url = 'http://localhost:8081/staff?page=1&pageSize=100';
-            if (name) url += `&staffName=${encodeURIComponent(name)}`;
-            if (role) url += `&role=${encodeURIComponent(role)}`;
-            if (deptId) url += `&deptId=${deptId}`;
+        // 拼接 URL 参数
+        // 接口地址: http://localhost:8081/staff
+        let url = 'http://localhost:8081/staff?page=1&pageSize=100';
+        if (name) url += `&staffName=${encodeURIComponent(name)}`;
+        if (role) url += `&role=${encodeURIComponent(role)}`;
+        if (deptId) url += `&deptId=${deptId}`;
 
-            try {
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    }
-                });
-
-                const result = await response.json();
-
-                if (result.code === 200) {
-                    // 拿到分页数据里的记录列表
-                    staffList = result.data.records;
-                    renderStaffTable();
-                } else {
-                    showMessage('获取列表失败: ' + result.message, 'error');
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
                 }
-            } catch (error) {
-                console.error(error);
-                showMessage('连接服务器失败', 'error');
+            });
+
+            const result = await response.json();
+
+            if (result.code === 200) {
+                // 拿到分页数据里的记录列表
+                staffList = result.data.records;
+                renderStaffTable();
+            } else {
+                showMessage('获取列表失败: ' + result.message, 'error');
             }
+        } catch (error) {
+            console.error(error);
+            showMessage('连接服务器失败', 'error');
+        }
+    }
+
+    // 2. ★★★ 渲染表格 (字段名已修正) ★★★
+    function renderStaffTable() {
+        const tbody = document.querySelector('tbody');
+
+        if (!staffList || staffList.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">暂无数据</td></tr>';
+            return;
         }
 
-        // 2. ★★★ 渲染表格 (字段名已修正) ★★★
-        function renderStaffTable() {
-            const tbody = document.querySelector('tbody');
-
-            if (!staffList || staffList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center">暂无数据</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = staffList.map(staff => `
+        tbody.innerHTML = staffList.map(staff => `
             <tr>
                 <td>${staff.staffId}</td> <td>${staff.staffName}</td> <td>
                     <span class="badge ${getRoleBadgeClass(staff.role)}">${staff.role}</span>
@@ -249,89 +328,89 @@
                 </td>
             </tr>
         `).join('');
+    }
+
+    // 3. ★★★ 添加新职工 ★★★
+    async function addStaff() {
+        const form = document.getElementById('addStaffForm');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
         }
 
-        // 3. ★★★ 添加新职工 ★★★
-        async function addStaff() {
-            const form = document.getElementById('addStaffForm');
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
+        // 收集表单数据转成 JSON
+        const formData = new FormData(form);
+        const staffData = Object.fromEntries(formData.entries());
+
+        // 转换数据类型：后端要求 deptId 是数字
+        if (staffData.deptId) staffData.deptId = parseInt(staffData.deptId);
+
+        try {
+            const response = await fetch('http://localhost:8081/staff', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token')
+                },
+                body: JSON.stringify(staffData)
+            });
+
+            const result = await response.json();
+
+            if (result.code === 200) {
+                showMessage('职工添加成功！', 'success');
+
+                // 关闭弹窗并重置
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addStaffModal'));
+                modal.hide();
+                form.reset();
+
+                // 重新加载列表，就能看到新人了
+                fetchStaffList();
+            } else {
+                showMessage('添加失败: ' + result.message, 'error');
             }
+        } catch (error) {
+            console.error(error);
+            showMessage('操作失败，请检查网络', 'error');
+        }
+    }
 
-            // 收集表单数据转成 JSON
-            const formData = new FormData(form);
-            const staffData = Object.fromEntries(formData.entries());
+    // 4. 删除职工 (额外功能)
+    async function deleteStaff(staffId) {
+        if(!confirm('确定要删除该职工吗？')) return;
 
-            // 转换数据类型：后端要求 deptId 是数字
-            if (staffData.deptId) staffData.deptId = parseInt(staffData.deptId);
-
-            try {
-                const response = await fetch('http://localhost:8081/staff', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': localStorage.getItem('token')
-                    },
-                    body: JSON.stringify(staffData)
-                });
-
-                const result = await response.json();
-
-                if (result.code === 200) {
-                    showMessage('职工添加成功！', 'success');
-
-                    // 关闭弹窗并重置
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('addStaffModal'));
-                    modal.hide();
-                    form.reset();
-
-                    // 重新加载列表，就能看到新人了
-                    fetchStaffList();
-                } else {
-                    showMessage('添加失败: ' + result.message, 'error');
-                }
-            } catch (error) {
-                console.error(error);
-                showMessage('操作失败，请检查网络', 'error');
+        try {
+            const response = await fetch(`http://localhost:8081/staff/${staffId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            const result = await response.json();
+            if(result.code === 200) {
+                showMessage('删除成功', 'success');
+                fetchStaffList(); // 刷新列表
+            } else {
+                showMessage(result.message, 'error');
             }
+        } catch(e) {
+            showMessage('删除失败', 'error');
         }
+    }
 
-        // 4. 删除职工 (额外功能)
-        async function deleteStaff(staffId) {
-            if(!confirm('确定要删除该职工吗？')) return;
+    // 辅助函数：给角色上色
+    function getRoleBadgeClass(role) {
+        if (role === '医生') return 'bg-primary';
+        if (role === '药剂师') return 'bg-success';
+        if (role === '管理员') return 'bg-warning';
+        return 'bg-secondary';
+    }
 
-            try {
-                const response = await fetch(`http://localhost:8081/staff/${staffId}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': localStorage.getItem('token') }
-                });
-                const result = await response.json();
-                if(result.code === 200) {
-                    showMessage('删除成功', 'success');
-                    fetchStaffList(); // 刷新列表
-                } else {
-                    showMessage(result.message, 'error');
-                }
-            } catch(e) {
-                showMessage('删除失败', 'error');
-            }
-        }
+    // 绑定事件
+    function setupEventListeners() {
+        document.getElementById('searchBtn').addEventListener('click', fetchStaffList);
+    }
 
-        // 辅助函数：给角色上色
-        function getRoleBadgeClass(role) {
-            if (role === '医生') return 'bg-primary';
-            if (role === '药剂师') return 'bg-success';
-            if (role === '管理员') return 'bg-warning';
-            return 'bg-secondary';
-        }
-
-        // 绑定事件
-        function setupEventListeners() {
-            document.getElementById('searchBtn').addEventListener('click', fetchStaffList);
-        }
-
-        function editStaff(id) { alert('编辑功能暂未连接'); }
-    </script>
+    function editStaff(id) { alert('编辑功能暂未连接'); }
+</script>
 </body>
 </html>

@@ -22,6 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+// ✅ 1. 新增了这两个必须的包
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 职工服务实现类
  *
@@ -54,26 +58,49 @@ public class StaffServiceImpl implements StaffService {
         System.out.println("输入密码: " + request.getPassword());
         System.out.println("数据库哈希: " + staff.getPasswordHash());
         System.out.println("哈希长度: " + (staff.getPasswordHash() != null ? staff.getPasswordHash().length() : 0));
-        
+
         // 验证密码
         boolean matches = PasswordUtil.matches(request.getPassword(), staff.getPasswordHash());
         System.out.println("密码验证结果: " + (matches ? "✓ 成功" : "✗ 失败"));
         System.out.println("================================");
-        
+
         if (!matches) {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "账号或密码错误");
         }
 
-        // 生成Token
+        // ✅ 2. 修复了这里：改成了 Map 传参
+        // 原报错代码: String token = JwtUtil.createToken(staff.getStaffId().longValue(), staff.getLoginName());
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", staff.getStaffId());
+        claims.put("username", staff.getLoginName());
+
         String token = JwtUtil.generateToken(staff.getStaffId().longValue(), staff.getLoginName());
 
-        // 构造响应
+        // 构建返回信息
         StaffLoginResponse response = new StaffLoginResponse();
-        response.setToken(token);
         response.setStaffId(staff.getStaffId());
         response.setStaffName(staff.getStaffName());
         response.setRole(staff.getRole());
-        response.setLoginName(staff.getLoginName());
+        response.setTitle(staff.getTitle());
+        response.setToken(token);
+        response.setDeptId(staff.getDeptId()); // 设置科室ID
+
+        // === 新增：查询并设置科室名称 ===
+        if (staff.getDeptId() != null) {
+            Department dept = departmentMapper.selectById(staff.getDeptId());
+            if (dept != null) {
+                response.setDeptName(dept.getDeptName());
+
+                // 🔥 核心判断逻辑 🔥
+                // 如果科室表里的 managerId 等于当前登录人的 staffId，他就是主任
+                if (dept.getManagerId() != null && dept.getManagerId().equals(staff.getStaffId())) {
+                    response.setIsDeptManager(true);
+                } else {
+                    response.setIsDeptManager(false);
+                }
+            }
+        }
 
         return response;
     }
@@ -140,8 +167,7 @@ public class StaffServiceImpl implements StaffService {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "职工不存在");
         }
 
-        // TODO: 可以添加检查，如果职工有排班或其他关联数据，不允许删除
-        
+
         staffMapper.deleteById(staffId);
     }
 
@@ -186,9 +212,9 @@ public class StaffServiceImpl implements StaffService {
         // 转换为VO
         Page<StaffVO> voPage = new Page<>(staffPage.getCurrent(), staffPage.getSize(), staffPage.getTotal());
         voPage.setRecords(
-            staffPage.getRecords().stream()
-                .map(this::convertToVO)
-                .collect(java.util.stream.Collectors.toList())
+                staffPage.getRecords().stream()
+                        .map(this::convertToVO)
+                        .collect(java.util.stream.Collectors.toList())
         );
 
         return voPage;
@@ -212,4 +238,3 @@ public class StaffServiceImpl implements StaffService {
         return vo;
     }
 }
-

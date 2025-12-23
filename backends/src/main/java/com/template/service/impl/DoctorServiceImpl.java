@@ -10,6 +10,7 @@ import com.template.mapper.*;
 import com.template.service.DoctorService;
 import com.template.vo.DoctorAppointmentVO;
 import com.template.vo.MedicalRecordDetailVO;
+import com.template.vo.PharmacyPrescriptionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,7 +87,7 @@ public class DoctorServiceImpl implements DoctorService {
                 vo.setPatientName(patient.getPatientName());
                 vo.setPatientGender(patient.getGender());
                 vo.setPatientPhone(patient.getPhoneNumber());
-                
+
                 // 计算年龄
                 if (patient.getDateOfBirth() != null) {
                     Period period = Period.between(patient.getDateOfBirth(), LocalDate.now());
@@ -162,36 +163,19 @@ public class DoctorServiceImpl implements DoctorService {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "病历不存在");
         }
 
-        MedicalRecordDetailVO vo = new MedicalRecordDetailVO();
-        vo.setRecordId(record.getRecordId());
-        vo.setAppointmentId(record.getAppointmentId());
-        vo.setPatientId(record.getPatientId());
-        vo.setStaffId(record.getStaffId());
-        vo.setSubjective(record.getSubjective());
-        vo.setObjective(record.getObjective());
-        vo.setAssessment(record.getAssessment());
-        vo.setPlan(record.getPlan());
-        vo.setCreateTime(record.getCreateTime());
-
-        // 查询患者信息
-        Patient patient = patientMapper.selectById(record.getPatientId());
-        if (patient != null) {
-            vo.setPatientName(patient.getPatientName());
+        return buildMedicalRecordDetail(record);
+    }
+    @Override
+    public MedicalRecordDetailVO getMedicalRecordDetailByAppointment(Integer staffId, Integer appointmentId) {
+        LambdaQueryWrapper<MedicalRecord> query = new LambdaQueryWrapper<>();
+        query.eq(MedicalRecord::getAppointmentId, appointmentId);
+        MedicalRecord record = medicalRecordMapper.selectOne(query);
+        if (record == null) {
+            return null;
         }
 
-        // 查询医生信息
-        Staff staff = staffMapper.selectById(record.getStaffId());
-        if (staff != null) {
-            vo.setStaffName(staff.getStaffName());
-            
-            // 查询科室信息
-            Department dept = departmentMapper.selectById(staff.getDeptId());
-            if (dept != null) {
-                vo.setDeptName(dept.getDeptName());
-            }
-        }
 
-        return vo;
+        return buildMedicalRecordDetail(record);
     }
 
     @Override
@@ -215,6 +199,7 @@ public class DoctorServiceImpl implements DoctorService {
         prescription.setStaffId(staffId);
         prescription.setPrescriptionDate(LocalDateTime.now());
         prescription.setStatus("未发药");
+        prescription.setAdvice(request.getAdvice());
 
         prescriptionMapper.insert(prescription);
 
@@ -233,7 +218,7 @@ public class DoctorServiceImpl implements DoctorService {
 
             // 检查库存
             if (medicine.getStockLevel() < item.getQuantity()) {
-                throw new BusinessException(ResultCode.BUSINESS_ERROR, 
+                throw new BusinessException(ResultCode.BUSINESS_ERROR,
                         "药品库存不足：" + medicine.getMedicineName());
             }
 
@@ -249,6 +234,9 @@ public class DoctorServiceImpl implements DoctorService {
             detail.setQuantity(item.getQuantity());
             detail.setUnitPrice(medicine.getUnitPrice());
             detail.setSubtotal(itemAmount);
+            detail.setUsageMethod(item.getUsage());
+            detail.setFrequency(item.getFrequency());
+            detail.setDays(item.getDays());
 
             prescriptionDetailMapper.insert(detail);
 
@@ -269,6 +257,119 @@ public class DoctorServiceImpl implements DoctorService {
 
         return prescription.getPrescriptionId();
     }
+    @Override
+    public PharmacyPrescriptionVO getPrescriptionByAppointment(Integer staffId, Integer appointmentId) {
+        LambdaQueryWrapper<MedicalRecord> recordQuery = new LambdaQueryWrapper<>();
+        recordQuery.eq(MedicalRecord::getAppointmentId, appointmentId);
+        MedicalRecord record = medicalRecordMapper.selectOne(recordQuery);
+        if (record == null) {
+            return null;
+        }
+
+        LambdaQueryWrapper<Prescription> prescriptionQuery = new LambdaQueryWrapper<>();
+        prescriptionQuery.eq(Prescription::getRecordId, record.getRecordId())
+                .orderByDesc(Prescription::getPrescriptionDate)
+                .last("LIMIT 1");
+        Prescription prescription = prescriptionMapper.selectOne(prescriptionQuery);
+        if (prescription == null) {
+            return null;
+        }
+
+        return buildPrescriptionVO(prescription);
+    }
+
+    private MedicalRecordDetailVO buildMedicalRecordDetail(MedicalRecord record) {
+        MedicalRecordDetailVO vo = new MedicalRecordDetailVO();
+        vo.setRecordId(record.getRecordId());
+        vo.setAppointmentId(record.getAppointmentId());
+        vo.setPatientId(record.getPatientId());
+        vo.setStaffId(record.getStaffId());
+        vo.setSubjective(record.getSubjective());
+        vo.setObjective(record.getObjective());
+        vo.setAssessment(record.getAssessment());
+        vo.setPlan(record.getPlan());
+        vo.setCreateTime(record.getCreateTime());
+
+        Patient patient = patientMapper.selectById(record.getPatientId());
+        if (patient != null) {
+            vo.setPatientName(patient.getPatientName());
+        }
+
+        Staff staff = staffMapper.selectById(record.getStaffId());
+        if (staff != null) {
+            vo.setStaffName(staff.getStaffName());
+
+            Department dept = departmentMapper.selectById(staff.getDeptId());
+            if (dept != null) {
+                vo.setDeptName(dept.getDeptName());
+            }
+        }
+
+        return vo;
+    }
+
+    private PharmacyPrescriptionVO buildPrescriptionVO(Prescription prescription) {
+        PharmacyPrescriptionVO vo = new PharmacyPrescriptionVO();
+        vo.setPrescriptionId(prescription.getPrescriptionId());
+        vo.setRecordId(prescription.getRecordId());
+        vo.setPatientId(prescription.getPatientId());
+        vo.setStaffId(prescription.getStaffId());
+        vo.setPrescriptionDate(prescription.getPrescriptionDate());
+        vo.setStatus(prescription.getStatus());
+        vo.setAdvice(prescription.getAdvice());
+
+        Patient patient = patientMapper.selectById(prescription.getPatientId());
+        if (patient != null) {
+            vo.setPatientName(patient.getPatientName());
+            vo.setPatientGender(patient.getGender());
+
+            if (patient.getDateOfBirth() != null) {
+                Period period = Period.between(patient.getDateOfBirth(), LocalDate.now());
+                vo.setPatientAge(period.getYears());
+            }
+        }
+
+        Staff staff = staffMapper.selectById(prescription.getStaffId());
+        if (staff != null) {
+            vo.setStaffName(staff.getStaffName());
+
+            if (staff.getDeptId() != null) {
+                Department dept = departmentMapper.selectById(staff.getDeptId());
+                if (dept != null) {
+                    vo.setDeptName(dept.getDeptName());
+                }
+            }
+        }
+
+        LambdaQueryWrapper<PrescriptionDetail> detailQuery = new LambdaQueryWrapper<>();
+        detailQuery.eq(PrescriptionDetail::getPrescriptionId, prescription.getPrescriptionId());
+        List<PrescriptionDetail> details = prescriptionDetailMapper.selectList(detailQuery);
+
+        List<PharmacyPrescriptionVO.PrescriptionDetailVO> detailVOs = new ArrayList<>();
+        for (PrescriptionDetail detail : details) {
+            PharmacyPrescriptionVO.PrescriptionDetailVO detailVO = new PharmacyPrescriptionVO.PrescriptionDetailVO();
+            detailVO.setDetailId(detail.getDetailId());
+            detailVO.setMedicineId(detail.getMedicineId());
+            detailVO.setQuantity(detail.getQuantity());
+            detailVO.setUnitPrice(detail.getUnitPrice());
+            detailVO.setSubtotal(detail.getSubtotal());
+            detailVO.setUsage(detail.getUsageMethod());
+            detailVO.setFrequency(detail.getFrequency());
+            detailVO.setDays(detail.getDays());
+
+            Medicine medicine = medicineMapper.selectById(detail.getMedicineId());
+            if (medicine != null) {
+                detailVO.setMedicineName(medicine.getMedicineName());
+                detailVO.setSpecification(medicine.getSpecification());
+                detailVO.setUnitPrice(medicine.getUnitPrice());
+            }
+
+            detailVOs.add(detailVO);
+        }
+        vo.setDetails(detailVOs);
+
+        return vo;
+    }
 
     /**
      * 获取或创建收费单
@@ -280,9 +381,9 @@ public class DoctorServiceImpl implements DoctorService {
                 .eq(Bill::getStatus, "未支付")
                 .orderByDesc(Bill::getCreateTime)
                 .last("LIMIT 1");
-        
+
         Bill bill = billMapper.selectOne(query);
-        
+
         if (bill == null) {
             // 创建新的收费单
             bill = new Bill();
@@ -292,7 +393,7 @@ public class DoctorServiceImpl implements DoctorService {
             bill.setCreateTime(LocalDateTime.now());
             billMapper.insert(bill);
         }
-        
+
         return bill;
     }
 }

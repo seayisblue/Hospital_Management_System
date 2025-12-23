@@ -73,9 +73,24 @@ function loadNavbar(containerId = 'navbar-container') {
             .then(response => response.text())
             .then(html => {
                 container.innerHTML = html;
+                console.log('导航栏加载成功');
             })
             .catch(error => {
                 console.error('加载导航栏失败:', error);
+                // 如果加载失败，显示一个简单的导航栏
+                container.innerHTML = `
+                    <nav class="navbar navbar-expand-lg navbar-dark">
+                        <div class="container">
+                            <a class="navbar-brand" href="#">
+                                🏥 医院门诊管理系统
+                                <small class="ms-2 opacity-75">[系统]</small>
+                            </a>
+                            <div class="navbar-nav">
+                                <a class="nav-link" href="../patient/login.html">登录</a>
+                            </div>
+                        </div>
+                    </nav>
+                `;
             });
     }
 }

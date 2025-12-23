@@ -4,353 +4,1818 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>医生工作站 - 医院门诊管理系统</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="../../styles/common.css">
+
     <style>
-        .patient-list-item {
-            transition: all 0.3s ease;
+        :root {
+            --sidebar-bg: #2c3e50;
+            --main-bg: #f8fafc;
+            --theme-start: #4CA1AF;
+            --theme-end: #C4E0E5;
+            --border-light: #edf2f7;
+            --text-muted: #94a3b8;
+            --white: #ffffff;
+        }
+
+        body {
+            background-color: var(--main-bg);
+            color: #334155;
+            margin: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: var(--sidebar-bg);
+            color: rgba(255,255,255,0.8);
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 22px 20px;
+            font-weight: 700;
+            color: var(--white);
+            background: rgba(0,0,0,0.15);
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sidebar .nav-link {
+            padding: 14px 22px;
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .sidebar .nav-link i { width: 28px; font-size: 1.1rem; }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: var(--theme-start);
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 220px;
+            padding: 24px 32px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-card {
+            background: linear-gradient(135deg, var(--theme-start), var(--theme-end));
+            color: #fff;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-card .time {
+            font-size: 2.4rem;
+            font-weight: 700;
+        }
+
+        .section-card {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 18px;
+        }
+
+        .queue-panel {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 250px);
+        }
+
+        .queue-toolbar {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-light);
+            background: #f8fafc;
+        }
+
+        .toolbar-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .toolbar-input {
+            position: relative;
+        }
+
+        .toolbar-input input {
+            font-size: 0.85rem;
+            padding: 6px 10px;
+        }
+
+        .search-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            max-height: 220px;
+            overflow: auto;
+            z-index: 20;
+            display: none;
+        }
+
+        .search-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f1f5f9;
             cursor: pointer;
         }
-        .patient-list-item:hover {
-            background-color: #f8f9fa;
-            transform: translateX(5px);
+
+        .search-item:last-child { border-bottom: none; }
+        .search-item:hover { background: #f8fafc; }
+
+        .queue-list {
+            flex: 1;
+            overflow-y: auto;
         }
-        .urgent-badge {
-            animation: pulse 2s infinite;
+
+        .patient-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+
+        .patient-item:hover { background: #f8fafc; }
+
+        .patient-item.active {
+            background: #e0f2fe;
+            border-left: 4px solid var(--theme-start);
+        }
+
+        .patient-item .avatar {
+            width: 36px;
+            height: 36px;
+
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--theme-start);
+            font-weight: 700;
+        }
+
+        .context-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 250px);
+        }
+
+        .context-header {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .context-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .context-tab {
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #475569;
+            padding: 6px 14px;
+
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .context-tab.active {
+            background: var(--theme-start);
+            color: #fff;
+        }
+
+        .context-body {
+            flex: 1;
+            padding: 16px 18px 22px;
+            overflow-y: auto;
+        }
+
+        .context-empty {
+            padding: 48px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            border: 1px dashed var(--border-light);
+
+            background: #f8fafc;
+        }
+
+        .patient-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+            padding: 12px 14px;
+
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+        }
+
+        .patient-summary span { color: var(--text-muted); margin-right: 4px; }
+
+        .record-section {
+            border: 1px solid var(--border-light);
+
+            padding: 14px 16px;
+            margin-bottom: 16px;
+        }
+
+        .record-section h6 {
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #1f2937;
+        }
+
+        .record-section h6 i { color: var(--theme-start); }
+
+        .history-item {
+            border: 1px solid var(--border-light);
+
+            padding: 12px 14px;
+            margin-bottom: 12px;
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .history-item-detail {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-light);
+            display: none;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 18px 0;
+            background: #f8fafc;
+            border: 1px dashed var(--border-light);
+
+        }
+
+        .prescription-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .prescription-item {
+            display: grid;
+            grid-template-columns: 1.2fr 2.4fr auto;
+            gap: 10px;
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+
+            padding: 8px 10px;
+            font-size: 0.85rem;
+        }
+
+        .prescription-head {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .prescription-fields {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 6px 8px;
+        }
+
+        .prescription-fields input {
+            font-size: 0.8rem;
+        }
+
+        .prescription-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .record-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .drug-search-box {
+            margin-top: 12px;
+            position: relative;
+        }
+
+        .drug-preview {
+            margin-top: 8px;
+            border: 1px solid #dbe5e7;
+            background: #f8fafc;
+            padding: 10px 12px;
+            font-size: 0.82rem;
+            color: #334155;
+        }
+
+        .schedule-panel,
+        .notice-panel {
+            margin-top: 18px;
+        }
+
+        .calendar-body {
+            padding: 12px 14px 16px;
+            max-width: 460px;
+            margin: 0;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            text-align: center;
+        }
+
+        .cal-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 800; padding-bottom: 8px; }
+
+        .cal-date {
+            height: 80px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; cursor: pointer;
+            transition: 0.2s; border: 1px solid transparent;
+            width: 80px;
+        }
+
+        .cal-past { color: #d1d5db; cursor: default; }
+
+        .cal-scheduled {
+            background: var(--theme-start);
+            color: #fff !important;
+            font-weight: 700;
+        }
+
+        .cal-date.selected {
+            box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--theme-end);
+        }
+
+        .schedule-detail {
+            font-size: 0.8rem;
+            padding: 10px 12px;
+            background: #f2f8f9;
+            border: 1px solid #cfe6ea;
+            min-height: 38px;
+            width: 70%;
+        }
+
+        .schedule-detail-columns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .schedule-detail-col {
+            flex: 1;
+            min-width: 0;
+            background: #ffffff;
+            border: 1px solid #d9edf0;
+            padding: 8px 10px;
+        }
+
+        .schedule-detail-col .col-title {
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #1f7f8a;
+            margin-bottom: 6px;
+        }
+
+
+        .schedule-detail .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px dashed #d3e6ea;
+        }
+
+        .schedule-detail .detail-item:last-child { border-bottom: none; }
+
+        .schedule-detail .detail-item i { color: var(--theme-start) !important; }
+
+        .schedule-layout {
+            display: flex;
+            gap: 18px;
+            padding: 30px 16px 18px;
+            align-items: flex-start;
+        }
+
+        .schedule-detail-panel {
+            flex: 1.4;
+            min-width: 220px;
+            margin-left: 400px;
+        }
+
+        .schedule-manager-link {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #f8fafc, #e2f2f4);
+            color: #0f172a;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .schedule-manager-link:hover { background: linear-gradient(135deg, #f1f5f9, #dbeaec); }
+
+        .schedule-manager-dialog { max-width: 1150px; }
+
+        .schedule-manager-content {
+            min-height: 620px;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .schedule-manager-body {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 16px;
+            padding: 16px 18px 20px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .manager-sidebar {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 12px;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .manager-sidebar h6 {
+            font-weight: 800;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            color: #1f2937;
+        }
+
+        .doctor-list {
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 6px;
+        }
+
+        .doctor-chip {
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .doctor-chip.active {
+            background: #e7f2f3;
+            border-color: var(--theme-start);
+            color: var(--theme-start);
+            font-weight: 600;
+        }
+
+        .manager-save {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .manager-save button {
+            border: 1px solid #dbe5e7;
+            background: #fff;
+            color: #1f2937;
+            padding: 6px 18px;
+        }
+
+        .manager-save button:hover {
+            border-color: var(--theme-start);
+            color: var(--theme-start);
+            background: #f1f7f8;
+        }
+
+        .manager-calendar {
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 14px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+            min-height: 0;
+        }
+
+        .manager-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .manager-toolbar .btn {
+            border: 1px solid #e2e8f0;
+            background: #fff;
+        }
+
+        .manager-calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 6px;
+            min-height: 0;
+        }
+
+        .manager-day {
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            height: 300px;
+            padding: 8px;
+            text-align: left;
+            cursor: pointer;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .manager-day.disabled { opacity: 0.4; cursor: default; }
+        .manager-day.selected { border-color: var(--theme-start); box-shadow: inset 0 0 0 2px rgba(76, 161, 175, 0.35); }
+
+        .manager-day .date-num {
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .manager-day-slots {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 0;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .manager-slot {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-height: 0;
+            padding-top: 4px;
+        }
+
+        .manager-slot-title {
+            font-size: 0.65rem;
+            color: #64748b;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+        }
+
+        .manager-slot.divider {
+            border-top: 1px solid #e2e8f0;
+            margin-top: 4px;
+        }
+
+        .manager-day-names {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: repeat(3, minmax(0, 1fr));
+            gap: 4px 6px;
+            overflow: hidden;
+        }
+
+        .manager-day-names span {
+            background: #e2f2f4;
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            color: #334155;
+            cursor: pointer;
+        }
+
+        .manager-day-names span:hover {
+            color: var(--theme-start);
+            background: #dfecee;
+        }
+
+        .slot-toggle .btn {
+            border-radius: 4px;
+            border-color: #dbe5e7;
+            color: #1f2937;
+            background: #fff;
+        }
+
+        .slot-toggle .btn:hover {
+            border-color: var(--theme-start);
+            color: var(--theme-start);
+            background: #f1f7f8;
+        }
+
+        .slot-toggle .btn.active,
+        .slot-toggle .btn:active {
+            border-color: var(--theme-start);
+            color: var(--theme-start);
+            background: #e7f2f3;
+            box-shadow: none;
+        }
+
+        .schedule-filter {
+            display: inline-flex;
+            border: 1px solid #e2e8f0;
+        }
+
+        .schedule-filter button {
+            background: #fff;
+            border: none;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .schedule-filter button.active {
+            background: var(--theme-start);
+            color: #fff;
+        }
+
+        .notice-item {
+            padding: 14px 18px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .notice-item:hover { background: #f8fafc; }
+
+        .notice-item:last-child { border-bottom: none; }
+
+        .notice-modal .modal-content {
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .notice-modal .modal-header {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .notice-modal .modal-body {
+            font-size: 0.9rem;
+            color: #334155;
+            line-height: 1.7;
+            overflow-y: auto;
+            min-height: 0;
+            flex: 1;
+        }
+
+        .notice-meta {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        .notice-meta {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 1200px) {
+            .workspace-grid { grid-template-columns: 1fr; }
+            .queue-panel,
+            .context-panel { height: auto; min-height: auto; }
+            .toolbar-row { grid-template-columns: 1fr; }
+            .main-content { padding: 20px; }
+            .schedule-layout { flex-direction: column; }
+            .prescription-item { grid-template-columns: 1fr; }
+            .prescription-fields { grid-template-columns: 1fr; }
+            .prescription-actions { justify-content: flex-start; }
         }
     </style>
 </head>
 <body>
-    <div id="navbar-container"></div>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-brand">医生工作站</div>
+        <nav class="mt-3">
+            <a href="#" class="nav-link active" data-section="outpatient">
+                <i class="material-icons-outlined">assignment_ind</i>门诊治疗
+            </a>
+            <a href="#" class="nav-link" data-section="schedule">
+                <i class="material-icons-outlined">calendar_today</i>科室排班
+            </a>
+            <a href="#" class="nav-link" data-section="notice">
+                <i class="material-icons-outlined">campaign</i>医院通知
+            </a>
+        </nav>
+    </aside>
 
-    <div class="container mt-4">
-        <!-- 医生信息横幅 -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <h4>👨‍⚕️ 张医生，欢迎回来！</h4>
-                                <p class="mb-0">内科 - 主任医师 | 今日接诊数: <strong>12</strong> 人</p>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <div class="h5">📅 2024年1月15日</div>
-                                <div>星期一 09:30 AM</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <h4 class="mb-1 fw-bold" id="welcome-msg">医生，您好</h4>
+                <small class="text-muted" id="doctor-details">医生站环境就绪</small>
             </div>
+            <a href="../../../index.html" class="btn btn-sm btn-outline-secondary">返回门户</a>
         </div>
 
-        <div class="row">
-            <!-- 就诊队列 -->
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">📋 今日就诊队列</h5>
-                        <span class="badge bg-primary">8人等待</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group" id="patientQueue">
+        <div class="header-card mb-4">
+            <div>
+                <div class="fw-semibold">今日门诊进度</div>
+                <div class="small opacity-75" id="current-date">正在同步时间...</div>
+            </div>
+            <div class="time" id="current-time">00:00</div>
+        </div>
 
-
+        <section id="section-outpatient">
+            <div class="workspace-grid">
+                <div class="section-card queue-panel">
+                    <div class="queue-toolbar">
+                        <div class="toolbar-row">
+                            <div class="toolbar-input">
+                                <input id="patientSearchInput" type="text" class="form-control form-control-sm" placeholder="搜索患者姓名/手机号" oninput="searchPatients(this.value)">
+                                <div class="search-dropdown" id="patientSearchDropdown"></div>
+                            </div>
                         </div>
                     </div>
+                    <div class="queue-list" id="patientQueue"></div>
                 </div>
 
-                <!-- 今日已完成就诊 -->
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">✅ 今日已完成就诊</h5>
+                <div class="section-card context-panel">
+                    <div class="context-header">
+                        <div class="fw-bold">当前患者面板</div>
+                        <div class="context-tabs">
+                            <button class="context-tab active" data-tab="current">本次就诊</button>
+                            <button class="context-tab" data-tab="history">就诊历史</button>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>患者</th>
-                                        <th>诊断</th>
-                                        <th>就诊时间</th>
-                                        <th>状态</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>赵六</td>
-                                        <td>上呼吸道感染</td>
-                                        <td>08:00-08:20</td>
-                                        <td><span class="badge bg-success">已完成</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>钱七</td>
-                                        <td>高血压随访</td>
-                                        <td>08:25-08:45</td>
-                                        <td><span class="badge bg-success">已完成</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="context-body">
+                        <div class="context-empty" id="contextEmpty">从左侧队列选择患者开始接诊</div>
+
+                        <div id="contextCurrent" class="hidden">
+                            <div class="patient-summary">
+                                <div><span>姓名</span><strong id="currentPatientName">-</strong></div>
+                                <div><span>性别</span><strong id="currentPatientGender">-</strong></div>
+                                <div><span>年龄</span><strong id="currentPatientAge">-</strong></div>
+                            </div>
+
+                            <div class="record-section">
+                                <h6><i class="material-icons-outlined">clinical_notes</i>本次就诊病历</h6>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" for="subjective">主诉</label>
+                                    <textarea class="form-control" id="subjective" rows="3" placeholder="患者自述的主要症状、持续时间等"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" for="objective">查体</label>
+                                    <textarea class="form-control" id="objective" rows="3" placeholder="医生的检查发现、体征等"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" for="assessment">初步诊断</label>
+                                    <textarea class="form-control" id="assessment" rows="2" placeholder="初步诊断结果"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" for="plan">治疗方案</label>
+                                    <textarea class="form-control" id="plan" rows="3" placeholder="治疗计划、建议等"></textarea>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-md-3">
+                                        <label class="form-label small">体温(℃)</label>
+                                        <input type="number" class="form-control form-control-sm" id="vitalTemp" step="0.1">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small">血压(mmHg)</label>
+                                        <input type="text" class="form-control form-control-sm" id="vitalBp">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small">心率(次/分)</label>
+                                        <input type="number" class="form-control form-control-sm" id="vitalHr">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small">呼吸(次/分)</label>
+                                        <input type="number" class="form-control form-control-sm" id="vitalResp">
+                                    </div>
+                                </div>
+                                <div class="record-actions">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="saveMedicalRecord()">保存病历</button>
+                                    <button class="btn btn-sm btn-primary" onclick="submitPrescription()">提交处方</button>
+                                </div>
+                            </div>
+
+                            <div class="record-section">
+                                <h6><i class="material-icons-outlined">medication</i>处方草稿</h6>
+                                <div id="prescriptionList" class="prescription-list">
+                                    <div class="text-muted small">尚未选择药品，请使用下方药品搜索。</div>
+                                </div>
+                                <div class="drug-search-box">
+                                    <label class="form-label fw-bold small" for="drugSearchInput">搜索药品</label>
+                                    <div class="toolbar-input">
+                                        <input id="drugSearchInput" type="text" class="form-control form-control-sm" placeholder="输入药品名称" oninput="searchDrugs(this.value)">
+                                        <div class="search-dropdown" id="drugSearchDropdown"></div>
+                                    </div>
+                                    <div id="drugDetailPreview" class="drug-preview hidden"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="contextHistory" class="hidden">
+                            <div class="patient-summary">
+                                <div><span>姓名</span><strong id="historyPatientName">-</strong></div>
+                                <div><span>性别</span><strong id="historyPatientGender">-</strong></div>
+                                <div><span>年龄</span><strong id="historyPatientAge">-</strong></div>
+                            </div>
+                            <div id="historyList"></div>
                         </div>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- 快捷功能 -->
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body text-center">
-                        <div class="h1 text-primary">📝</div>
-                        <h5>电子病历模板</h5>
-                        <p class="card-text">常用病历模板和诊断方案</p>
-                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#templatesModal">查看模板</button>
+        <section id="section-schedule" class="hidden">
+            <div class="section-card schedule-panel">
+                <div class="context-header">
+                    <div class="fw-bold">我的上班日历</div>
+                    <div class="schedule-filter" id="scheduleFilter">
+                        <button type="button" class="active" data-mode="all">全科排班</button>
+                        <button type="button" data-mode="mine">我的排班</button>
                     </div>
                 </div>
-
-                <div class="card mb-4">
-                    <div class="card-body text-center">
-                        <div class="h1 text-success">💊</div>
-                        <h5>药品目录</h5>
-                        <p class="card-text">常用药品信息和用法</p>
-                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#medicinesModal">查看药品</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-body text-center">
-                        <div class="h1 text-info">📊</div>
-                        <h5>工作统计</h5>
-                        <div class="row text-center mt-3">
-                            <div class="col-6">
-                                <div class="h5 text-primary">12</div>
-                                <small>今日接诊</small>
-                            </div>
-                            <div class="col-6">
-                                <div class="h5 text-success">8</div>
-                                <small>开具处方</small>
-                            </div>
+                <div class="schedule-layout">
+                    <div class="calendar-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3 px-2">
+                            <button class="btn btn-sm p-0" onclick="changeMonth(-1)"><i class="material-icons-outlined">chevron_left</i></button>
+                            <span id="calendarMonth" class="fw-bold small">2025年12月</span>
+                            <button class="btn btn-sm p-0" onclick="changeMonth(1)"><i class="material-icons-outlined">chevron_right</i></button>
                         </div>
+                        <div class="calendar-grid" id="calendarGrid"></div>
+                    </div>
+
+                    <div class="schedule-detail-panel">
+                        <div id="selectedSchedule" class="schedule-detail">
+                            <span class="text-muted">点击日历有班日期查看详情</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dept-schedule-manager" class="p-3 border-top" style="display: none;">
+                    <div class="schedule-manager-link" id="openDeptSchedule">
+                        <i class="material-icons-outlined">calendar_month</i>
+                        <span>管理科室排班</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-notice" class="hidden">
+            <div class="section-card notice-panel">
+                <div class="context-header">
+                    <div class="fw-bold">医院通知</div>
+                </div>
+                <div id="noticeList">
+                    <div class="notice-item" data-title="系统维护通知" data-time="2025-01-15 18:30" data-content="<p>今晚 23:00 - 01:00 将进行系统维护，期间门诊开单、排班调整与药品出库会短暂不可用。</p><p>请提前保存病历，并在维护结束后检查未完成的操作。</p><ul><li>维护时间：23:00 - 01:00</li><li>影响范围：门诊、排班、药房</li></ul>">
+                        <div class="fw-bold small">系统维护通知</div>
+                        <div class="extra-small text-muted mt-1">今晚 23:00 - 01:00 进行维护，请提前保存病历。</div>
+                        <div class="notice-meta">发布时间：2025-01-15 18:30</div>
+                    </div>
+                    <div class="notice-item" data-title="门诊流程更新" data-time="2025-01-10 09:00" data-content="<p>自本周起，门诊叫号规则更新为：先预约、后现场，优先接诊超时患者。</p><p>请在接诊前确认患者状态，并留意候诊队列提示。</p><ul><li>叫号顺序：预约优先</li><li>提醒：关注超时提示</li></ul>">
+                        <div class="fw-bold small">门诊流程更新</div>
+                        <div class="extra-small text-muted mt-1">本周起叫号规则更新，请注意接诊顺序。</div>
+                        <div class="notice-meta">发布时间：2025-01-10 09:00</div>
+                    </div>
+                    <div class="notice-item" data-title="抗菌药物审核" data-time="2025-01-05 14:20" data-content="<p>抗菌药物处方需补充使用指征与疗程说明。</p><p>若为联合用药，请在病历中说明必要性与监测计划，避免审核退回。</p><ul><li>必须填写：使用指征、疗程</li><li>联合用药：说明必要性</li></ul>">
+                        <div class="fw-bold small">抗菌药物审核</div>
+                        <div class="extra-small text-muted mt-1">抗菌药需填写使用指征，请补充病历说明。</div>
+                        <div class="notice-meta">发布时间：2025-01-05 14:20</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div class="modal fade" id="deptScheduleModal" tabindex="-1">
+    <div class="modal-dialog modal-xl schedule-manager-dialog modal-dialog-centered">
+        <div class="modal-content schedule-manager-content border-0">
+            <div class="modal-header border-0 px-4 pt-4">
+                <div>
+                    <h5 class="fw-bold mb-1">科室排班管理</h5>
+                    <div class="text-muted small">选择上午/下午后，您可批量选中日期，指派给列表中的任意一位医生</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="schedule-manager-body">
+                <div class="manager-sidebar">
+                    <h6>医生列表</h6>
+                    <div class="doctor-list" id="deptDoctorList"></div>
+                </div>
+                <div class="manager-calendar">
+                    <div class="manager-toolbar">
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-sm" onclick="changeMonth(-1)"><i class="material-icons-outlined">chevron_left</i></button>
+                            <span id="managerMonth" class="fw-bold small">2025年12月</span>
+                            <button class="btn btn-sm" onclick="changeMonth(1)"><i class="material-icons-outlined">chevron_right</i></button>
+                        </div>
+                        <div class="btn-group slot-toggle" role="group" aria-label="time slot">
+                            <button type="button" class="btn btn-sm btn-outline-primary active" onclick="setManagerTimeSlot('上午')">上午</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="setManagerTimeSlot('下午')">下午</button>
+                        </div>
+                    </div>
+                    <div class="manager-calendar-grid" id="managerCalendarGrid"></div>
+                    <div class="manager-save">
+                        <button type="button" onclick="closeDeptSchedule()">保存</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- 病历模板模态框 -->
-    <div class="modal fade" id="templatesModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">📝 电子病历模板</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<div class="modal fade notice-modal" id="noticeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl schedule-manager-dialog modal-dialog-centered">
+        <div class="modal-content schedule-manager-content border-0">
+            <div class="modal-header px-4 pt-4 pb-3">
+                <div>
+                    <h5 class="fw-bold mb-1" id="noticeModalTitle">通知详情</h5>
+                    <div class="notice-meta" id="noticeModalTime"></div>
                 </div>
-                <div class="modal-body">
-                    <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">上呼吸道感染模板</h6>
-                                <small>常用</small>
-                            </div>
-                            <p class="mb-1">主诉：发热、咳嗽、咽痛。查体：咽部充血，扁桃体不大...</p>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">高血压随访模板</h6>
-                                <small>常用</small>
-                            </div>
-                            <p class="mb-1">主诉：血压控制情况。查体：BP 130/85mmHg，心率78次/分...</p>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">糖尿病管理模板</h6>
-                                <small>专科</small>
-                            </div>
-                            <p class="mb-1">主诉：血糖控制情况。查体：随机血糖8.5mmol/L...</p>
-                        </a>
-                    </div>
-                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            <div class="modal-body px-4 pb-4" id="noticeModalBody"></div>
         </div>
     </div>
+</div>
 
-    <!-- 药品目录模态框 -->
-    <div class="modal fade" id="medicinesModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">💊 常用药品目录</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>药品名称</th>
-                                    <th>规格</th>
-                                    <th>用法</th>
-                                    <th>单价</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>阿莫西林胶囊</td>
-                                    <td>0.25g*24粒</td>
-                                    <td>0.5g tid</td>
-                                    <td>¥25.00</td>
-                                </tr>
-                                <tr>
-                                    <td>感冒灵颗粒</td>
-                                    <td>10g*9袋</td>
-                                    <td>1袋 tid</td>
-                                    <td>¥18.50</td>
-                                </tr>
-                                <tr>
-                                    <td>降压片</td>
-                                    <td>30片</td>
-                                    <td>1片 qd</td>
-                                    <td>¥32.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../utils/helpers.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../utils/helpers.js"></script>
+<script>
+    let currentMonth = new Date();
+    let scheduleByDate = {};
+    let scheduleDates = new Set();
+    let currentDeptId = null;
+    let currentDoctorId = null;
+    let scheduleViewMode = 'all';
+    let deptDoctors = [];
+    let selectedManagerDates = new Set();
+    let selectedManagerDoctorId = null;
+    let managerTimeSlot = '上午';
+    let selectedPatient = null;
+    let prescriptionItems = [];
+    let currentRecordId = null;
 
-    <script>
-        // 页面加载时自动执行
-        document.addEventListener('DOMContentLoaded', function() {
-            loadNavbar();
-            loadDoctorInfo();      // 加载医生名字
-            fetchPendingPatients();// ★★★ 去后端拉取病人列表 ★★★
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDoctorInfo();
+        fetchPendingPatients();
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        fetchMonthSchedules();
+        initSidebar();
+        initContextTabs();
+        initScheduleFilter();
+        initScheduleManager();
+        initNoticeModal();
+    });
+
+    function initSidebar() {
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const target = link.dataset.section;
+                document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                document.querySelectorAll('main section').forEach(section => section.classList.add('hidden'));
+                document.getElementById(`section-${target}`).classList.remove('hidden');
+            });
         });
+    }
 
-        // 显示欢迎信息
-        function loadDoctorInfo() {
-            const infoStr = localStorage.getItem('doctorInfo');
-            if (infoStr) {
-                const info = JSON.parse(infoStr);
-                // 找到页面上显示名字的地方（根据你的HTML结构可能需要微调选择器，或者直接用下面的简单粗暴法）
-                const welcomeTitle = document.querySelector('.card-body h4');
-                if(welcomeTitle) welcomeTitle.innerHTML = `👨‍⚕️ ${info.staffName}，欢迎回来！`;
-            }
-        }
-
-        let currentPatientList = [];
-        // ★★★ 核心：获取待就诊列表 ★★★
-        async function fetchPendingPatients() {
-            const token = localStorage.getItem('token');
-            if (!token) return window.location.href = 'login.html';
-
-            try {
-                // 1. 调用后端接口：查询该医生的待就诊挂号
-                const response = await fetch('http://localhost:8081/doctor/appointments/pending', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token // 带上门票
-                    }
-                });
-
-                const result = await response.json();
-
-                if (result.code === 200) {
-                    const patients = result.data;
-                    currentPatientList = patients;
-                    renderPatientQueue(patients); // 渲染列表
-
-                    // 更新右上角的“X人等待”
-                    const badge = document.querySelector('.card-header .badge');
-                    if(badge) badge.textContent = `${patients.length}人等待`;
-
-                } else {
-                    if (result.code === 401) {
-                        alert('登录过期');
-                        window.location.href = 'login.html';
-                    } else {
-                        showMessage('加载患者列表失败: ' + result.message, 'error');
-                    }
+    function initContextTabs() {
+        document.querySelectorAll('.context-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.context-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                if (!selectedPatient) {
+                    document.getElementById('contextEmpty').classList.remove('hidden');
+                    document.getElementById('contextCurrent').classList.add('hidden');
+                    document.getElementById('contextHistory').classList.add('hidden');
+                    return;
                 }
-            } catch (error) {
-                console.error(error);
-                showMessage('服务器连接失败', 'error');
-            }
+                const target = tab.dataset.tab;
+                document.getElementById('contextCurrent').classList.toggle('hidden', target !== 'current');
+                document.getElementById('contextHistory').classList.toggle('hidden', target !== 'history');
+            });
+        });
+    }
+
+    function loadDoctorInfo() {
+        const info = JSON.parse(localStorage.getItem('doctorInfo') || '{}');
+        document.getElementById('welcome-msg').textContent = `${info.staffName || '医生'}医生，您好`;
+        document.getElementById('doctor-details').textContent = `${info.deptName || '未定科室'} · ${info.title || '医师'}`;
+        currentDeptId = info.deptId;
+        currentDoctorId = info.staffId;
+        if (info.isDeptManager) document.getElementById('dept-schedule-manager').style.display = 'block';
+    }
+
+    function updateDateTime() {
+        const now = new Date();
+        document.getElementById('current-time').textContent = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+    }
+
+    function renderCalendar() {
+        const grid = document.getElementById('calendarGrid');
+        const monthLabel = document.getElementById('calendarMonth');
+        grid.innerHTML = '';
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+        monthLabel.textContent = `${year}年${month + 1}月`;
+        ['日','一','二','三','四','五','六'].forEach(d => grid.innerHTML += `<div class="cal-label">${d}</div>`);
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const today = new Date(); today.setHours(0,0,0,0);
+        for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateObj = new Date(year, month, d);
+            const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const allRecords = scheduleByDate[dateStr] || [];
+            const hasOwnSchedule = allRecords.some(item => String(item.staffId) === String(currentDoctorId));
+            let classList = "cal-date";
+            const isSelectable = dateObj >= today;
+            if (!isSelectable) classList += " cal-past";
+            else if (hasOwnSchedule) classList += " cal-scheduled";
+            const clickAttr = isSelectable ? `onclick="handleDateClick('${dateStr}', true, this)"` : 'aria-disabled="true"';
+            grid.innerHTML += `<div class="${classList}" ${clickAttr}>${d}</div>`;
         }
+    }
 
-        // 渲染列表 HTML
-        function renderPatientQueue(patients) {
-            const container = document.getElementById('patientQueue');
+    function handleDateClick(dateStr, isFuture, el) {
+        if (!isFuture) return;
+        document.querySelectorAll('.cal-date').forEach(d => d.classList.remove('selected'));
+        el.classList.add('selected');
+        const detail = document.getElementById('selectedSchedule');
+        const records = getRecordsForDate(dateStr);
+        if (records.length === 0) {
+            detail.innerHTML = `<span class="text-muted">${dateStr} 暂无排班</span>`;
+            return;
+        }
+        const morningRecords = records.filter(r => String(r.timeSlot || '').includes('上午'));
+        const afternoonRecords = records.filter(r => String(r.timeSlot || '').includes('下午'));
+        const fallbackRecords = records.filter(r => !String(r.timeSlot || '').includes('上午') && !String(r.timeSlot || '').includes('下午'));
+        const morningList = morningRecords.length > 0 ? morningRecords : fallbackRecords;
+        detail.innerHTML = `
+            <div class="fw-bold mb-1">${dateStr} 排班</div>
+            <div class="schedule-detail-columns">
+                <div class="schedule-detail-col">
+                    <div class="col-title">上午</div>
+                    ${morningList.length > 0 ? morningList.map(r => `
+                        <div class="detail-item">
+                            <i class="material-icons-outlined text-primary" style="font-size: 16px;">person</i>
+                            <div>
+                                <div class="fw-semibold">${r.staffName || '医生'}</div>
+                                <div class="text-muted small">${r.timeSlot || ''} · 余号${r.availableSlots ?? '-'} / ${r.totalSlots ?? '-'}</div>
+                            </div>
+                        </div>
+                    `).join('') : `<div class="text-muted small">暂无上午排班</div>`}
+                </div>
+                <div class="schedule-detail-col">
+                    <div class="col-title">下午</div>
+                    ${afternoonRecords.length > 0 ? afternoonRecords.map(r => `
+                        <div class="detail-item">
+                            <i class="material-icons-outlined text-primary" style="font-size: 16px;">person</i>
+                            <div>
+                                <div class="fw-semibold">${r.staffName || '医生'}</div>
+                                <div class="text-muted small">${r.timeSlot || ''} · 余号${r.availableSlots ?? '-'} / ${r.totalSlots ?? '-'}</div>
+                            </div>
+                        </div>
+                    `).join('') : `<div class="text-muted small">暂无下午排班</div>`}
+                </div>
+            </div>
+        `;
+    }
 
-            if (patients.length === 0) {
-                container.innerHTML = '<div class="text-center p-4 text-muted">暂无待就诊患者</div>';
-                return;
+    function getRecordsForDate(dateStr) {
+        const list = scheduleByDate[dateStr] || [];
+        if (scheduleViewMode === 'mine') {
+            return list.filter(item => String(item.staffId) === String(currentDoctorId));
+        }
+        return list;
+    }
+
+    function initScheduleFilter() {
+        const filter = document.getElementById('scheduleFilter');
+        if (!filter) return;
+        filter.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+                if (!mode || scheduleViewMode === mode) return;
+                scheduleViewMode = mode;
+                filter.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+                document.getElementById('selectedSchedule').innerHTML = '<span class="text-muted">点击日历有班日期查看详情</span>';
+                renderCalendar();
+            });
+        });
+    }
+
+    function changeMonth(step) {
+        currentMonth.setMonth(currentMonth.getMonth() + step);
+        clearManagerDates();
+        fetchMonthSchedules();
+    }
+
+    async function fetchMonthSchedules() {
+        if (!currentDeptId) return;
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+        const startDate = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+        const endDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(new Date(year, month + 1, 0).getDate()).padStart(2, '0')}`;
+        try {
+            const res = await (await fetch(`http://localhost:8081/schedule/page?current=1&pageSize=500&deptId=${currentDeptId}&startDate=${startDate}&endDate=${endDate}`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            })).json();
+            scheduleByDate = {};
+            scheduleDates = new Set();
+            if (res.code === 200) {
+                (res.data.records || []).forEach(item => {
+                    if (!scheduleByDate[item.scheduleDate]) scheduleByDate[item.scheduleDate] = [];
+                    scheduleByDate[item.scheduleDate].push(item);
+                    scheduleDates.add(item.scheduleDate);
+                });
             }
+            renderCalendar();
+            renderManagerCalendar();
+        } catch (e) {
+            scheduleByDate = {};
+            scheduleDates = new Set();
+            renderCalendar();
+            renderManagerCalendar();
+        }
+    }
 
-            container.innerHTML = patients.map(p => `
-            <div class="list-group-item patient-list-item" data-appointment-id="${p.appointmentId}">
-                <div class="d-flex w-100 justify-content-between">
-                    <div>
-                        <h6 class="mb-1">
-                            ${p.patientName}
-                            <span class="badge bg-light text-dark">${p.patientGender}</span>
-                            <span class="badge bg-light text-dark">${p.patientAge}岁</span>
-                        </h6>
-                        <p class="mb-1">预约时间：${formatTime(p.appointmentTime)}</p>
-                        <small class="text-muted">排班时段: ${p.scheduleDate} ${p.timeSlot}</small>
-                    </div>
-                    <div class="text-end">
-                        <span class="badge bg-warning mb-2">待就诊</span>
-                        <div>
-                            <button class="btn btn-sm btn-primary" onclick="startConsultation(${p.appointmentId})">
-                                开始接诊
-                            </button>
+    function initScheduleManager() {
+        const btn = document.getElementById('openDeptSchedule');
+        if (btn) {
+            btn.addEventListener('click', () => {
+                clearManagerDates();
+                selectedManagerDoctorId = null;
+                setManagerTimeSlot('上午');
+                renderManagerCalendar();
+                new bootstrap.Modal(document.getElementById('deptScheduleModal')).show();
+            });
+        }
+        loadDeptDoctors();
+    }
+
+    function initNoticeModal() {
+        const modalEl = document.getElementById('noticeModal');
+        const modal = new bootstrap.Modal(modalEl);
+        document.querySelectorAll('#noticeList .notice-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const title = item.dataset.title || '通知详情';
+                const time = item.dataset.time || '';
+                const content = item.dataset.content || '';
+                document.getElementById('noticeModalTitle').textContent = title;
+                document.getElementById('noticeModalTime').textContent = time ? `发布时间：${time}` : '';
+                document.getElementById('noticeModalBody').innerHTML = content;
+                modal.show();
+            });
+        });
+    }
+
+    async function loadDeptDoctors() {
+        if (!currentDeptId) return;
+        try {
+            const res = await (await fetch(`http://localhost:8081/staff?deptId=${currentDeptId}&pageSize=100`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            })).json();
+            if (res.code === 200) {
+                deptDoctors = res.data.records || [];
+                renderDoctorList();
+            }
+        } catch (e) {
+            deptDoctors = [];
+            renderDoctorList();
+        }
+    }
+
+    function renderDoctorList() {
+        const container = document.getElementById('deptDoctorList');
+        if (!container) return;
+        if (deptDoctors.length === 0) {
+            container.innerHTML = '<div class="text-muted small">尚未找到医生</div>';
+            return;
+        }
+        container.innerHTML = deptDoctors.map(doc => `
+            <div class="doctor-chip ${String(doc.staffId) === String(selectedManagerDoctorId) ? 'active' : ''}" data-id="${doc.staffId}" onclick="assignDoctorToDates('${doc.staffId}')">
+                <i class="material-icons-outlined" style="font-size:16px;">person</i>
+                <span>${doc.staffName}</span>
+            </div>
+        `).join('');
+    }
+
+    async function assignDoctorToDates(staffId) {
+        if (String(selectedManagerDoctorId) === String(staffId)) {
+            selectedManagerDoctorId = null;
+            renderDoctorList();
+            return;
+        }
+        selectedManagerDoctorId = staffId;
+        renderDoctorList();
+        if (selectedManagerDates.size === 0) return showMessage('请先选择日期', 'warning');
+        const dates = Array.from(selectedManagerDates);
+        let created = 0;
+        for (const dateStr of dates) {
+            const r = await fetch('http://localhost:8081/schedule', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') },
+                body: JSON.stringify({
+                    staffId: parseInt(staffId, 10),
+                    scheduleDate: dateStr,
+                    timeSlot: managerTimeSlot,
+                    totalSlots: 30,
+                    deptId: currentDeptId
+                })
+            });
+            const result = await r.json();
+            if (result.code === 200) created += 1;
+        }
+        fetchMonthSchedules();
+    }
+
+    function setManagerTimeSlot(slot) {
+        managerTimeSlot = slot;
+        document.querySelectorAll('.slot-toggle .btn').forEach(btn => btn.classList.remove('active'));
+        const target = Array.from(document.querySelectorAll('.slot-toggle .btn')).find(btn => btn.textContent.trim() === slot);
+        if (target) target.classList.add('active');
+    }
+
+    function renderManagerCalendar() {
+        const grid = document.getElementById('managerCalendarGrid');
+        const monthLabel = document.getElementById('managerMonth');
+        if (!grid || !monthLabel) return;
+        grid.innerHTML = '';
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+        monthLabel.textContent = `${year}年${month + 1}月`;
+        ['日','一','二','三','四','五','六'].forEach(d => grid.innerHTML += `<div class="cal-label">${d}</div>`);
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateObj = new Date(year, month, d);
+            const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const selected = selectedManagerDates.has(dateStr) ? 'selected' : '';
+            const disabled = dateObj < today ? 'disabled' : '';
+            const morningItems = getAssignedItemsBySlot(dateStr, 'morning');
+            const afternoonItems = getAssignedItemsBySlot(dateStr, 'afternoon');
+            const clickAttr = dateObj < today ? 'aria-disabled="true"' : `onclick="toggleManagerDate('${dateStr}')"`;
+            grid.innerHTML += `
+                <div class="manager-day ${selected} ${disabled}" ${clickAttr}>
+                    <div class="date-num">${d}</div>
+                    <div class="manager-day-slots">
+                        <div class="manager-slot">
+
+                            <div class="manager-day-names">
+                                ${morningItems.map(item => `<span onclick="removeSchedule(event, ${item.scheduleId})">${item.staffName}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="manager-slot divider">
+
+                            <div class="manager-day-names">
+                                ${afternoonItems.map(item => `<span onclick="removeSchedule(event, ${item.scheduleId})">${item.staffName}</span>`).join('')}
+                            </div>
                         </div>
                     </div>
+                </div>
+            `;
+        }
+    }
+
+    function getAssignedItemsBySlot(dateStr, slot) {
+        const list = scheduleByDate[dateStr] || [];
+        const filtered = list.filter(item => {
+            const timeSlot = String(item.timeSlot || '');
+            if (slot === 'morning') return timeSlot.includes('上午');
+            if (slot === 'afternoon') return timeSlot.includes('下午');
+            return false;
+        });
+        const sorted = filtered.slice().sort((a, b) => {
+            const nameA = String(a.staffName || '');
+            const nameB = String(b.staffName || '');
+            const nameCmp = nameA.localeCompare(nameB, 'zh-Hans-CN');
+            if (nameCmp !== 0) return nameCmp;
+            return String(a.staffId || '').localeCompare(String(b.staffId || ''));
+        });
+        const seen = new Set();
+        const items = [];
+        sorted.forEach(item => {
+            if (!item || !item.staffId || seen.has(item.staffId)) return;
+            seen.add(item.staffId);
+            if (item.scheduleId) items.push({ staffName: item.staffName || '医生', scheduleId: item.scheduleId });
+        });
+        return items.slice(0, 6);
+    }
+
+    function closeDeptSchedule() {
+        const modalEl = document.getElementById('deptScheduleModal');
+        const instance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        instance.hide();
+    }
+
+    async function removeSchedule(event, scheduleId) {
+        event.stopPropagation();
+        if (!scheduleId) return;
+        const res = await (await fetch(`http://localhost:8081/schedule/${scheduleId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': localStorage.getItem('token') }
+        })).json();
+        if (res.code === 200) {
+            fetchMonthSchedules();
+            return;
+        }
+        showMessage('删除失败，请稍后重试', 'warning');
+    }
+
+    function toggleManagerDate(dateStr) {
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (dateStr < todayStr) return;
+        if (selectedManagerDates.has(dateStr)) selectedManagerDates.delete(dateStr);
+        else selectedManagerDates.add(dateStr);
+        renderManagerCalendar();
+    }
+
+    function clearManagerDates() {
+        selectedManagerDates.clear();
+        renderManagerCalendar();
+    }
+
+    async function fetchPendingPatients() {
+        const container = document.getElementById('patientQueue');
+        container.innerHTML = '<div class="p-4 text-center text-muted">正在加载队列...</div>';
+        try {
+            const r = await fetch('http://localhost:8081/doctor/appointments/pending', { headers: { 'Authorization': localStorage.getItem('token') } });
+            const res = await r.json();
+            if (res.code === 200) {
+                if (res.data.length === 0) {
+                    container.innerHTML = '<div class="p-5 text-center text-muted">当前无候诊患者</div>';
+                } else {
+                    container.innerHTML = res.data.map(p => renderQueueItem(p)).join('');
+                }
+            }
+        } catch (e) {
+            container.innerHTML = '<div class="p-4 text-center text-danger">加载失败</div>';
+        }
+    }
+
+    function renderQueueItem(p) {
+        const gender = p.patientGender || p.gender || '-';
+        return `
+            <div class="patient-item" data-appointment-id="${p.appointmentId}" onclick='selectPatient(${JSON.stringify({
+            appointmentId: p.appointmentId,
+            patientId: p.patientId,
+            patientName: p.patientName,
+            patientAge: p.patientAge,
+            patientGender: gender,
+            phoneNumber: p.phoneNumber,
+            appointmentTime: p.appointmentTime
+        })})'>
+                <div class="avatar">${p.patientName ? p.patientName.slice(0,1) : '医'}</div>
+                <div style="flex:1">
+                    <div class="fw-bold">${p.patientName} <span class="badge bg-light text-dark fw-normal ms-1">${p.patientAge || '-'}岁</span></div>
+                    <div class="small text-muted mt-1">${gender} · ${p.appointmentTime ? '预约 ' + p.appointmentTime.split('T')[1].substring(0,5) : '待诊'}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function selectPatient(patient) {
+        selectedPatient = patient;
+        if (patient?.appointmentId) {
+            localStorage.setItem('currentAppointmentId', patient.appointmentId);
+        }
+        document.getElementById('patientSearchDropdown').style.display = 'none';
+        document.getElementById('drugSearchDropdown').style.display = 'none';
+        document.querySelectorAll('.patient-item').forEach(item => item.classList.remove('active'));
+        const currentItem = document.querySelector(`.patient-item[data-appointment-id='${patient.appointmentId}']`);
+        if (currentItem) currentItem.classList.add('active');
+
+        document.getElementById('contextEmpty').classList.add('hidden');
+        document.getElementById('contextCurrent').classList.remove('hidden');
+        document.getElementById('contextHistory').classList.add('hidden');
+        document.querySelector('.context-tab[data-tab="current"]').classList.add('active');
+        document.querySelector('.context-tab[data-tab="history"]').classList.remove('active');
+
+        document.getElementById('currentPatientName').textContent = patient.patientName || '-';
+        document.getElementById('currentPatientGender').textContent = patient.patientGender || '-';
+        document.getElementById('currentPatientAge').textContent = `${patient.patientAge || '-'}岁`;
+
+        document.getElementById('historyPatientName').textContent = patient.patientName || '-';
+        document.getElementById('historyPatientGender').textContent = patient.patientGender || '-';
+        document.getElementById('historyPatientAge').textContent = `${patient.patientAge || '-'}岁`;
+
+        fetchPatientHistory(patient);
+    }
+
+    async function searchPatients(keyword) {
+        const dropdown = document.getElementById('patientSearchDropdown');
+        if (!keyword || keyword.length < 1) {
+            dropdown.style.display = 'none';
+            dropdown.innerHTML = '';
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8081/patient/search?keyword=${encodeURIComponent(keyword)}`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            const result = await response.json();
+
+            if (result.code === 200) {
+                if (result.data.length === 0) {
+                    dropdown.innerHTML = '<div class="search-item text-muted">未找到匹配患者</div>';
+                } else {
+                    dropdown.innerHTML = result.data.map(p => `
+                        <div class="search-item" onclick='selectPatient(${JSON.stringify({
+                        patientId: p.patientId,
+                        patientName: p.patientName,
+                        patientAge: p.age || p.patientAge,
+                        patientGender: p.gender,
+                        phoneNumber: p.phoneNumber
+                    })})'>
+                            <div class="fw-bold">${p.patientName}</div>
+                            <div class="small text-muted">${p.gender || '-'} · ${p.phoneNumber || '-'}</div>
+                        </div>
+                    `).join('');
+                }
+                dropdown.style.display = 'block';
+            }
+        } catch (e) {
+            dropdown.innerHTML = '<div class="search-item text-danger">搜索失败</div>';
+            dropdown.style.display = 'block';
+        }
+    }
+
+    async function searchDrugs(query) {
+        const dropdown = document.getElementById('drugSearchDropdown');
+        const preview = document.getElementById('drugDetailPreview');
+        if (!query) {
+            dropdown.style.display = 'none';
+            dropdown.innerHTML = '';
+            if (preview) preview.classList.add('hidden');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8081/medicine?medicineName=${encodeURIComponent(query)}&pageSize=20`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            const result = await response.json();
+            if (result.code === 200) {
+                const list = result.data.records || [];
+                if (list.length === 0) {
+                    dropdown.innerHTML = '<div class="search-item text-muted">未找到匹配药品</div>';
+                    if (preview) preview.classList.add('hidden');
+                } else {
+                    dropdown.innerHTML = list.map(d => `
+                        <div class="search-item" onclick='selectDrug(${JSON.stringify(d)})'
+                             onmouseenter='previewDrugDetail(${JSON.stringify(d)})'
+                             onmouseleave="clearDrugPreview()">
+                            <div class="fw-bold">${d.medicineName}</div>
+                            <div class="small text-muted">${d.specification || '常规'} · 库存 ${d.stockLevel ?? '-'}</div>
+                        </div>
+                    `).join('');
+                }
+                dropdown.style.display = 'block';
+            }
+        } catch (e) {
+            dropdown.innerHTML = '<div class="search-item text-danger">搜索失败</div>';
+            dropdown.style.display = 'block';
+        }
+    }
+
+    function selectDrug(drug) {
+        addPrescription({
+            medicineId: drug.medicineId,
+            medicineName: drug.medicineName,
+            specification: drug.specification,
+            unitPrice: drug.unitPrice,
+            usage: '',
+            dosage: '',
+            notes: '',
+            quantity: 1
+        });
+        document.getElementById('drugSearchDropdown').style.display = 'none';
+        clearDrugPreview();
+    }
+
+    function previewDrugDetail(drug) {
+        const preview = document.getElementById('drugDetailPreview');
+        if (!preview) return;
+        preview.innerHTML = `
+            <div class="fw-bold">${drug.medicineName}</div>
+            <div class="text-muted small">规格：${drug.specification || '-'} · 厂家：${drug.manufacturer || '-'}</div>
+            <div class="text-muted small">单价：¥${drug.unitPrice ?? '-'} · 库存：${drug.stockLevel ?? '-'}</div>
+        `;
+        preview.classList.remove('hidden');
+    }
+
+    function clearDrugPreview() {
+        const preview = document.getElementById('drugDetailPreview');
+        if (preview) preview.classList.add('hidden');
+    }
+
+    function addPrescription(item) {
+        const existing = prescriptionItems.find(i => String(i.medicineId) === String(item.medicineId));
+        if (existing) {
+            existing.quantity += 1;
+        } else {
+            prescriptionItems.push({ ...item });
+        }
+        renderPrescription();
+    }
+
+    function renderPrescription() {
+        const container = document.getElementById('prescriptionList');
+        if (prescriptionItems.length === 0) {
+            container.innerHTML = '<div class="text-muted small">尚未选择药品，请使用下方药品搜索。</div>';
+            return;
+        }
+        container.innerHTML = prescriptionItems.map((item, index) => `
+            <div class="prescription-item">
+                <div class="prescription-head">
+                    <div class="fw-bold">${item.medicineName}</div>
+                    <div class="text-muted small">${item.specification || '-'} · ¥${item.unitPrice ?? '-'}</div>
+                </div>
+                <div class="prescription-fields">
+                    <input type="text" class="form-control form-control-sm" placeholder="用法"
+                           value="${item.usage || ''}" onchange="updatePrescriptionField(${index}, 'usage', this.value)">
+                    <input type="text" class="form-control form-control-sm" placeholder="用量"
+                           value="${item.dosage || ''}" onchange="updatePrescriptionField(${index}, 'dosage', this.value)">
+                    <input type="number" min="1" class="form-control form-control-sm" placeholder="数量"
+                           value="${item.quantity || 1}" onchange="updatePrescriptionField(${index}, 'quantity', this.value)">
+                    <input type="text" class="form-control form-control-sm" placeholder="注意事项"
+                           value="${item.notes || ''}" onchange="updatePrescriptionField(${index}, 'notes', this.value)">
+                </div>
+                <div class="prescription-actions">
+                    <button class="btn btn-sm btn-outline-danger" onclick="removePrescription(${index})">移除</button>
                 </div>
             </div>
         `).join('');
+    }
+
+    function updatePrescriptionField(index, field, value) {
+        if (!prescriptionItems[index]) return;
+        if (field === 'quantity') {
+            prescriptionItems[index].quantity = Math.max(1, parseInt(value, 10) || 1);
+            return;
+        }
+        prescriptionItems[index][field] = value;
+    }
+
+    function removePrescription(index) {
+        prescriptionItems.splice(index, 1);
+        renderPrescription();
+    }
+
+    async function saveMedicalRecord() {
+        if (!selectedPatient?.appointmentId) {
+            showMessage('请先选择患者', 'warning');
+            return;
+        }
+        const subjective = document.getElementById('subjective').value.trim();
+        const objective = document.getElementById('objective').value.trim();
+        const assessment = document.getElementById('assessment').value.trim();
+        const plan = document.getElementById('plan').value.trim();
+
+        if (!subjective || !assessment) {
+            showMessage('请至少填写主诉和初步诊断', 'warning');
+            return;
         }
 
-        // 简单的日期格式化工具
-        function formatTime(dateTimeStr) {
-            if(!dateTimeStr) return '';
-            return dateTimeStr.replace('T', ' ').substring(0, 16);
-        }
-
-        // 点击接诊
-        function startConsultation(appointmentId) {
-            // 1. 从全局列表中找到当前点击的患者对象
-            const patient = currentPatientList.find(p => p.appointmentId === appointmentId);
-
-            if (patient) {
-                // 2. ★★★ 把患者信息存入缓存 ★★★
-                localStorage.setItem('currentPatientInfo', JSON.stringify({
-                    name: patient.patientName,
-                    gender: patient.patientGender,
-                    age: patient.patientAge,
-                    phone: patient.patientPhone,
-                    id: patient.patientId
-                }));
+        try {
+            const response = await fetch('http://localhost:8081/doctor/medical-record', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    appointmentId: parseInt(selectedPatient.appointmentId, 10),
+                    subjective,
+                    objective,
+                    assessment,
+                    plan
+                })
+            });
+            const result = await response.json();
+            if (result.code === 200) {
+                const recordId = result.data?.recordId ?? result.data;
+                currentRecordId = recordId;
+                if (recordId) localStorage.setItem('currentRecordId', recordId);
+                showMessage('病历已保存', 'success');
+                return;
             }
-
-            // 3. 存挂号ID并跳转
-            localStorage.setItem('currentAppointmentId', appointmentId);
-            showMessage(`开始接诊...`, 'success');
-            setTimeout(() => {
-                window.location.href = `medical-record.html?appointmentId=${appointmentId}`;
-            }, 500);
+            showMessage(`保存失败: ${result.message || '请稍后重试'}`, 'warning');
+        } catch (e) {
+            showMessage('保存失败，请稍后重试', 'warning');
         }
-    </script>
+    }
+
+    async function submitPrescription() {
+        if (prescriptionItems.length === 0) {
+            showMessage('请先添加药品', 'warning');
+            return;
+        }
+        const recordId = currentRecordId || localStorage.getItem('currentRecordId');
+        if (!recordId) {
+            showMessage('请先保存病历', 'warning');
+            return;
+        }
+        const items = prescriptionItems
+            .filter(item => item.medicineId)
+            .map(item => {
+                const usageParts = [];
+                if (item.usage) usageParts.push(item.usage);
+                if (item.dosage) usageParts.push(item.dosage);
+                if (item.notes) usageParts.push(`注意事项:${item.notes}`);
+                return {
+                    medicineId: item.medicineId,
+                    quantity: parseInt(item.quantity, 10) || 1,
+                    usage: usageParts.join(' ').trim(),
+                    frequency: '每日',
+                    days: 1
+                };
+            });
+        if (items.length === 0) {
+            showMessage('请先添加药品', 'warning');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8081/doctor/prescription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    recordId: parseInt(recordId, 10),
+                    items
+                })
+            });
+            const result = await response.json();
+            if (result.code === 200) {
+                showMessage('处方已提交', 'success');
+                return;
+            }
+            showMessage(`提交失败: ${result.message || '请稍后重试'}`, 'warning');
+        } catch (e) {
+            showMessage('提交失败，请稍后重试', 'warning');
+        }
+    }
+
+    async function fetchPatientHistory(patient) {
+        const container = document.getElementById('historyList');
+        container.innerHTML = '<div class="p-4 text-center text-muted">正在加载历史...</div>';
+        try {
+            let url = `http://localhost:8081/admin/appointment?status=已就诊`;
+            const response = await fetch(url, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            const result = await response.json();
+
+            if (result.code === 200) {
+                const records = result.data.records || [];
+                const filtered = records.filter(r => r.patientName === patient.patientName);
+                if (filtered.length === 0) {
+                    container.innerHTML = '<div class="history-empty">暂无历史诊治记录</div>';
+                } else {
+                    container.innerHTML = filtered.map(h => `
+                        <div class="history-item" data-appointment-id="${h.appointmentId}">
+                            <div class="history-item-header" onclick="toggleHistoryDetail(${h.appointmentId})">
+                                <div>
+                                    <div class="fw-bold">${h.scheduleDate} ${h.timeSlot || ''}</div>
+                                    <div class="small text-muted">${h.departmentName || ''} · ${h.status || '已就诊'}</div>
+                                </div>
+                                <span class="text-primary small">查看详情</span>
+                            </div>
+                            <div class="history-item-detail" id="history-detail-${h.appointmentId}">
+                                <div class="text-muted small">正在加载详情...</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        } catch (e) {
+            container.innerHTML = '<div class="history-empty">加载失败，请稍后重试。</div>';
+        }
+    }
+
+    async function toggleHistoryDetail(appointmentId) {
+        const detail = document.getElementById(`history-detail-${appointmentId}`);
+        if (!detail) return;
+        if (detail.dataset.loaded === 'true') {
+            detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+            return;
+        }
+        detail.style.display = 'block';
+        try {
+            const token = localStorage.getItem('token');
+            const [recordRes, prescriptionRes] = await Promise.all([
+                fetch(`http://localhost:8081/medical-record/appointment/${appointmentId}`, { headers: { 'Authorization': token } }),
+                fetch(`http://localhost:8081/prescription/appointment/${appointmentId}`, { headers: { 'Authorization': token } })
+            ]);
+            const recordResult = await recordRes.json();
+            const prescriptionResult = await prescriptionRes.json();
+            const record = recordResult.code === 200 ? recordResult.data : null;
+            const prescription = prescriptionResult.code === 200 ? prescriptionResult.data : null;
+            const prescriptionDetails = prescription && prescription.details ? prescription.details : [];
+
+            detail.innerHTML = `
+                <div class="mb-2"><span class="text-muted">主诉：</span>${record?.subjective || '未填写'}</div>
+                <div class="mb-2"><span class="text-muted">诊断：</span>${record?.assessment || '未填写'}</div>
+                <div class="mb-2"><span class="text-muted">查体：</span>${record?.objective || '未填写'}</div>
+                <div class="mb-3"><span class="text-muted">治疗方案：</span>${record?.plan || '未填写'}</div>
+                <div>
+                    <div class="fw-bold mb-2">处方明细</div>
+                    ${prescriptionDetails.length > 0 ? `
+                        <ul class="small">
+                            ${prescriptionDetails.map(d => `<li>${d.medicineName} · ${d.quantity || 0} · ¥${d.subtotal ?? '-'}</li>`).join('')}
+                        </ul>
+                    ` : `<div class="text-muted small">该次就诊未开具处方。</div>`}
+                </div>
+            `;
+            detail.dataset.loaded = 'true';
+        } catch (e) {
+            detail.innerHTML = '<div class="text-danger small">加载失败</div>';
+        }
+    }
+</script>
 </body>
 </html>

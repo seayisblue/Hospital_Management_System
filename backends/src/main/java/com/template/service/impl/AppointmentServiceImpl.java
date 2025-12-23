@@ -67,7 +67,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (request.getStartDate() != null && !request.getStartDate().isEmpty()) {
             scheduleDate = LocalDate.parse(request.getStartDate());
         }
-        
+
         return doctorScheduleMapper.selectAvailableSchedules(
                 request.getDeptId(),
                 request.getStaffId(),
@@ -104,13 +104,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setScheduleId(request.getScheduleId());
         appointment.setPatientId(request.getPatientId());
         appointment.setStaffId(schedule.getStaffId());
-        
+
         // 从排班获取医生信息，再获取科室ID
         com.template.entity.Staff staff = staffMapper.selectById(schedule.getStaffId());
         if (staff != null && staff.getDeptId() != null) {
             appointment.setDeptId(staff.getDeptId());
         }
-        
+
         appointment.setAppointmentTime(LocalDateTime.now());
         appointment.setStatus("待就诊");
         appointment.setFee(new BigDecimal("15.00")); // 默认挂号费
@@ -205,6 +205,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         vo.setStaffId(prescription.getStaffId());
         vo.setPrescriptionDate(prescription.getPrescriptionDate());
         vo.setStatus(prescription.getStatus());
+        vo.setAdvice(prescription.getAdvice());
 
         // 3. 补全医生和科室信息
         com.template.entity.Staff staff = staffMapper.selectById(prescription.getStaffId());
@@ -239,6 +240,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             detailVO.setQuantity(detail.getQuantity());
             detailVO.setUnitPrice(detail.getUnitPrice());
             detailVO.setSubtotal(detail.getSubtotal());
+            detailVO.setUsage(detail.getUsageMethod());
+            detailVO.setFrequency(detail.getFrequency());
+            detailVO.setDays(detail.getDays());
 
             // 查询药品名称
             com.template.entity.Medicine medicine = medicineMapper.selectById(detail.getMedicineId());

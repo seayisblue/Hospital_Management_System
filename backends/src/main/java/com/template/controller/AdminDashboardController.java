@@ -3,12 +3,17 @@ package com.template.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.template.common.Result;
 import com.template.entity.Appointment;
+import com.template.entity.Bill;
+import com.template.entity.Medicine;
 import com.template.entity.Staff;
 import com.template.mapper.AppointmentMapper;
+import com.template.mapper.BillMapper;
+import com.template.mapper.MedicineMapper;
 import com.template.mapper.PatientMapper;
 import com.template.mapper.StaffMapper;
 import com.template.service.BillService;
 import com.template.vo.AdminStatsVO;
+import com.template.vo.AdminTaskVO;
 import com.template.vo.RevenueStatisticsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * 管理员仪表盘 Controller
- */
 @RestController
 @RequestMapping("/admin/dashboard")
 public class AdminDashboardController {
@@ -36,33 +40,68 @@ public class AdminDashboardController {
     private AppointmentMapper appointmentMapper;
 
     @Autowired
-    private BillService billService; // 复用财务服务的统计逻辑
+    private BillMapper billMapper;
+
+    @Autowired
+    private MedicineMapper medicineMapper;
+
+    @Autowired
+    private BillService billService;
 
     @GetMapping("/stats")
     public Result<AdminStatsVO> getDashboardStats() {
         AdminStatsVO vo = new AdminStatsVO();
 
-        // 1. 统计注册患者总数
         vo.setPatientCount(Math.toIntExact(patientMapper.selectCount(null)));
 
-        // 2. 统计在职医生数 (Role = '医生')
         LambdaQueryWrapper<Staff> staffQuery = new LambdaQueryWrapper<>();
         staffQuery.eq(Staff::getRole, "医生");
         vo.setDoctorCount(Math.toIntExact(staffMapper.selectCount(staffQuery)));
 
-        // 3. 统计今日预约数
         LocalDateTime todayStart = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
         LocalDateTime todayEnd = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
-
         LambdaQueryWrapper<Appointment> appQuery = new LambdaQueryWrapper<>();
         appQuery.ge(Appointment::getAppointmentTime, todayStart)
                 .le(Appointment::getAppointmentTime, todayEnd);
         vo.setTodayAppointment(Math.toIntExact(appointmentMapper.selectCount(appQuery)));
 
-        // 4. 统计今日收入 (直接调用已有的 BillService)
         RevenueStatisticsVO revenueStats = billService.getRevenueStatistics();
         vo.setTodayRevenue(revenueStats.getTodayRevenue());
 
         return Result.success(vo);
+    }
+
+    @GetMapping("/tasks")
+    public Result<List<AdminTaskVO>> getPendingTasks() {
+        List<AdminTaskVO> tasks = new ArrayList<>();
+
+        LambdaQueryWrapper<Bill> unpaidQuery = new LambdaQueryWrapper<>();
+        unpaidQuery.eq(Bill::getStatus, "未支付");
+        long unpaidCount = billMapper.selectCount(unpaidQuery);
+        if (unpaidCount > 0) {
+            AdminTaskVO task = new AdminTaskVO();
+            task.setType("财务审核");
+            task.setDescription("未支付账单共 " + unpaidCount + " 笔待处理");
+            task.setSubmitTime(LocalDateTime.now());
+            task.setStatus("待处理");
+            task.setActionUrl("finance-center.html");
+            tasks.add(task);
+        }
+
+        LambdaQueryWrapper<Medicine> stockQuery = new LambdaQueryWrapper<>();
+        stockQuery.isNotNull(Medicine::getMinStock)
+                .apply("StockLevel < MinStock");
+        long lowStockCount = medicineMapper.selectCount(stockQuery);
+        if (lowStockCount > 0) {
+            AdminTaskVO task = new AdminTaskVO();
+            task.setType("库存预警");
+            task.setDescription("低库存药品 " + lowStockCount + " 种需要补货");
+            task.setSubmitTime(LocalDateTime.now());
+            task.setStatus("紧急");
+            task.setActionUrl("medicine-stock.html");
+            tasks.add(task);
+        }
+
+        return Result.success(tasks);
     }
 }

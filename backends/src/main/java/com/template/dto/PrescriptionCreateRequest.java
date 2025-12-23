@@ -26,6 +26,11 @@ public class PrescriptionCreateRequest {
     @NotEmpty(message = "处方明细不能为空")
     private List<PrescriptionItemRequest> items;
 
+    /**
+     * 医嘱说明/注意事项
+     */
+    private String advice;
+
     @Data
     public static class PrescriptionItemRequest {
         /**

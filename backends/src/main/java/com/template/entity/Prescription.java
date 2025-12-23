@@ -52,5 +52,11 @@ public class Prescription implements Serializable {
      */
     @TableField("Status")
     private String status;
+
+    /**
+     * 医嘱说明/注意事项
+     */
+    @TableField("Advice")
+    private String advice;
 }
 

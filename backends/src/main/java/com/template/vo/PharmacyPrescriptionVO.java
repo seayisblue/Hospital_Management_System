@@ -69,6 +69,11 @@ public class PharmacyPrescriptionVO {
     private String status;
 
     /**
+     * 医嘱说明/注意事项
+     */
+    private String advice;
+
+    /**
      * 收费单ID
      */
     private Integer billId;
@@ -127,6 +132,21 @@ public class PharmacyPrescriptionVO {
          * 小计
          */
         private java.math.BigDecimal subtotal;
+
+        /**
+         * 用法
+         */
+        private String usage;
+
+        /**
+         * 频次
+         */
+        private String frequency;
+
+        /**
+         * 天数
+         */
+        private Integer days;
     }
 }
 

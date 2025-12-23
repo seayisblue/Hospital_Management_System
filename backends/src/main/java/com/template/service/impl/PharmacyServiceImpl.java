@@ -63,15 +63,21 @@ public class PharmacyServiceImpl implements PharmacyService {
         List<PharmacyPrescriptionVO> result = new ArrayList<>();
 
         for (Prescription prescription : prescriptions) {
-            // 查询关联的收费单（通过 BillItem）
+            // 查询关联的收费单（通过 BillItem ）- 修改这里！
             LambdaQueryWrapper<BillItem> itemQuery = new LambdaQueryWrapper<>();
             itemQuery.eq(BillItem::getReferenceId, prescription.getPrescriptionId())
                     .eq(BillItem::getItemType, "药品");
-            BillItem billItem = billItemMapper.selectOne(itemQuery);
+
+            // ❌ 原代码：BillItem billItem = billItemMapper.selectOne(itemQuery);
+            // ✅ 修改为：获取所有相关的收费项
+            List<BillItem> billItems = billItemMapper.selectList(itemQuery);
 
             Bill bill = null;
-            if (billItem != null) {
-                bill = billMapper.selectById(billItem.getBillId());
+            if (!billItems.isEmpty()) {
+                // 假设同一个处方的所有药品收费项都关联到同一个账单
+                // 取第一个billItem的billId（通常所有项都属于同一个账单）
+                Integer billId = billItems.get(0).getBillId();
+                bill = billMapper.selectById(billId);
             }
 
             PharmacyPrescriptionVO vo = buildPrescriptionVO(prescription, bill);
@@ -115,7 +121,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 
             // 检查库存
             if (medicine.getStockLevel() < detail.getQuantity()) {
-                throw new BusinessException(ResultCode.BUSINESS_ERROR, 
+                throw new BusinessException(ResultCode.BUSINESS_ERROR,
                         "药品库存不足：" + medicine.getMedicineName() + "，需要" + detail.getQuantity() + "，库存" + medicine.getStockLevel());
             }
 
@@ -149,6 +155,7 @@ public class PharmacyServiceImpl implements PharmacyService {
         vo.setStaffId(prescription.getStaffId());
         vo.setPrescriptionDate(prescription.getPrescriptionDate());
         vo.setStatus(prescription.getStatus());
+        vo.setAdvice(prescription.getAdvice());
         vo.setBillId(bill.getBillId());
         vo.setBillAmount(bill.getTotalAmount());
 
@@ -157,7 +164,7 @@ public class PharmacyServiceImpl implements PharmacyService {
         if (patient != null) {
             vo.setPatientName(patient.getPatientName());
             vo.setPatientGender(patient.getGender());
-            
+
             // 计算年龄
             if (patient.getDateOfBirth() != null) {
                 Period period = Period.between(patient.getDateOfBirth(), LocalDate.now());
@@ -169,7 +176,7 @@ public class PharmacyServiceImpl implements PharmacyService {
         Staff staff = staffMapper.selectById(prescription.getStaffId());
         if (staff != null) {
             vo.setStaffName(staff.getStaffName());
-            
+
             // 查询科室信息
             if (staff.getDeptId() != null) {
                 Department dept = departmentMapper.selectById(staff.getDeptId());
@@ -192,6 +199,9 @@ public class PharmacyServiceImpl implements PharmacyService {
             detailVO.setQuantity(detail.getQuantity());
             detailVO.setUnitPrice(detail.getUnitPrice());
             detailVO.setSubtotal(detail.getSubtotal());
+            detailVO.setUsage(detail.getUsageMethod());
+            detailVO.setFrequency(detail.getFrequency());
+            detailVO.setDays(detail.getDays());
 
             // 查询药品信息
             Medicine medicine = medicineMapper.selectById(detail.getMedicineId());

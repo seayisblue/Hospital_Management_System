@@ -130,7 +130,7 @@
 
         // 2. ★★★ 完成病历 (提交到后端) ★★★
         async function completeMedicalRecord() {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('doctorToken');
 
             // 获取数据
             const subjective = document.getElementById('subjective').value;
@@ -184,7 +184,7 @@
 
         // 新增：更新状态的辅助函数
         async function updateAppointmentStatus(id, status) {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('doctorToken');
             try {
                 // 使用管理员的更新接口（通常医生也有权限修改自己接诊的单子）
                 // 如果后端有专门的 doctor/appointment/complete 接口更好

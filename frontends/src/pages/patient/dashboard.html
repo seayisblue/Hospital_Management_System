@@ -183,7 +183,7 @@
 
     // ★★★ 获取我的挂号记录 ★★★
     async function fetchMyAppointments() {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('patientToken');
         // 如果没 Token，踢回登录页
         if (!token) {
             // alert('未登录'); // 可选
@@ -271,7 +271,7 @@
     // 取消预约
     async function cancelAppointment(id) {
         if (!confirm('确定取消吗？')) return;
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('patientToken');
 
         try {
             const response = await fetch(`http://localhost:8081/appointment/${id}`, {

@@ -222,7 +222,7 @@
 
     async function loadDoctorsData(deptId) {
         const res = await (await fetch(`http://localhost:8081/staff?deptId=${deptId}&pageSize=100`, {
-            headers: { 'Authorization': localStorage.getItem('token') }
+            headers: { 'Authorization': localStorage.getItem('doctorToken') }
         })).json();
 
         if (res.code === 200) {
@@ -244,7 +244,7 @@
         if (sid) url += `&staffId=${sid}`;
         if (date) url += `&startDate=${date}&endDate=${date}`;
 
-        const res = await (await fetch(url, { headers: { 'Authorization': localStorage.getItem('token') } })).json();
+        const res = await (await fetch(url, { headers: { 'Authorization': localStorage.getItem('doctorToken') } })).json();
         if (res.code === 200) renderList(res.data.records);
     }
 
@@ -310,7 +310,7 @@
             for (const d of targetDates) {
                 const r = await fetch('http://localhost:8081/schedule', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('doctorToken') },
                     body: JSON.stringify({
                         staffId: parseInt(docId),
                         scheduleDate: d,
@@ -337,7 +337,7 @@
         if (!confirm('撤销此排班？')) return;
         const res = await (await fetch(`http://localhost:8081/schedule/${id}`, {
             method: 'DELETE',
-            headers: { 'Authorization': localStorage.getItem('token') }
+            headers: { 'Authorization': localStorage.getItem('doctorToken') }
         })).json();
         if (res.code === 200) fetchSchedules();
     }

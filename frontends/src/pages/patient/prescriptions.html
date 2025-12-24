@@ -95,7 +95,7 @@
 
     // 1. 获取处方列表
     async function fetchPrescriptions() {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('patientToken');
         if (!token) return window.location.href = 'login.html';
 
         try {
@@ -155,7 +155,7 @@
 
     // 3. 查看详情
     async function viewPrescriptionDetail(id) {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('patientToken');
 
         try {
             const response = await fetch(`http://localhost:8081/appointment/prescriptions/${id}`, {

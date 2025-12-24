@@ -1027,10 +1027,12 @@
     let selectedPatient = null;
     let prescriptionItems = [];
     let currentRecordId = null;
+    let pendingPatientsRefreshTimer = null;
 
     document.addEventListener('DOMContentLoaded', () => {
         loadDoctorInfo();
         fetchPendingPatients();
+        pendingPatientsRefreshTimer = setInterval(fetchPendingPatients, 1000);
         updateDateTime();
         setInterval(updateDateTime, 1000);
         fetchMonthSchedules();
@@ -1195,7 +1197,7 @@
         const endDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(new Date(year, month + 1, 0).getDate()).padStart(2, '0')}`;
         try {
             const res = await (await fetch(`http://localhost:8081/schedule/page?current=1&pageSize=500&deptId=${currentDeptId}&startDate=${startDate}&endDate=${endDate}`, {
-                headers: { 'Authorization': localStorage.getItem('token') }
+                headers: { 'Authorization': localStorage.getItem('doctorToken') }
             })).json();
             scheduleByDate = {};
             scheduleDates = new Set();
@@ -1250,7 +1252,7 @@
         if (!currentDeptId) return;
         try {
             const res = await (await fetch(`http://localhost:8081/staff?deptId=${currentDeptId}&pageSize=100`, {
-                headers: { 'Authorization': localStorage.getItem('token') }
+                headers: { 'Authorization': localStorage.getItem('doctorToken') }
             })).json();
             if (res.code === 200) {
                 deptDoctors = res.data.records || [];
@@ -1291,7 +1293,7 @@
         for (const dateStr of dates) {
             const r = await fetch('http://localhost:8081/schedule', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') },
+                headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('doctorToken') },
                 body: JSON.stringify({
                     staffId: parseInt(staffId, 10),
                     scheduleDate: dateStr,
@@ -1393,7 +1395,7 @@
         if (!scheduleId) return;
         const res = await (await fetch(`http://localhost:8081/schedule/${scheduleId}`, {
             method: 'DELETE',
-            headers: { 'Authorization': localStorage.getItem('token') }
+            headers: { 'Authorization': localStorage.getItem('doctorToken') }
         })).json();
         if (res.code === 200) {
             fetchMonthSchedules();
@@ -1419,7 +1421,7 @@
         const container = document.getElementById('patientQueue');
         container.innerHTML = '<div class="p-4 text-center text-muted">正在加载队列...</div>';
         try {
-            const r = await fetch('http://localhost:8081/doctor/appointments/pending', { headers: { 'Authorization': localStorage.getItem('token') } });
+            const r = await fetch('http://localhost:8081/doctor/appointments/pending', { headers: { 'Authorization': localStorage.getItem('doctorToken') } });
             const res = await r.json();
             if (res.code === 200) {
                 if (res.data.length === 0) {
@@ -1492,7 +1494,7 @@
 
         try {
             const response = await fetch(`http://localhost:8081/patient/search?keyword=${encodeURIComponent(keyword)}`, {
-                headers: { 'Authorization': localStorage.getItem('token') }
+                headers: { 'Authorization': localStorage.getItem('doctorToken') }
             });
             const result = await response.json();
 
@@ -1533,7 +1535,7 @@
 
         try {
             const response = await fetch(`http://localhost:8081/medicine?medicineName=${encodeURIComponent(query)}&pageSize=20`, {
-                headers: { 'Authorization': localStorage.getItem('token') }
+                headers: { 'Authorization': localStorage.getItem('doctorToken') }
             });
             const result = await response.json();
             if (result.code === 200) {
@@ -1663,7 +1665,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token')
+                    'Authorization': localStorage.getItem('doctorToken')
                 },
                 body: JSON.stringify({
                     appointmentId: parseInt(selectedPatient.appointmentId, 10),
@@ -1722,7 +1724,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token')
+                    'Authorization': localStorage.getItem('doctorToken')
                 },
                 body: JSON.stringify({
                     recordId: parseInt(recordId, 10),
@@ -1746,7 +1748,7 @@
         try {
             let url = `http://localhost:8081/admin/appointment?status=已就诊`;
             const response = await fetch(url, {
-                headers: { 'Authorization': localStorage.getItem('token') }
+                headers: { 'Authorization': localStorage.getItem('doctorToken') }
             });
             const result = await response.json();
 
@@ -1786,7 +1788,7 @@
         }
         detail.style.display = 'block';
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('doctorToken');
             const [recordRes, prescriptionRes] = await Promise.all([
                 fetch(`http://localhost:8081/medical-record/appointment/${appointmentId}`, { headers: { 'Authorization': token } }),
                 fetch(`http://localhost:8081/prescription/appointment/${appointmentId}`, { headers: { 'Authorization': token } })

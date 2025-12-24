@@ -81,7 +81,7 @@
                     showMessage('医生登录成功！正在跳转...', 'success');
 
                     // 3. ★★★ 关键：保存 Token 和医生信息 ★★★
-                    localStorage.setItem('token', result.data.token);
+                    localStorage.setItem('doctorToken', result.data.token);
                     localStorage.setItem('doctorInfo', JSON.stringify(result.data));
                     localStorage.setItem('userRole', 'doctor'); 
 

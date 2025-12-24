@@ -250,7 +250,7 @@
     });
 
     async function fetchMedicines() {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('doctorToken');
         try {
             const r = await fetch('http://localhost:8081/medicine?page=1&pageSize=100', {
                 headers: { 'Authorization': token }
@@ -405,7 +405,7 @@
 
         // 从 localStorage 获取当前挂号 ID (你在 medical-record.html 应该存过)
         const appointmentId = localStorage.getItem('currentAppointmentId');
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('doctorToken');
 
         const requestData = {
             recordId: parseInt(recordId),

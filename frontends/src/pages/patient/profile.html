@@ -91,7 +91,7 @@
 
     // 1. 获取个人信息
     async function fetchProfile() {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('patientToken');
         if (!token) return window.location.href = 'login.html';
 
         try {
@@ -180,7 +180,7 @@
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token')
+                    'Authorization': localStorage.getItem('patientToken')
                 },
                 body: JSON.stringify({
                     phoneNumber: phone,

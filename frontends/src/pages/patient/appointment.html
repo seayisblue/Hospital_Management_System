@@ -291,7 +291,7 @@
         try {
             const response = await fetch('http://localhost:8081/department', {
                 method: 'GET',
-                headers: { 'Authorization': localStorage.getItem('token') }
+                headers: { 'Authorization': localStorage.getItem('patientToken') }
             });
             const result = await response.json();
             if (result.code === 200) {
@@ -414,7 +414,7 @@
         try {
             const response = await fetch(`http://localhost:8081/appointment/schedules?deptId=${deptId}`, {
                 method: 'GET',
-                headers: { 'Authorization': localStorage.getItem('token') }
+                headers: { 'Authorization': localStorage.getItem('patientToken') }
             });
             const result = await response.json();
             if (result.code === 200) {
@@ -432,7 +432,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token')
+                    'Authorization': localStorage.getItem('patientToken')
                 },
                 body: JSON.stringify({ scheduleId: appointmentData.schedule.id })
             });

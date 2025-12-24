@@ -217,7 +217,7 @@
     });
 
     async function fetchMedicalRecords() {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('patientToken');
         try {
             const response = await fetch('http://localhost:8081/appointment/medical-records', {
                 headers: { 'Authorization': token }
